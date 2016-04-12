@@ -6,12 +6,12 @@
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
 
-#include <mgr/mgr.h>
 #include <time.h>
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h> 
 #include <stdio.h>
+#include <mgr/mgr.h>
 
 #define SCREEN 0
 #define MINS 1

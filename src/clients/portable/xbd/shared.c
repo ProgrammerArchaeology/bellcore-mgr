@@ -11,14 +11,14 @@
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
 #endif
-#ifdef MGR
-#define M_NOFLUSH
-#include <mgr/mgr.h>
-#endif
 #include <errno.h>
 #include <sys/time.h>
 #include <sys/timeb.h>
 #include <string.h>
+#ifdef MGR
+#define M_NOFLUSH
+#include <mgr/mgr.h>
+#endif
 #include "xbd.h"
 
 /* Manufaction a graphics cursor used in a XFill... operation. */

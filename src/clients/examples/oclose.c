@@ -8,10 +8,10 @@
 
 /* close a window */
 
-#include <mgr/mgr.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
 
 #define POS(x)		800+(x)/18		/* where to put window */
 #define Max(x,y)	((x)>(y)?(x):(y))

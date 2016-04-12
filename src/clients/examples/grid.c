@@ -3,9 +3,9 @@
 /* draw a grid of lines */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <mgr/mgr.h>
 /*}}}  */
 
 /*{{{  clean*/

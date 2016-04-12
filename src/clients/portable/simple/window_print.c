@@ -8,13 +8,13 @@
 
 /* print any window on the hp think jet (use lpr filter) */
 
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <signal.h>
 #include <sys/file.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
 
 #define TEMP	"/tmp/pr."			/* temp file name */
 #define MESSAGE	"\rwindow dump"			/* window message */

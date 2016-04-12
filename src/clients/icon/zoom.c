@@ -8,8 +8,6 @@
 
 /* icon editor -- version I (single window) */
 
-#include <mgr/mgr.h>
-#include <mgr/bitblit.h>
 #include <fcntl.h>
 #include <string.h>
 #include <signal.h>
@@ -17,6 +15,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <mgr/mgr.h>
+#include <mgr/bitblit.h>
 
 char *bsd_sprintf(char *s, char *fmt, ...)
 {

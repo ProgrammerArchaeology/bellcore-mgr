@@ -12,8 +12,6 @@
 */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/share.h>
 #include <sys/time.h>
 #include <getopt.h>
 #include <signal.h>
@@ -21,6 +19,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <mgr/bitblit.h>
+#include <mgr/share.h>
 /*}}}  */
 /*{{{  #defines*/
 #define BASE	6

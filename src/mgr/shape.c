@@ -11,9 +11,10 @@
 /* re-shape a window */
 /*}}}  */
 /*{{{  #includes*/
+#include <stdio.h>
+
 #include <mgr/bitblit.h>
 #include <mgr/font.h>
-#include <stdio.h>
 
 #include "clip.h"
 #include "defs.h"

@@ -12,11 +12,11 @@ static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/misc/RCS/omgrmail.c,v $$Revisi
 
 /* check for new mail */
 
-#include <mgr/mgr.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <signal.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 
 #define MSG_1	"\fLooking for new mail"
 #define MSG_2	"\f\007You have new mail"

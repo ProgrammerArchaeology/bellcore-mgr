@@ -9,12 +9,12 @@
 /* check for new messages */
 /* icon version */
 
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+#include <mgr/mgr.h>
 
 #define Isflag(arg,flag)	(!strncmp(arg,flag,strlen(flag)))
 #define Max(x,y)		((x)>(y)?(x):(y))

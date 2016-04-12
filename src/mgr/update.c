@@ -22,9 +22,10 @@
  */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
 
 #include "defs.h"
 #include "clip.h"

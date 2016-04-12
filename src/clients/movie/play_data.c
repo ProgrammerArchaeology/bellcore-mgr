@@ -3,12 +3,12 @@
 /* read op file (binary format) and do the associated actions */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/share.h>
 #include <sys/signal.h>
 #include <sys/time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <mgr/bitblit.h>
+#include <mgr/share.h>
 
 #include "getshort.h"
 /*}}}  */

@@ -1,9 +1,8 @@
 /*{{{}}}*/
 /*{{{  #includes*/
-#include "screen.h"
-#include <mgr/mgr.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 /*}}}  */
 
 /*{{{  bit_load*/

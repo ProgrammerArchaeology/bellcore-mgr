@@ -5,12 +5,12 @@
  * raymond@kestrel.nmt.edu
  * $Id: mgrsketch.c,v 1.4 1993/04/24 14:08:55 dave Exp dave $
  */
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
+#include <mgr/mgr.h>
 
 /* default window dimensions */
 #define X0 0

@@ -3,10 +3,11 @@
 /* Teminal emulator functions called from put_window() and down_load() */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "clip.h"
 #include "defs.h"

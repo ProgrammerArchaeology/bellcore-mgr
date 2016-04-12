@@ -12,9 +12,9 @@ static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/msg/RCS/client.c,v $$Revision:
  */
 /* sample client for testing server (template only) */
 
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <signal.h>
+#include <mgr/mgr.h>
 
 #include "do.h"
 

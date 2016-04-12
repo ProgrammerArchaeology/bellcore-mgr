@@ -1,10 +1,10 @@
 /* setname.c - specify the name to appear when window is iconified
    Jim Blandy - Monday, July 17, 1989 - Bell Communications Research */
 
-#include <mgr/mgr.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
 
 char *progname;			/* name of program */
 

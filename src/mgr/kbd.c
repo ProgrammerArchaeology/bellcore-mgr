@@ -15,13 +15,14 @@ Very ugly stuff to use machine dependent things.
 */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
 
 #include "proto.h"
 

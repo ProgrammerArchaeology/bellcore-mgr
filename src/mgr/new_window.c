@@ -11,12 +11,13 @@
 /* Create a new window */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "clip.h"
 #include "defs.h"

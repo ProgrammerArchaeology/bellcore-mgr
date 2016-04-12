@@ -1,9 +1,9 @@
-#include <mgr/bitblit.h>
-#include <mgr/share.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <mgr/bitblit.h>
+#include <mgr/share.h>
 
 int main(int argc, char *argv[])
 {

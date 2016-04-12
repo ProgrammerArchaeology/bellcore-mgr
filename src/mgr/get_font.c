@@ -10,13 +10,14 @@
 
 /*{{{}}}*/
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <errno.h>
 #include <limits.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "defs.h"
 

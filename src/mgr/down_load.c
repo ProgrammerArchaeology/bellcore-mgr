@@ -11,13 +11,14 @@
 /* down load text -- called from put_window.c */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <sys/file.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "defs.h"
 #include "menu.h"

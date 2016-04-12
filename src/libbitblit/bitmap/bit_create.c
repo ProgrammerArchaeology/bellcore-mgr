@@ -1,8 +1,8 @@
 /*{{{}}}*/
 /*{{{  #includes*/
+#include <stdlib.h>
 #include <mgr/bitblit.h>
 #include <mgr/share.h>
-#include <stdlib.h>
 /*}}}  */
 
 /*{{{  bit_create -- create a bitmap as a sub-rectangle of another bitmap*/

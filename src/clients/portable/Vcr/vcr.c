@@ -1,8 +1,8 @@
 /* MGR vcr DEMO */
 
-#include <mgr/mgr.h>
 #include <sys/time.h>
 #include <signal.h>
+#include <mgr/mgr.h>
 
 #define fsleep(s) /* sleep 100ths of a second */ \
    { \

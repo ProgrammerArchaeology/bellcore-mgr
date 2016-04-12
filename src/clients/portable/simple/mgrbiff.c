@@ -1,6 +1,5 @@
 /*{{{}}}*/
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -8,6 +7,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
 /*}}}  */
 /*{{{  #defines*/
 #define POLL 30

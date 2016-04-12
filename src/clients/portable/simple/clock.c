@@ -3,13 +3,13 @@
 /* get today's date */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <errno.h>
 #include <time.h>
 #include <unistd.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 /*}}}  */
 /*{{{  #defines*/
 #define POLL		15			/* poll interval */

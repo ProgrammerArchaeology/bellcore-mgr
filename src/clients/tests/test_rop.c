@@ -8,9 +8,9 @@
 
 /* test raster op functions */
 
-#include <mgr/mgr.h>
 #include <signal.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
 
 char *op_names[] = {
    "0", 

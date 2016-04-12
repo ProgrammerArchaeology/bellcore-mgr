@@ -11,13 +11,13 @@ Color fixes and speedup, Vincent Broman, 1994.
 */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
-#include <mgr/bitblit.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
+#include <mgr/bitblit.h>
 /*}}}  */
 /*{{{  #defines*/
 #define ABS(x) ((x)<0 ? -(x) : (x))

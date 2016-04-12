@@ -11,10 +11,11 @@
 /* make an alternate window */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <stdio.h>
 #include <unistd.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "clip.h"
 #include "defs.h"

@@ -9,10 +9,9 @@
 */
 /*}}}  */
 /*{{{  #includes*/
-#include "screen.h"
-#include <mgr/share.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <mgr/share.h>
 /*}}}  */
 
 /*{{{  variables*/

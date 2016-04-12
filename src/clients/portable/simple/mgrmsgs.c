@@ -11,10 +11,10 @@
 /* check for new messages */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
+#include <mgr/mgr.h>
 /*}}}  */
 /*{{{  #defines*/
 #define Isflag(arg,flag)	(!strncmp(arg,flag,strlen(flag)))

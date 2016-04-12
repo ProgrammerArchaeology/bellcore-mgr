@@ -11,13 +11,13 @@
 #include <X11/keysym.h>
 #include <X11/Xutil.h>
 #endif
-#ifdef MGR
-#include <mgr/mgr.h>
-#endif
 #include <signal.h>
 #include <sys/time.h>
 #include <sys/timeb.h>
 #include <stdlib.h>
+#ifdef MGR
+#include <mgr/mgr.h>
+#endif
 #include "xbd.h"
 
 void

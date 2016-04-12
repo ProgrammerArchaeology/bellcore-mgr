@@ -1,10 +1,10 @@
 /* display bitmap files on window */
 
-#include <mgr/mgr.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 
 #define GAP		3		/* space between icons */
 #define SAVE		2		/* temp bitmap # */

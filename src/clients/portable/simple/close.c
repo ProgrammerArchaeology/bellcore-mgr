@@ -12,8 +12,8 @@ static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/misc/RCS/close.c,v $$Revision:
 
 /* close a window  - keep icon uncovered */
 
-#include <mgr/mgr.h>
 #include <signal.h>
+#include <mgr/mgr.h>
 
 static int debug = 0;			/* for debugging */
 

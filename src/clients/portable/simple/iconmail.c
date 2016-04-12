@@ -8,7 +8,6 @@
 
 /* check for new mail  (icon version) */
 
-#include <mgr/mgr.h>
 #include <sys/stat.h>
 #include <sys/time.h>		/* for fsleep */
 #include <stdlib.h>
@@ -16,6 +15,7 @@
 #include <string.h>
 #include <signal.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 
 #define MSG_READING	"\freading mail ...\r"
 #define MSG_CHECKING	"\rChecking for new mail..."

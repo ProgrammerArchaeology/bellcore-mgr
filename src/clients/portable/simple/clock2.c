@@ -3,7 +3,6 @@
 /* get today's date  (analog clock version) */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +10,7 @@
 #include <time.h>
 #include <signal.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
 /*}}}  */
 /*{{{  #defines*/
 #define OFFSET		(500<<10)		/* shift points to 1st quad */

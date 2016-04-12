@@ -3,9 +3,9 @@
 /* convert ascii back into binary */
 /*}}}  */
 /*{{{  #includes*/
+#include <strings.h>
 #include <mgr/bitblit.h>
 #include <mgr/share.h>
-#include <strings.h>
 
 #include "putshort.h"
 /*}}}  */

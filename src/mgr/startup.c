@@ -3,13 +3,14 @@
 /* read and process startup file */ /* this needs to be redone */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
-#include <mgr/share.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
+#include <mgr/share.h>
 
 #include "clip.h"
 #include "defs.h"

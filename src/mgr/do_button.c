@@ -3,9 +3,6 @@
 /* Figure out what to do with a button push */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/share.h>
-#include <mgr/font.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -14,6 +11,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/share.h>
+#include <mgr/font.h>
 
 #include "defs.h"
 #include "event.h"

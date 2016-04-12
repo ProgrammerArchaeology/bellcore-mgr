@@ -1,10 +1,10 @@
 /*{{{}}}*/
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <time.h>
 #include <signal.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
 /*}}}  */
 /*{{{  #defines*/
 #define ICON_BITMAP 1

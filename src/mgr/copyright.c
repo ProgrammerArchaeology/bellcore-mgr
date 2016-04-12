@@ -24,13 +24,13 @@ without paying fees.
 */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <sys/time.h>
 #include <sys/signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "defs.h"
 

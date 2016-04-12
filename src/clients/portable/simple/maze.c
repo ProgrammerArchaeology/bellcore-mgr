@@ -25,7 +25,6 @@
 /* A simple maze wars game to test out user level graphics */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -33,6 +32,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <mgr/mgr.h>
 /*}}}  */
 
 int Redraw = 1;

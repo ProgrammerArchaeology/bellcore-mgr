@@ -11,9 +11,6 @@
 /* destroy a window */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
-#include <mgr/window.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -22,6 +19,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
+#include <mgr/window.h>
 
 #include "clip.h"
 #include "defs.h"

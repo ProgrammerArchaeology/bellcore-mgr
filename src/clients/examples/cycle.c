@@ -6,12 +6,12 @@
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
 
-#include <mgr/mgr.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 
 /*
  * cycle -- a program to do simple flip-book animation

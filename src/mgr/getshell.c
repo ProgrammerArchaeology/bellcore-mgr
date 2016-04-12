@@ -11,7 +11,6 @@
 /* start a shell */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -22,6 +21,8 @@
 #include <stdio.h>
 #include <termios.h>
 #include <unistd.h>
+
+#include <mgr/bitblit.h>
 
 #include "defs.h"
 

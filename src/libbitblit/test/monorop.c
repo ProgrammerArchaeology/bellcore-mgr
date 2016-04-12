@@ -1,7 +1,7 @@
 /* test small bit_blit functions */
 
-#include <mgr/bitblit.h>
 #include <stdio.h>
+#include <mgr/bitblit.h>
 
 #define SIZE		32
 

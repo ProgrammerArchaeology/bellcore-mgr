@@ -11,14 +11,14 @@
 /* snap a piece of the screen -- only works locally */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
-#include <mgr/bitblit.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
+#include <mgr/bitblit.h>
 /*}}}  */
 /*{{{  #defines*/
 #define ICON   "easel"

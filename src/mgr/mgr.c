@@ -11,9 +11,6 @@
 /* main routine for MGR */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
-#include <mgr/share.h>
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <getopt.h>
@@ -29,6 +26,10 @@
 #endif
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
+#include <mgr/share.h>
 
 #include "clip.h"
 #include "defs.h"

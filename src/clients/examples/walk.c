@@ -1,12 +1,12 @@
 /*{{{}}}*/
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
 #include <unistd.h>
+#include <mgr/mgr.h>
 /*}}}  */
 /*{{{  #defines*/
 #define ICONPATH        "eye"

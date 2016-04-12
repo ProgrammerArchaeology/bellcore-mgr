@@ -13,8 +13,9 @@
  */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
 
 #include "clip.h"
 #include "defs.h"

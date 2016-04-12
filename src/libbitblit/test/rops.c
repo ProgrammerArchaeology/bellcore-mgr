@@ -1,5 +1,5 @@
-#include <mgr/bitblit.h>
 #include <stdio.h>
+#include <mgr/bitblit.h>
 
 int main(argc,argv) int argc; char **argv;
 {

@@ -38,7 +38,6 @@ SOFTWARE.
  *  sleep switch
  */
 
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <unistd.h>
 #define __USE_BSD
@@ -46,6 +45,8 @@ SOFTWARE.
 #include <stdlib.h>
 #include <time.h>
 #include <signal.h>
+
+#include <mgr/mgr.h>
 
 #define DoRed	0x01
 #define DoGreen	0x02

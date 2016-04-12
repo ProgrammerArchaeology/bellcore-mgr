@@ -8,10 +8,10 @@
 
 /* Long writes to ptty's don't always work */
 
-#include <mgr/bitblit.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <mgr/bitblit.h>
 
 #include "defs.h"
 

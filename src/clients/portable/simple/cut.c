@@ -11,11 +11,11 @@
 /* save current cut buffer in a file */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
 #include <time.h>
+#include <mgr/mgr.h>
 /*}}}  */
 /*{{{  #defines*/
 #define TERM		"mgr"			/* name of valid terminal id */

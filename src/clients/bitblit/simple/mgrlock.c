@@ -3,8 +3,6 @@
 /* star-trek lock screen (sau/sdh) */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/mgr.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <pwd.h>
@@ -14,6 +12,8 @@
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
+#include <mgr/bitblit.h>
+#include <mgr/mgr.h>
 #ifdef sun
 #define _POSIX_VDISABLE 0
 #endif

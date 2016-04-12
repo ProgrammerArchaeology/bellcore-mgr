@@ -11,8 +11,6 @@
 /* misc window and screen mangement routines */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <signal.h>
@@ -26,6 +24,9 @@
 #ifdef sun
 #include <sundev/kbio.h>
 #endif
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "clip.h"
 #include "defs.h"

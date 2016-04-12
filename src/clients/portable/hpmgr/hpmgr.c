@@ -9,11 +9,12 @@
 **	hp2621 terminal emulator
 */
 
-#include <mgr/mgr.h>
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#include <mgr/mgr.h>
 
 #define MAX_ROW		24
 #define MAX_COL		80

@@ -1,6 +1,6 @@
 #include <assert.h>
-#include <mgr/mgr.h>
 #include <signal.h>
+#include <mgr/mgr.h>
 
 /*{{{}}}*/
 /*{{{  #defines*/

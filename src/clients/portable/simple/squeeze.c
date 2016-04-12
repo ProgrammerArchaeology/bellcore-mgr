@@ -7,8 +7,8 @@ Read an modern bitmap file and do byte run-length encoding.
 */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 /*}}}  */
 
 int main(int argc, char *argv[])

@@ -11,12 +11,12 @@
 
 /*	stringart.c	13	84/04/22	*/
 
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <mgr/mgr.h>
 
 #define NUMLINES	343		/* number of vectors in a design */
 #define NUMFUNCTIONS	13		/* number of functions */

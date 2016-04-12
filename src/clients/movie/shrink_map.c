@@ -1,8 +1,8 @@
 /* shrink a MGR bitmap by 2  (sau) 11/90 */
 /* Compile with -DTEST to make a test program */
 
-#include <mgr/bitblit.h>
 #include <stdio.h>
+#include <mgr/bitblit.h>
 
 /* retrieve bitmap data, reduce it by 2x2 to 1x1 */
 

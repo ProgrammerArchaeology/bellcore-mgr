@@ -3,8 +3,8 @@
 /* erase a pixrect to background pattern */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
 #include <stdio.h>
+#include <mgr/bitblit.h>
 
 #include "defs.h"
 

@@ -8,13 +8,13 @@ Heavily edited by: Michael Haardt
 */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
+#include <mgr/mgr.h>
 
 #include "getload.h"
 /*}}}  */

@@ -13,11 +13,11 @@
 */
 static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/msg/RCS/menus.c,v $$Revision: 4.3 $";
 
-#include <mgr/mgr.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/dir.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 
 
 #define MAX		512					/* max path length */

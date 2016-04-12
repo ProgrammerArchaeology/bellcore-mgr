@@ -1,5 +1,5 @@
-#include <mgr/mgr.h>
 #include <signal.h>
+#include <mgr/mgr.h>
 
 /* program to draw hilbert space filling curves (very quick).
  * Steve Hawley			11/87 (Macintosh C implementation)

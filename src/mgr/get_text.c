@@ -3,9 +3,10 @@
 /* sweep out text rectangle */
 /*}}}  */
 /*{{{  #includes*/
+#include <stdio.h>
+
 #include <mgr/bitblit.h>
 #include <mgr/font.h>
-#include <stdio.h>
 
 #include "defs.h"
 #include "event.h"

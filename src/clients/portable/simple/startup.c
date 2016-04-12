@@ -3,8 +3,8 @@
 /* generate a startup file from existing window configuration */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/mgr.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 /*}}}  */
 
 /*{{{  main*/

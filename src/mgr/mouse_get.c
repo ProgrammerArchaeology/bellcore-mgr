@@ -1,10 +1,11 @@
 /*{{{}}}*/
 /*{{{  #includes*/
 #include <sys/time.h>
-#include <mgr/share.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+
+#include <mgr/share.h>
 
 #include "proto.h"
 #include "mouse.h"

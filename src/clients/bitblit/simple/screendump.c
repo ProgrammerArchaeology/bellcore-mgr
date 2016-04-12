@@ -1,9 +1,9 @@
 /*{{{}}}*/
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <stdio.h>
+#include <mgr/bitblit.h>
 /*}}}  */
 
 /*{{{  main*/

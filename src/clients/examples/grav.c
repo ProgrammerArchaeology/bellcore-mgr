@@ -6,10 +6,10 @@
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
 
-#include <mgr/mgr.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <mgr/mgr.h>
 
 #define MAXX	999
 #define MAXY	999

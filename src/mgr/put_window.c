@@ -11,8 +11,6 @@
 /* Terminal emulator */
 /*}}}  */
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <sys/time.h>
 #include <termios.h>
 #include <errno.h>
@@ -20,6 +18,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "clip.h"
 #include "defs.h"

@@ -12,12 +12,13 @@
 /*}}}  */
 
 /*{{{  #includes*/
-#include <mgr/bitblit.h>
-#include <mgr/font.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+
+#include <mgr/bitblit.h>
+#include <mgr/font.h>
 
 #include "defs.h"
 #include "event.h"
