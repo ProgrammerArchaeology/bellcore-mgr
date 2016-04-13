@@ -7,6 +7,8 @@
 #include <signal.h>
 /*}}}  */
 /*{{{  #defines*/
+static int DO_MSG(struct share_msg msg, char *data);
+
 /* get an unused bitmap id */
 
 #define get_mid()	(next_free>0 ? freed_ids[--next_free] : next_id++)
