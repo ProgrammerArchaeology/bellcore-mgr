@@ -9,6 +9,7 @@
 /* font routines */
 
 #include <mgr/font.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
