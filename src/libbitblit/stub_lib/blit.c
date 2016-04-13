@@ -18,10 +18,12 @@ static char	RCSid_[] = "$Source: /files/src/linuxmgr/src/libbitblit/stub_lib/RCS
  *  General memory-to-memory rasterop
  */
 
+int
 mem_rop(dest, dx, dy, width, height, func, source, sx, sy)
 int sx, sy, dx, dy;		/* properly clipped source and dest */
 int width, height;		/* rectangle to be transferred */
 BITMAP *source, *dest;		/* bit map pointers */
 int func;			/* rasterop function */
    {
+    return -1;
    }

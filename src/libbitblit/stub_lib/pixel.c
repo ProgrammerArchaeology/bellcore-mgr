@@ -20,4 +20,5 @@ BITMAP *map;
 register int dx, dy;
 int func;
    {
+    return -1;
    }

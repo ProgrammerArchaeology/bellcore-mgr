@@ -12,6 +12,7 @@ static char	RCSid_[] = "$Source: /files/src/linuxmgr/src/libbitblit/stub_lib/RCS
 
 /*  generic bitblit code routines*/
 
+#include <stdlib.h>
 #include "bitmap.h"
 
 /* open the display */
@@ -21,7 +22,6 @@ bit_open(name)
 char *name;			/* name of frame buffer */
 {
    BITMAP *result;
-   char *malloc();
 
    if ((result = (BITMAP *) malloc(sizeof(BITMAP))) == (BITMAP *) 0)
       return (BIT_NULL);
@@ -59,7 +59,6 @@ bit_create(map, x, y, wide, high)
 BITMAP *map;
 int x, y, wide, high;
 {
-   char *malloc();
    register BITMAP *result;
 
    if (x + wide > map->wide)
@@ -90,7 +89,6 @@ unsigned short wide, high;
 DATA data;
 int bits;	/* in preparation for color */
 {
-   char *malloc();
    register BITMAP *result;
    register int size;
 

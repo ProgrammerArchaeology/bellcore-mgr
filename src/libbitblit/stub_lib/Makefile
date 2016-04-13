@@ -10,10 +10,12 @@
 
 #	makefile for stub blit library
 
+include ../../../Configfile
+
 CFLAGS=-O  -I..
 
-CFILES= blit.c line.c pixel.c bitmap.c
-OBJS= blit.o line.o pixel.o bitmap.o
+CFILES= blit.c line.c pixel.c bitmap.c bit_size.c
+OBJS= blit.o line.o pixel.o bitmap.o bit_size.o
 HFILES= bitmap.h
 OTHER=Makefile README
 LIB=blitlib.a
@@ -29,11 +31,21 @@ $(LIB): $(OBJS)
 	ranlib $(LIB)
 
 clean:
-	$(RMF) *.o $(LIB)
+	$(RMF) screen.h *.o $(LIB)
+
+screen.h:
+		$(LNS) $(SCREEN).h screen.h
+
+$(OBJS):	screen.h
 
 list:
 	@for i in ${HFILES} ${CFILES} ${OTHER}; do \
 		echo "${START}/$$i"; \
 	done	
 
+depend:		screen.h
+		$(MKDEP) $(MKDEPFLAGS) $(CPPFLAGS) $(BLITLIBFLAGS) *.c > $(MKDEPOUT)
+
 clobber:
+		$(RMF) screen.h
+		$(ZILCH) $(DEPFILE)
