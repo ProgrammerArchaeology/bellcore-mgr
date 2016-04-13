@@ -17,6 +17,7 @@ depend:
 
 clean:
 		for i in $(BITBLIT) bitmap seqbitmap movie; do (cd $$i; make clean); done
+		$(RMF) libbitblit.a
 
 clobber:
 		for i in $(BITBLIT) bitmap seqbitmap movie test; do (cd $$i; make clobber); done
