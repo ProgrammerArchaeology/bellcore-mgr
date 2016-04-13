@@ -76,36 +76,3 @@ int x, y, wide, high;
    result->type = map->type;
    return (result);
 }
-
-/* allocate space for, and create a memory bitmap */
-
-BITMAP *
-bit_alloc(wide, high, data, bits)
-unsigned short wide, high;
-DATA data;
-int bits;	/* in preparation for color */
-{
-   register BITMAP *result;
-   register int size;
-
-   if ((result = (BITMAP *) malloc(sizeof(BITMAP))) == (BITMAP *) 0)
-      return (result);
-
-   result->x0 = 0;
-   result->y0 = 0;
-   result->high = high;
-   result->wide = wide;
-
-   size = BIT_SIZE(result);
-
-   if (data != (DATA ) 0)
-      result->data = data;
-   else if ((result->data = (DATA ) malloc(size)) == (DATA ) 0) {
-      free(result);
-      return ((BITMAP *) 0);
-   }
-
-   result->primary = result;
-   result->type = _MEMORY;
-   return (result);
-}
