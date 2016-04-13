@@ -277,7 +277,7 @@ extern fd_set to_poll;
 extern WINDOW *active;
 extern WINDOW *last_active;
 extern int button_state;
-extern mouse, mousex, mousey, mouse_on;
+extern int mouse, mousex, mousey, mouse_on;
 extern int debug;
 extern char *fontlist[], *font_dir;
 extern char *icon_dir;

@@ -76,7 +76,7 @@ ms_setspeed(const int old, const int new,
     tty.c_cc[VTIME] = 0;
     tty.c_cc[VMIN] = 1;
     tty.c_cflag = c_cflag;
-#ifndef __FreeBSD__
+#if !defined(__FreeBSD__) && !defined(__APPLE__)
     tty.c_line = 0;
 #endif
 

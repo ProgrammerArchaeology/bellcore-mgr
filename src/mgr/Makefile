@@ -40,6 +40,8 @@ icon_server.c:	../tools/bitmaptoc
 		echo '#include <mgr/bitblit.h>' >> $@
 		../tools/bitmaptoc $(SERVERICONDIR)/* >> $@
 
+$(OBJS): icon_server.h default_font.h version.h
+
 ../tools/bitmaptoc:
 		(cd ../tools; make all)
 
@@ -65,7 +67,7 @@ depend:         version.h
 		$(RMF) default_font.h icon_server.h icon_server.c
 
 clean:
-		$(RMF) $(OBJS) mgrlogin_fnt.o mgrlogin.o
+		$(RMF) icon_server.c icon_server.h version.h $(OBJS) mgrlogin_fnt.o mgrlogin.o
 
 clobber:	clean
 		$(RMF) core mgr mgrlogin default_font.h icon_server.[ch] version.h

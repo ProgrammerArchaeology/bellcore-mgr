@@ -205,7 +205,6 @@ char *tty;
    register int i;
    register char *check = tty + (strlen(tty) - 2);
    register char *p1,*p2;
-   char *strcpy();
 
    *buff = '\0';
    for(i=0;i<p_count;i++)
