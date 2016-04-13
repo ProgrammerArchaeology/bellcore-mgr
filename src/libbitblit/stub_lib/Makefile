@@ -13,7 +13,7 @@ CFLAGS=		$(CCFLAGS) $(CPPFLAGS) -I..
 
 CFILES= blit.c line.c pixel.c bitmap.c bit_size.c
 OBJS= blit.o line.o pixel.o bitmap.o bit_size.o
-HFILES= bitmap.h
+HFILES= bitmap.h screen.h
 OTHER=Makefile README
 LIB=blitlib.a
 START=.
@@ -28,21 +28,15 @@ $(LIB): $(OBJS)
 	ranlib $(LIB)
 
 clean:
-	$(RMF) screen.h *.o $(LIB)
-
-screen.h:
-		$(LNS) $(SCREEN).h screen.h
-
-$(OBJS):	screen.h
+	$(RMF) *.o $(LIB)
 
 list:
 	@for i in ${HFILES} ${CFILES} ${OTHER}; do \
 		echo "${START}/$$i"; \
 	done	
 
-depend:		screen.h
+depend:
 		$(MKDEP) $(MKDEPFLAGS) $(CPPFLAGS) $(BLITLIBFLAGS) *.c > $(MKDEPOUT)
 
 clobber:
-		$(RMF) screen.h
 		$(ZILCH) $(DEPFILE)
