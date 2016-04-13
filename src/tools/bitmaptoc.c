@@ -65,7 +65,7 @@ static void dofile(filename) char *filename;
 
   cp = (unsigned char *)BIT_DATA(map);
   endp = cp + bit_size(BIT_WIDE(map),BIT_HIGH(map),BIT_DEPTH(map));
-  printf("char %s_data[%d] = {\n\t", name, endp - cp);
+  printf("char %s_data[%lu] = {\n\t", name, endp - cp);
   for (i=1; cp<endp; cp++,i++)
     printf("0%03o%s", *cp, i%10 ? ", " : ",\n\t");
   printf("\n\t};\n");
