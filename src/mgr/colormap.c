@@ -1,6 +1,6 @@
 /* routines for allocating/freeing colors for use in windows */
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <mgr/bitblit.h>
 #include "defs.h"
 #include "colormap.h"
