@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <mgr/mgr.h>
+#include "screen.h"
 /*}}}  */
 
 /*{{{  bitmapwrite*/

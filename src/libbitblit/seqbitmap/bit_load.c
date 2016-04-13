@@ -2,7 +2,9 @@
 /*{{{  #includes*/
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <mgr/mgr.h>
+#include "screen.h"
 /*}}}  */
 
 /*{{{  bit_load*/
