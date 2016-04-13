@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: bitmap.h,v 4.3 88/07/19 14:20:06 sau Exp $
-	$Source: /tmp/mgrsrc/src/pixrect/RCS/bitmap.h,v $
-*/
-static char	h_sundep_[] = "$Source: /tmp/mgrsrc/src/pixrect/RCS/bitmap.h,v $$Revision: 4.3 $";
 
 /* map generic bit-blit library calls to sun pixrect */
 

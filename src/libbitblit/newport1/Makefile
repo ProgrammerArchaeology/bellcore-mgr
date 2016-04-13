@@ -5,9 +5,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: Makefile,v 1.2 89/05/23 08:33:45 sau Exp $
-#	$Source: /mnt/sau/bitblt/DEC/RCS/Makefile,v $
-
 #	makefile for portable blit library (S. A. Uhler)
 
 #	Compile flags

@@ -9,10 +9,6 @@
  * John R. MacMillan
  */
 
-#ifndef lint
-char	*SCCSid = "@(#)ft2fnt.c	1.1	90/03/20";
-#endif
-
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>

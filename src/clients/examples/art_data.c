@@ -5,9 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: art_data.c,v 4.2 88/06/22 14:37:09 bianchi Exp $
-	$Source: /tmp/mgrsrc/demo/misc/RCS/art_data.c,v $
-*/
 
 /*	stringart.c	13	84/04/22	*/
 

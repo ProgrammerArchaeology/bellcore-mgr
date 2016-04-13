@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/dviclass.c,v 1.3 89/02/13 14:30:57 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * dviclass - DVI code classification tables.
  */

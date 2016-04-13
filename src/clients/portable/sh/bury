@@ -6,9 +6,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: bury,v 4.1 88/06/21 14:01:28 bianchi Exp $
-#	$Source: /tmp/mgrsrc/demo/sh/RCS/bury,v $
-
 #	bury the window
 
 BURY="8s"

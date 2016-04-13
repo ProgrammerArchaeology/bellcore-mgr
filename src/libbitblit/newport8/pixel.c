@@ -5,7 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-static char	RCSid_[] = "$Source: /home/sau/mgr/nsrc/port8/RCS/pixel8.c,v $$Revision: 1.3 $";
 
 #include <stdio.h>		/* debugging only */
 #include "bitmap.h"

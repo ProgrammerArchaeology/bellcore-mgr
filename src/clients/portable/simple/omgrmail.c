@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: omgrmail.c,v 4.2 88/06/22 14:37:57 bianchi Exp $
-	$Source: /tmp/mgrsrc/demo/misc/RCS/omgrmail.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/misc/RCS/omgrmail.c,v $$Revision: 4.2 $";
 
 /* check for new mail */
 

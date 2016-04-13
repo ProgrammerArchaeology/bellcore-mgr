@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: mgrplot.c,v 4.1 88/06/21 14:03:12 bianchi Exp $
-	$Source: /tmp/mgrsrc/demo/plot/RCS/mgrplot.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/plot/RCS/mgrplot.c,v $$Revision: 4.1 $";
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: /files/src/linuxmgr/src/libbitblit/dec3100/RCS/line.c,v 4.3 1994/01/28 21:01:44 broman Rel $
-	$Source: /files/src/linuxmgr/src/libbitblit/dec3100/RCS/line.c,v $
-*/
-static char	RCSid_[] = "$Source: /files/src/linuxmgr/src/libbitblit/dec3100/RCS/line.c,v $$Revision: 4.3 $";
 
 #include "bitmap.h"
 

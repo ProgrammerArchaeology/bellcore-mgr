@@ -1,8 +1,3 @@
-/*	$Header: do.h,v 4.1 88/06/21 14:02:42 bianchi Exp $
-	$Source: /tmp/mgrsrc/demo/msg/RCS/do.h,v $
-*/
-static char	h_do_[] = "$Source: /tmp/mgrsrc/demo/msg/RCS/do.h,v $$Revision: 4.1 $";
-
 /*                        Copyright (c) 1987 Bellcore
  *                            All Rights Reserved
  *       Permission is granted to copy or use this program, EXCEPT that it

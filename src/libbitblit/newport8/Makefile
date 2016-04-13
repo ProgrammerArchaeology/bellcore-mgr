@@ -5,9 +5,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: /home/sau/mgr/nsrc/port8/RCS/Makefile,v 1.2 91/03/01 11:55:15 sau Exp Locker: sau $
-#	$Source: /home/sau/mgr/nsrc/port8/RCS/Makefile,v $
-
 #	makefile for portable blit library (S. A. Uhler)
 
 #	Compile flags

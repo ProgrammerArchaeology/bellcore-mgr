@@ -5,9 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: bitmap.h,v 4.2 88/07/19 14:19:23 sau Exp $
-	$Source: /tmp/mgrsrc/src/oblit/RCS/bitmap.h,v $
-*/
 
 /* header file for SUN version of portable bitblit code (S. A. Uhler) */
 

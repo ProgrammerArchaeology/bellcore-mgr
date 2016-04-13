@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: close.c,v 4.6 88/08/08 09:43:38 sau Exp $
-	$Source: /tmp/mgrsrc/demo/misc/RCS/close.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/misc/RCS/close.c,v $$Revision: 4.6 $";
 
 /* close a window  - keep icon uncovered */
 

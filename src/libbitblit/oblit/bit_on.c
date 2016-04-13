@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: /files/src/linuxmgr/src/libbitblit/oblit/RCS/bit_on.c,v 4.3 1994/01/28 20:59:34 broman Stab $
-	$Source: /files/src/linuxmgr/src/libbitblit/oblit/RCS/bit_on.c,v $
-*/
-static char	RCSid_[] = "$Source: /files/src/linuxmgr/src/libbitblit/oblit/RCS/bit_on.c,v $$Revision: 4.3 $";
 
 #include "bitmap.h"
 

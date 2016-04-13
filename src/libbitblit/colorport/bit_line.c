@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: /files/src/linuxmgr/src/libbitblit/colorport/RCS/bit_line.c,v 4.12 1994/11/17 23:27:05 broman Rel $
-	$Source: /files/src/linuxmgr/src/libbitblit/colorport/RCS/bit_line.c,v $
-*/
-static char	RCSid_[] = "$Source: /files/src/linuxmgr/src/libbitblit/colorport/RCS/bit_line.c,v $$Revision: 4.12 $";
 
 #include <stdio.h>		/* debugging only */
 #include "screen.h"

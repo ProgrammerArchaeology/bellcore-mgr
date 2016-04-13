@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: /home/sau/mgr/nsrc/port8/RCS/line8.c,v 1.3 91/03/01 11:55:16 sau Exp Locker: sau $
-	$Source: /home/sau/mgr/nsrc/port8/RCS/line8.c,v $
-*/
-static char	RCSid_[] = "$Source: /home/sau/mgr/nsrc/port8/RCS/line8.c,v $$Revision: 1.3 $";
 
 #include <stdio.h>		/* debugging only */
 #include "bitmap.h"

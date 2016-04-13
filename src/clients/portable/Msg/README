@@ -5,9 +5,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: README,v 1.2 88/08/29 13:23:05 sau Exp $
-#	$Source: /tmp/mgrsrc/demo/msg/RCS/README,v $
-
 This directory contains a sample client-server system.  It uses menus
 to traverse the file system, and servers to do things to selected files.
 

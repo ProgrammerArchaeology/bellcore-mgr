@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: hash.h,v 1.1 88/07/07 10:12:10 sau Exp $
-	$Source: /tmp/mgrsrc/doc/usrman/croff/RCS/hash.h,v $
-*/
-static char	h_hash_[] = "$Source: /tmp/mgrsrc/doc/usrman/croff/RCS/hash.h,v $$Revision: 1.1 $";
 
 /* hash table item */
 

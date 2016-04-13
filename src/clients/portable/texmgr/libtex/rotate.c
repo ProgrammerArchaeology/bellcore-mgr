@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/rotate.c,v 1.4 89/02/13 14:31:18 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * Routines to generate rotated bitmaps given unrotated inputs.
  *

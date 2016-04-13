@@ -6,9 +6,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: square,v 4.1 88/06/21 14:01:40 bianchi Exp $
-#	$Source: /tmp/mgrsrc/demo/sh/RCS/square,v $
-
 # square a window 
 
 ESC=""

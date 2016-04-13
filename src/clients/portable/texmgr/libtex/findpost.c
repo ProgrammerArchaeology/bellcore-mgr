@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/findpost.c,v 1.4 89/02/13 14:31:00 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * FindPostAmble - Find the postamble of a DVI file.
  *

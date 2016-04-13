@@ -9,11 +9,6 @@
 /* version 2 - eliminate trailing white space */
 /* version 3 - rotate fat pictures */
 
-/*	$Header: tjfilter.c,v 1.3 88/08/24 10:36:59 bianchi Exp $
-	$Source: /tmp/mgrsrc/misc/RCS/tjfilter.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/misc/RCS/tjfilter.c,v $$Revision: 1.3 $";
-
 #include <stdio.h>
 #include "dump.h"
 #include <sgtty.h>

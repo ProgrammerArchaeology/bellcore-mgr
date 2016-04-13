@@ -1,8 +1,3 @@
-#ifndef lint
-static char rcsid[] =
-    "@(#) $Header: dtime.c,v 1.3 88/08/26 22:29:38 jef Exp $ (LBL)";
-#endif
-
 /*
 ** Copyright (C) 1988 by Jef Poskanzer.
 **

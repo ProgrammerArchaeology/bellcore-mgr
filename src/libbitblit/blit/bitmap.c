@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: bitmap.c,v 4.2 88/07/07 09:04:29 sau Exp $
-	$Source: /tmp/mgrsrc/src/blit/RCS/bitmap.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/src/blit/RCS/bitmap.c,v $$Revision: 4.2 $";
 
 /*  SUN-2  and SUN-3 bitblit code */
 

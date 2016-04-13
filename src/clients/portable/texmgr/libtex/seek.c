@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/seek.c,v 1.3 89/02/13 14:31:23 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * Seekable is a predicate which returns true iff a Unix fd is seekable.
  *

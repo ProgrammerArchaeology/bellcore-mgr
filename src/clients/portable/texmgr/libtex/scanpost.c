@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/scanpost.c,v 1.3 89/02/13 14:31:20 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * ScanPostAmble - read a DVI postamble.
  */

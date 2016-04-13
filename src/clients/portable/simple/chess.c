@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: chess.c,v 1.1 88/07/22 09:11:20 sau Exp $
-	$Source: /fs/16/21272/bianchi/src/nmgr/demo/icon/RCS/chess.c,v $
-*/
-static char	RCSid_[] = "$Source: /fs/16/21272/bianchi/src/nmgr/demo/icon/RCS/chess.c,v $$Revision: 1.1 $";
 
 /* MGR interface to /usr/games/chess by S. D. Hawley */
 

@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/search.c,v 1.4 89/02/13 14:31:21 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * Key search routines (for a 32 bit key)
  *

@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/conv.c,v 1.3 89/02/13 14:30:55 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * Conversions.
  */

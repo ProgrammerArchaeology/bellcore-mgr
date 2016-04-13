@@ -5,9 +5,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: README,v 4.1 88/06/21 13:14:24 bianchi Exp $
-#	$Source: /tmp/mgrsrc/src/blit/RCS/README,v $
-
 This is the 68020 bit-blit code using bit field instructions.  The 3
 source files are:
 

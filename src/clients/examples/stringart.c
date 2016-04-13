@@ -5,9 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: stringart.c,v 4.3 88/06/30 11:41:47 sau Exp $
-	$Source: /tmp/mgrsrc/demo/misc/RCS/stringart.c,v $
-*/
 
 /*	stringart.c	13	84/04/22	*/
 

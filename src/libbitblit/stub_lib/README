@@ -5,9 +5,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: /files/src/linuxmgr/src/libbitblit/stub_lib/RCS/README,v 4.4 1994/01/28 21:39:20 broman Stab $
-#	$Source: /files/src/linuxmgr/src/libbitblit/stub_lib/RCS/README,v $
-
 generic bitblit code stub
 
 * mem_rop(dst,x_dst,y_dst,w,h,op,src,x_src,y_src) /* bit-blt (clipped) */

@@ -1,8 +1,3 @@
-#ifndef lint
-static char rcsid[] =
-    "@(#) $Header: bigcheapmoon.c,v 1.6 88/08/26 22:29:18 jef Exp $ (LBL)";
-#endif
-
 /*
 ** Copyright (C) 1988 by Jef Poskanzer and Craig Leres.
 **

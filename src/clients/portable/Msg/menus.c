@@ -8,11 +8,6 @@
 
 /* convert current directory into a heirarchy of menus */
 
-/*	$Header: menus.c,v 4.3 88/08/29 13:27:16 sau Exp $
-	$Source: /tmp/mgrsrc/demo/msg/RCS/menus.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/msg/RCS/menus.c,v $$Revision: 4.3 $";
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/dir.h>

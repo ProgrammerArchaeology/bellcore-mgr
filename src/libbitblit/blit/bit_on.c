@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: bit_on.c,v 4.2 88/07/20 14:16:57 sau Exp $
-	$Source: /tmp/mgrsrc/src/blit/RCS/bit_on.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/src/blit/RCS/bit_on.c,v $$Revision: 4.2 $";
 
 #include "bitmap.h"
 

@@ -22,8 +22,6 @@
  * terminal emulation, was discarded.
  */
 
-static char Version[] = "$Header: /usr/src/rmgr/RCS/rmgr.c,v 1.5 90/10/15 03:39:02 hyc Stable $";
-
 #include <stdio.h>
 #include <sgtty.h>
 #include <signal.h>

@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/font_subr.c,v 1.5 89/02/13 14:31:04 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * Subroutines common to all fonts.
  */

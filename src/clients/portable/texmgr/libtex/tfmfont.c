@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/tfmfont.c,v 1.5 89/02/13 14:31:27 grunwald Exp Locker: grunwald $";
-#endif
-
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>

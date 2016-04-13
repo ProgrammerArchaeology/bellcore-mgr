@@ -6,9 +6,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: color,v 1.1 88/07/07 14:39:11 sau Exp $
-#	$Source: /tmp/mgrsrc/demo/sh/RCS/color,v $
-
 # set colors - use "set_color" for clt
 
 ESC=""

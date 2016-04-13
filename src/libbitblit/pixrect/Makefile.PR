@@ -5,9 +5,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: Makefile,v 4.3 88/08/10 17:31:14 bianchi Exp $
-#	$Source: /tmp/mgrsrc/src/pixrect/RCS/Makefile,v $
-
 #	makefile for old (16 bit) bitblit code
 
 CFLAGS=-O

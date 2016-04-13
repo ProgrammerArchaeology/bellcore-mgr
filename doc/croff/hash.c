@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: hash.c,v 1.1 88/07/07 10:12:06 sau Exp $
-	$Source: /tmp/mgrsrc/doc/usrman/croff/RCS/hash.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/doc/usrman/croff/RCS/hash.c,v $$Revision: 1.1 $";
 
 /************************************************************************
  *

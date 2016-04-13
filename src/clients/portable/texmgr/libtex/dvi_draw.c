@@ -57,8 +57,6 @@
  * it's worth it.
  */
 
-static char *rcsid="$Header: /usr/local/src/Uiuctex/libtex/RCS/dvi_draw.c,v 1.3 88/02/19 17:00:34 grunwald Exp Locker: grunwald $" ;
-
 #include	<math.h>
 #include	<stdio.h>
 #include	<ctype.h>

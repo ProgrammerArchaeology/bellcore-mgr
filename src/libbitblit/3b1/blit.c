@@ -5,11 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*
-  	$Header:
-	$Source:
-*/
-static char	RCSid_[] = "$Source:";
 
 /* bitblit code template generator for portable bitblt code */
 

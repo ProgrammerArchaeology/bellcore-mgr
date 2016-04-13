@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: overlay.c,v 1.1 88/07/08 11:56:58 sau Exp $
-	$Source: /tmp/mgrsrc/demo/icon/RCS/overlay.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/demo/icon/RCS/overlay.c,v $$Revision: 1.1 $";
 
 /*	overlay		(S A Uhler)
  *

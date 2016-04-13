@@ -7,11 +7,6 @@
  */
 /* convert a mgr window dump to lasergrafix format version 4 */
 
-/*	$Header: lasergrafix.c,v 4.1 88/08/24 15:54:08 bianchi Exp $
-	$Source: /tmp/mgrsrc/misc/RCS/lasergrafix.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/misc/RCS/lasergrafix.c,v $$Revision: 4.1 $";
-
 #include <stdio.h>
 
 #define WIDE	(30*85)				/* pixels/page */

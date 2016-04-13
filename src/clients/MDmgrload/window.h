@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: window.h,v 4.2 88/08/12 07:41:26 sau Exp $
-	$Source: /tmp/mgrsrc/lib/RCS/window.h,v $
-*/
-static char	h_window_[] = "$Source: /tmp/mgrsrc/lib/RCS/window.h,v $$Revision: 4.2 $";
 
 /* defines for terminal emulator */
 

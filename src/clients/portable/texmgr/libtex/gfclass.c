@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/gfclass.c,v 1.3 89/02/13 14:31:07 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * gfclass - GF code classification tables.
  */

@@ -6,9 +6,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: cursor,v 1.1 88/08/12 07:44:06 sau Exp $
-#	$Source: /tmp/mgrsrc/demo/sh/RCS/cursor,v $
-
 #	set cursor style
 SET=h
 ESC=

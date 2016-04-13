@@ -7,39 +7,8 @@
  */
 /* Raster print filter for hp laser printer */
 
-/***********************************************************************
- * $Header: hp_raster.c,v 1.3 88/07/15 14:34:13 sau Exp $
- * $Locker:  $
- * $Source: /tmp/mgrsrc/misc/RCS/hp_raster.c,v $
- * $Log:	hp_raster.c,v $
- * Revision 1.3  88/07/15  14:34:13  sau
- * Add new bitmap format (handles both formats now )
- * 
- * Revision 1.1  88/07/15  14:32:21  sau
- * Initial revision
- * 
- * Revision 1.2  88/07/08  08:25:43  sau
- * 
- * 
- * Revision 1.1  88/07/08  08:16:57  sau
- * Initial revision
- * 
- * Revision 1.1  88/07/08  08:14:22  sau
- * Initial revision
- * 
- * Revision 1.5  87/07/14  20:10:40  sau
- * Eliminate training white space on a line by line basis
- * 
- * Revision 1.4  87/06/25  11:03:29  sau
- * Auto scaling, lpr version
- * 
- ***********************************************************************/
-
 /* avoid complaints from "lint" */
 
-#ifndef lint
-static char     RCS_Id[] = "$Header: hp_raster.c,v 1.3 88/07/15 14:34:13 sau Exp $";
-#endif
 #include <stdio.h>
 #include "dump.h"
 

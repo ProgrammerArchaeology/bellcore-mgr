@@ -5,9 +5,6 @@
 #       on copies, and credit should be given to Bellcore where it is due.
 #       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
 
-#	$Header: /files/src/linuxmgr/src/libbitblit/stub_lib/RCS/Makefile,v 4.3 1994/01/28 21:01:13 broman Stab $
-#	$Source: /files/src/linuxmgr/src/libbitblit/stub_lib/RCS/Makefile,v $
-
 #	makefile for stub blit library
 
 include ../../../Configfile

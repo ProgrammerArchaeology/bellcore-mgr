@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: /home1/Np/broman/RCS/bit_line.c,v 4.10 1994/01/31 19:58:44 broman Rel $
-	$Source: /home1/Np/broman/RCS/bit_line.c,v $
-*/
-static char	RCSid_[] = "$Source: /home1/Np/broman/RCS/bit_line.c,v $$Revision: 4.10 $";
 
 #include "screen.h"
 

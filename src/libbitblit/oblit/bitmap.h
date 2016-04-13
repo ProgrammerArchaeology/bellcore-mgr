@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: /files/src/linuxmgr/src/libbitblit/oblit/RCS/bitmap.h,v 4.3 1994/01/28 20:59:34 broman Stab $
-	$Source: /files/src/linuxmgr/src/libbitblit/oblit/RCS/bitmap.h,v $
-*/
-static char	h_bitmap_[] = "$Source: /files/src/linuxmgr/src/libbitblit/oblit/RCS/bitmap.h,v $$Revision: 4.3 $";
 
 /* header file for SUN bitmap operations */
 

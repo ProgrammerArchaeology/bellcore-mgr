@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/gripes.c,v 1.3 89/02/13 14:31:11 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * Common errors (`gripes').
  */

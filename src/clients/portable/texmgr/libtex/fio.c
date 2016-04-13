@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/fio.c,v 1.3 89/02/13 14:31:01 grunwald Exp Locker: grunwald $";
-#endif
-
 /*
  * File I/O subroutines for getting bytes, words, 3bytes, and longwords.
  */

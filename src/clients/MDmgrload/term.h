@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: term.h,v 4.6 88/08/18 10:17:05 sau Exp $
-	$Source: /tmp/mgrsrc/lib/RCS/term.h,v $
-*/
-static char	h_term_[] = "$Source: /tmp/mgrsrc/lib/RCS/term.h,v $$Revision: 4.6 $";
 
 /* macros for writing to mgr terminal emulator */
 

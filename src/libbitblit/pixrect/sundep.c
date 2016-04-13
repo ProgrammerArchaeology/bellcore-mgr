@@ -5,10 +5,6 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: sundep.c,v 4.2 88/08/10 17:31:31 bianchi Exp $
-	$Source: /tmp/mgrsrc/src/pixrect/RCS/sundep.c,v $
-*/
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/src/pixrect/RCS/sundep.c,v $$Revision: 4.2 $";
 
 /*	this is missing from pixrect, and it must be a function */
 

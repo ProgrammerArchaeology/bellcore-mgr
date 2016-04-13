@@ -27,10 +27,6 @@
  * 	chris@cs.umd.edu
  */ 
 
-#ifndef lint
-static char rcsid[] = "$Header: /home/reed/grunwald/Projects/Iptex/lib/RCS/scaletfm.c,v 1.3 89/02/13 14:31:19 grunwald Exp Locker: grunwald $";
-#endif
-
 #include "types.h"
 #include "font.h"
 #include "proto.h"

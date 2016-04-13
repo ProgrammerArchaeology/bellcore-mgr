@@ -7,10 +7,6 @@
  */
 /*                        Copyright (c) 1987,1989, 1990 Bellcore
  */
-/*	$Header: /home/sau/mgr/nsrc/port8/RCS/bitmap.h,v 1.2 91/03/01 11:55:12 sau Exp Locker: sau $
-	$Source: /home/sau/mgr/nsrc/port8/RCS/bitmap.h,v $
-*/
-static char	h_bitmap_[] = "$Source: /home/sau/mgr/nsrc/port8/RCS/bitmap.h,v $$Revision: 1.2 $";
 
 /* header file for SUN 8-bit version of portable bitblit code (S. A. Uhler) */
 

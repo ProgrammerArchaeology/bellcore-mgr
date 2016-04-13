@@ -1,8 +1,3 @@
-#ifndef lint
-static char rcsid[] =
-    "@(#) $Header: phase.c,v 1.2 88/08/26 22:29:42 jef Exp $ (LBL)";
-#endif
-
 /* phase.c - routines to calculate the phase of the moon
 **
 ** Adapted from "moontool.c" by John Walker, Release 2.0.

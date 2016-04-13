@@ -6,11 +6,7 @@
         may not be sold for profit, the copyright notice must be reproduced
         on copies, and credit should be given to Bellcore where it is due.
         BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
-
-	$Header: croff.l,v 1.2 88/07/07 10:17:25 sau Exp $
-	$Source: /tmp/mgrsrc/doc/usrman/croff/RCS/croff.l,v $
 */
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/doc/usrman/croff/RCS/croff.l,v $$Revision: 1.2 $";
 
 /* is this lex abuse? */
 
