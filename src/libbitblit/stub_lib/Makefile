@@ -9,7 +9,7 @@
 
 include ../../../Configfile
 
-CFLAGS=-O  -I..
+CFLAGS=		$(CCFLAGS) $(CPPFLAGS) -I..
 
 CFILES= blit.c line.c pixel.c bitmap.c bit_size.c
 OBJS= blit.o line.o pixel.o bitmap.o bit_size.o
