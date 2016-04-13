@@ -11,6 +11,7 @@
 /*}}}  */
 /*{{{  #includes*/
 #include <stdlib.h>
+#include <string.h>
 #include <mgr/mgr.h>
 
 /*}}}  */

@@ -3,6 +3,7 @@
 #include <mgr/mgr.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <string.h>
 /*}}}  */
 
 /*{{{  m_getfontname*/

@@ -12,6 +12,7 @@
 /*{{{  #includes*/
 #include <mgr/mgr.h>
 #include <stdio.h>
+#include <string.h>
 /*}}}  */
 
 /*{{{  m_bitfile*/
