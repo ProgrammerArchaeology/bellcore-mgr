@@ -11,9 +11,9 @@
 This is the 68020 bit-blit code using bit field instructions.  The 3
 source files are:
 
-* blit.C		for bit-blts
-* line.C		for lines
-* pixel.C	for bliting 'points'
+* blit.tc		for bit-blts
+* line.tc		for lines
+* pixel.tc	for bliting 'points'
 
 Strategy:
 This is an attempt to build *fast* 68020 specific bit-blit code in an

@@ -23,7 +23,7 @@ CPP=/lib/cpp -P -C
 
 #	generic routines
 GENERICOBJS= blit.o line.o pixel.o bitmap.o
-GENERICSRCS= blit.C line.c pixel.c bitmap.c
+GENERICSRCS= blit.tc line.c pixel.c bitmap.c
 
 # device dependent routines for memory only versions
 DEVOBJS= generic.o
@@ -42,7 +42,7 @@ OTHER= Semantics README Makefile bitmap.h
 LIBOBJS= $(GENERICOBJS) $(DEVOBJS)
 
 
-#  Blit.C contains the templates for building the bitblt code.  It is
+#  Blit.tc contains the templates for building the bitblt code.  It is
 #  run through cpp twice, once to expand the templates, again as part of
 #  the normal compilation process.  The expansion level picks the amount
 #  of macro expansion that is done in the 1st cpp pass, to aid in debugging
@@ -76,8 +76,8 @@ test_shrink:		test_shrink.o  blitlib.a
 test_rop:		test_rop.o bitmap.o blit.o
 					$(CC) $(CFLAGS) -o test_rop test_rop.o blit.o bitmap.o
 
-blit.c:		blit.C
-				< blit.C sed "s/^[$(PASS1)]/#/" | \
+blit.c:		blit.tc
+				< blit.tc sed "s/^[$(PASS1)]/#/" | \
 					$(CPP) | \
 					sed 's/^[1-9%]/#/' | \
 					$(INDENT) | \

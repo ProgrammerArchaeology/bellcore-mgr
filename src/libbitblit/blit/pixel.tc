@@ -5,10 +5,10 @@
  *       on copies, and credit should be given to Bellcore where it is due.
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
-/*	$Header: pixel.C,v 4.2 88/06/30 11:39:58 sau Exp $
-	$Source: /tmp/mgrsrc/src/blit/RCS/pixel.C,v $
+/*	$Header: pixel.tc,v 4.2 88/06/30 11:39:58 sau Exp $
+	$Source: /tmp/mgrsrc/src/blit/RCS/pixel.tc,v $
 */
-static char	RCSid_[] = "$Source: /tmp/mgrsrc/src/blit/RCS/pixel.C,v $$Revision: 4.2 $";
+static char	RCSid_[] = "$Source: /tmp/mgrsrc/src/blit/RCS/pixel.tc,v $$Revision: 4.2 $";
 
 /* set/clear/ or invert a pixel */
 

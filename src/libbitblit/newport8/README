@@ -7,7 +7,7 @@ READMES       This file
 Semantics     Description of BitBlt semantics
 bitmap.c      Generic machine independent BitBlit operations
 bitmap.h      BitBlt definitions
-blit.C        Color and mono bitblt templates
+blit.tc       Color and mono bitblt templates
 generic.c     device dependent bitblit code templates
 line.c        Breshenham line drawing code
 pixel.c       single poit bitblts

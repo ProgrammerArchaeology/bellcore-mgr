@@ -31,8 +31,8 @@ test_randops:	test_randops.o bit_blit.o mem_rop.o
 test_rop:	test_rop.o bit_blit.o mem_rop.o
 		$(CC) $(CFLAGS) -o test_rop test_rop.o mem_rop.o bit_blit.o
                 
-mem_rop.c:	mem_rop.C
-		sed "s/^[$(BLITLIBOPT)]/#/" < mem_rop.C > tmp_mem_rop.c
+mem_rop.c:	mem_rop.tc
+		sed "s/^[$(BLITLIBOPT)]/#/" < mem_rop.tc > tmp_mem_rop.c
 		$(CPP) -P tmp_mem_rop.c | sed 's/^[1-9%]/#/' > mem_rop.c
 		$(RMF) tmp_mem_rop.c
 

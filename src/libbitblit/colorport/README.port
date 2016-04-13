@@ -16,7 +16,7 @@ bit_point.c   blit single pixels
 bit_size.c    calculate storage for BITMAP data
 colors.c      color calculations
 colors.h
-mem_rop.C     lower level imp of blit op
+mem_rop.tc    lower level imp of blit op
 s3            headers for some S3 cards
 sun.c         sun-dependent initialization/finalization
 sun.h

@@ -14,7 +14,7 @@ START=.
 OPTIONS= -DINVERT -DUNROLL
 CFLAGS= -I.  $(OPTIONS)
 CPP=/lib/cpp -P -C $(OPTIONS)
-CFILES= blit.C bitmap.c line.c pixel.c
+CFILES= blit.tc bitmap.c line.c pixel.c
 HFILES= bitmap.h
 
 #	The template expansion level is specified here for building blit.c
@@ -36,8 +36,8 @@ blitlib.a:	blit.o bitmap.o line.o pixel.o
 				ar rv blitlib.a blit.o bitmap.o line.o pixel.o
 				ranlib blitlib.a
 
-blit.c:		blit.C
-				< blit.C sed "s/^[$(PASS1)]/#/" | \
+blit.c:		blit.tc
+				< blit.tc sed "s/^[$(PASS1)]/#/" | \
 					$(CPP) | \
 					sed 's/^[1-9%]/#/' | \
 					$(INDENT) | \

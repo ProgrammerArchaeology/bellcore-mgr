@@ -54,8 +54,8 @@ shrink_map:		shrink_map.o
 test_rop:		test_rop.o bitmap.o blit.o
 					$(CC) $(CFLAGS) -o test_rop test_rop.o blit.o bitmap.o
 
-blit.c:		blit.C
-				< blit.C sed "s/^[$(PASS1)]/#/" | \
+blit.c:		blit.tc
+				< blit.tc sed "s/^[$(PASS1)]/#/" | \
 					$(CPP) | \
 					sed 's/^[1-9%]/#/' | \
 					$(INDENT) | \
@@ -65,7 +65,7 @@ blit.c:		blit.C
 bitmap.o blit.o line.o pixel.o:	bitmap.h
 
 list:
-	@for i in blit.C bitmap.h bitmap.c rops.c test_rop.c Makefile line.c \
+	@for i in blit.tc bitmap.h bitmap.c rops.c test_rop.c Makefile line.c \
 			 pixel.c share.h share.c timestamp.c README \
 			 ; do \
 		echo "${START}/$$i"; \

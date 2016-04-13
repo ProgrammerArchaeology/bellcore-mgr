@@ -10,7 +10,7 @@
 
 #		sun version of "portable assembler" bitblit stuff
 
-.SUFFIXES:	.C
+.SUFFIXES:	.tc
 
 SYMFLAGS=
 
@@ -23,7 +23,7 @@ CFLAGS= $(FLAG) -DALIGN32
 START= .
 HFILES= asm.h hash.h m4.h bitmap.h
 CFILES= bitmap.c bit_on.c hash.c sym.c
-CCFILES= blit.C line.C pixel.C 
+TCFILES= blit.tc line.tc pixel.tc
 COFILES= blit.c line.c pixel.c
 OFILES= bit_on.o bitmap.o blit.o line.o pixel.o 
 LIB= blitlib.a
@@ -82,8 +82,8 @@ blit.S:	blit.c bitmap.h
 			cc -g -S blit.c
 			mv blit.s blit.S
 
-blit.c:	blit.C asm.h m4.h
-			m4 m4.h blit.C >blit.c
+blit.c:	blit.tc asm.h m4.h
+			m4 m4.h blit.tc >blit.c
 
 pixel.so:	pixel.sg
 #  doesn't work!	/lib/c2 -20 <pixel.sg >pixel.so
@@ -100,8 +100,8 @@ pixel.S:	pixel.c bitmap.h
 			cc -g -S pixel.c
 			mv pixel.s pixel.S
 
-pixel.c:	pixel.C asm.h m4.h
-			m4 m4.h pixel.C >pixel.c
+pixel.c:	pixel.tc asm.h m4.h
+			m4 m4.h pixel.tc >pixel.c
 
 
 line.so:	line.sg
@@ -122,14 +122,14 @@ line.S:	line.c bitmap.h
 			cc -g -S line.c
 			mv line.s line.S
 
-line.c:	line.C asm.h m4.h
-			m4 m4.h line.C >line.c
+line.c:	line.tc asm.h m4.h
+			m4 m4.h line.tc >line.c
 
 
 $(OFILES):	bitmap.h
 
 list:
-	@for i in ${HFILES} ${CCFILES} ${CFILES} ${OTHER}; do \
+	@for i in ${HFILES} ${TCFILES} ${CFILES} ${OTHER}; do \
 		echo "${START}/$$i"; \
 	done	
 
