@@ -1,9 +1,9 @@
 include ../../Configfile
 
-_CPPFLAGS=	$(CPPFLAGS) $(LIBMGRFLAGS) -DHFONTDIR=\"$(HFONTDIR)\"
+_CPPFLAGS=	$(CPPFLAGS) -DHFONTDIR=\"$(HFONTDIR)\"
 CFLAGS=		$(CCFLAGS) $(_CPPFLAGS)
 OBJS=		ckmgrterm.o is_mgr_term.o m_setup.o m_tty.o m_bitfile.o term.o hfont.o \
-		usleep.o m_getborder.o m_gethost.o m_getscreen.o m_getfontn.o \
+		m_getborder.o m_gethost.o m_getscreen.o m_getfontn.o \
 		m_getfonts.o m_getwindows.o m_getwindowp.o m_getfontid.o \
 		m_bitc_send.o m_getdepth.o m_getevent.o \
 		m_getpalette.o m_localsrv.o m_parse.o oldinfo.o
