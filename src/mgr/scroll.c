@@ -39,7 +39,7 @@ int start,end,delta,op;	/* starting line, ending line, # of lines */
                      BIT_WIDE(map) + W(borderwid), end-start, delta);
             }
          else
-#endif MGR_ALIGN
+#endif /* MGR_ALIGN */
             bit_blit(map,0,start,BIT_WIDE(map),ems-delta,BIT_SRC,map,0,start+delta);
       bit_blit(map,0,end-delta,BIT_WIDE(map),delta,op,0,0,0);
       }

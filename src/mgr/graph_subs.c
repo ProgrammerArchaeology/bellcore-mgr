@@ -12,6 +12,7 @@
 /*}}}  */
 
 /*{{{  #includes*/
+#include <stdlib.h>
 #include <mgr/bitblit.h>
 /*}}}  */
 /*{{{  #defines*/

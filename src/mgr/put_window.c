@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/ioctl.h>
 
 #include <mgr/bitblit.h>
