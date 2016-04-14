@@ -29,10 +29,6 @@ int no_troff = 0;	/* dont xlate \ etc */
 int no_lig = 0;		/* on't emit troff ligatures (brain damaged imagen) */
 int debug = 0;		/* do debugging */
 
-#ifndef yywrap
-#define yywrap() 1
-#endif
-
 %}
 
 %START start comment quote
@@ -138,6 +134,7 @@ K	[a-zA-Z_][a-zA-Z0-9_]*
 #define GET_OPT(i)	\
 	strlen(argv[i])>2 ? argv[i]+2 : argv[++i]
 
+int
 main(argc,argv)
 int argc;
 char **argv;
@@ -158,7 +155,7 @@ char **argv;
    ps = "\\fB";		/* cpp decl's in bold */
    pe = "";
 
-   debug = getenv("DEBUG");
+   debug = getenv("DEBUG") != NULL;
 
    /* get arguments */
 
@@ -225,4 +222,7 @@ char **argv;
             }
       }
    yylex();
+   return 0;
    }
+
+int yywrap(void) { return 1; }

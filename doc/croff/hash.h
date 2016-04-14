@@ -35,3 +35,9 @@ typedef struct table_entry  TABLE;
 #ifndef HASH
 #   define HASH	hash			/* name of hash routine */
 #endif
+
+extern int add_entry(struct table_entry *table[], int size, char *name);
+extern int dlt_entry(struct table_entry *table[], int size, char *name);
+extern char *get_entry(struct table_entry *table[], int size, char *name);
+extern int is_entry(struct table_entry *table[], int size, char *name);
+extern int put_entry(struct table_entry *table[], int size, char *name, char *value);

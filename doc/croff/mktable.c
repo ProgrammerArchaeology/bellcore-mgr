@@ -14,6 +14,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 #include <unistd.h>
 
 #include "hash.h"
@@ -24,6 +26,7 @@
 char key[80];
 char value[80];
 
+int
 main(argc,argv)
 int argc;
 char **argv;

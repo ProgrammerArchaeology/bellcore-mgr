@@ -15,6 +15,11 @@
 
 #include "hash.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+char * save_line(char *string);
+char * alloc(int bytes);
 
 /*******************************************************************************
  * Generate a hash table index from an arbitrary length string
@@ -58,7 +63,7 @@ struct table_entry *table[];	/* name of hash table */
 int size;			/* number of table entries */
 char *name;			/* name to be put in table */
 	{
-	int HASH(), index;
+	int index;
 	char *alloc(), *save_line();
 	register TABLE *list;
 
@@ -87,8 +92,7 @@ struct table_entry *table[];	/* pntr to hash table */
 int size;			/* size of hash table */
 char *name;			/* name to be put in table */
 	{
-	int HASH(), index;
-	void free();
+	int index;
 	register struct table_entry *list, *temp= (struct table_entry *) 0;
 	index=HASH(name,size);
 	for(list=table[index]; list != (TABLE *) 0; temp=list,list = list->next)
@@ -124,7 +128,7 @@ struct table_entry *table[];
 int size;
 char *name;			/* name to be put in table */
 	{
-	int HASH(), index;
+	int index;
 	register struct table_entry *list;
 
 	index=HASH(name,size);
@@ -145,7 +149,7 @@ struct table_entry *table[];
 int size;
 char *name;			/* name to be put in table */
 	{
-	int HASH(), index;
+	int index;
 	register struct table_entry *list;
 
 	index=HASH(name,size);
@@ -167,10 +171,8 @@ int size;			/* number of table entries */
 char *name;			/* name to be put in table */
 char *value;			/* value to be put into table */
 	{
-	int HASH(), index;
+	int index;
 	register struct table_entry *list;
-        char *save_line();
-	void free();
 
 	index=HASH(name,size);
 	for(list=table[index]; list != (TABLE *) 0; list = list -> next)
@@ -192,7 +194,7 @@ char *
 save_line(string)
 char *string;
    {
-   char *where,*alloc(),*strcpy();
+   char *where;
 
    if (string == (char *) 0) string = "";
    where=alloc(strlen(string)+1);
@@ -209,8 +211,7 @@ char *
 alloc(bytes)
 int bytes;
   {
-  char *malloc(),*where;
-  void exit();
+  char *where;
 
   if ((where=malloc((unsigned)bytes)) == NULL) {
      fprintf(stderr,"no room for %d bytes\n",bytes);
