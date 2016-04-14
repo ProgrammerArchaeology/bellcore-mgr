@@ -19,8 +19,7 @@
 Now this is a typical "portable-unix-mess".  On SunOS, everybody can
 redirect console to everything, as long as you can open it.  On Linux
 you need (e)uid 0 and before redirecting to another pty, first you have
-to redirect back to /dev/console.  Coherent does not know redirection
-without a custom console driver.  ARGH!!
+to redirect back to /dev/console.
 
 */
 /*}}}  */

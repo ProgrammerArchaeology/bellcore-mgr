@@ -29,9 +29,7 @@ fi
 #{{{  ask OS
 echo "1) Linux 0.99.14+"
 echo "2) SunOS 4.1.2+"
-echo "3) HP-UX 8.07"
-echo "4) Coherent 4.0.[01]*"
-echo "5) FreeBSD 2.0"
+echo "3) FreeBSD 2.0"
 echo
 echo -n "What OS do you use? "
 read OS
@@ -39,7 +37,7 @@ echo
 #}}}
 case $OS in
 #  {{{  linux
-  [15])
+  [13])
   M4=m4
   case $OS in
     1) OSNAME="linux" ;;
@@ -152,60 +150,6 @@ case $OS in
   esac
   ;;
 #  }}}
-#  {{{  hp-ux
-  3)
-  M4=m4
-  M4FLAGS="$M4FLAGS -Dhpux" ;;
-#  }}}
-#  {{{  coherent
-  4)
-  M4=m4
-  M4FLAGS="$M4FLAGS -Dcoherent"
-#  {{{  graphics card
-  echo "1) Hercules graphics card"
-  echo "2) VGA 640x480"
-  echo "3) SVGA 800x600"
-  echo "4) SVGA 1024x768 (Trident SVGA only) - not tested"
-  echo
-  echo -n "What graphics card do you use? "
-  read CARD
-  echo
-  case $CARD in
-    1) M4FLAGS="$M4FLAGS -Dhgc" ;;
-    2) M4FLAGS="$M4FLAGS -Dhwvga" ;;
-    3) M4FLAGS="$M4FLAGS -Dsvga1" ;;
-    4) M4FLAGS="$M4FLAGS -Dsvga2" ;;
-    *) echo "Invalid answer, bye :("; exit 1 ;;
-  esac
-#  }}}
-#  {{{  mouse
-  echo "1) microsoft (2 button)"
-  echo "2) mousesystems (3 button)"
-  echo
-  echo -n "What mouse do you use? "
-  read MOUSE
-  echo
-  case $MOUSE in
-    1) M4FLAGS="$M4FLAGS -Dmicrosoft" ;;
-    2) M4FLAGS="$M4FLAGS -Dmousesystems" ;;
-    *) echo "Invalid answer, bye :("; exit 1 ;;
-  esac
-#  }}}
-#  {{{  movie mgr
-  echo "MOVIE MGR crashes the server, so only select it for debugging it."
-  echo
-  echo -n "Do you want to use MOVIE MGR (logging) functions? (y/n) "
-  read MOVIE
-  echo
-  case $MOVIE in
-    y) M4FLAGS="$M4FLAGS -Dmovie" ;;
-    n) ;;
-    *) echo "Invalid answer, bye :("; exit 1 ;;
-  esac
-#  }}}
-  ;;
-#  }}}
-#  {{{  *)
   *)
   echo "Invalid answer, bye :("; exit 1 ;;
 #  }}}

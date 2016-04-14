@@ -1,6 +1,6 @@
 include ../Configfile
 
-TARGETS=	libbitblit libmgr tools $(EMULIB) $(SERVER) clients
+TARGETS=	libbitblit libmgr tools $(SERVER) clients
 
 all:
 		for i in $(TARGETS) ; do (cd $$i; make all); done

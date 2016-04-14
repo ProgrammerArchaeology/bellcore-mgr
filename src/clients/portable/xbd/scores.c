@@ -57,11 +57,7 @@ add_score()
   next.score = score;
   next.slev = levelstart;
   next.elev = levelnum;
-#ifndef hpux
   sprintf(next.desc, "%s ", getenv("USER"));
-#else
-  sprintf(next.desc, "%s ", getenv("LOGNAME"));
-#endif
   cur = -1;
   /* Insert new score in old high score list */
   if (numscore < NUMHIGH || tops[NUMHIGH - 1].score < next.score)
