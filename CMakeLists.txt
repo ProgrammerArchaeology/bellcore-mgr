@@ -1,0 +1,32 @@
+PROJECT(mgr C)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
+
+# Enable Mac OS X @rpath handling
+CMAKE_POLICY(SET CMP0042 NEW)
+
+# This needs to be in the root CMakeLists.txt.
+ENABLE_TESTING()
+
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+
+OPTION(MGR_BUILD_DOCS "Build the GraphQL documentation." OFF)
+
+# clang doesn't print colored diagnostics when invoked from Ninja
+IF(UNIX AND
+   CMAKE_C_COMPILER_ID STREQUAL "Clang" AND
+   CMAKE_GENERATOR STREQUAL "Ninja")
+  SET(CMAKE_C_FLAGS "-fcolor-diagnostics ${CMAKE_C_FLAGS}")
+ENDIF()
+
+SET(MGR_VERSION_MAJOR 0)
+SET(MGR_VERSION_MINOR 1)
+SET(MGR_VERSION_PATCH 0)
+SET(MGR_VERSION "${MGR_VERSION_MAJOR}.${MGR_VERSION_MINOR}.${MGR_VERSION_PATCH}")
+
+ADD_SUBDIRECTORY(src)
+
+IF(MGR_BUILD_DOCS)
+  ADD_SUBDIRECTORY(docs)
+ENDIF()
+
+INCLUDE(${CMAKE_SOURCE_DIR}/cmake/PackagingConfig.cmake)

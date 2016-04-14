@@ -1,0 +1,11 @@
+INCLUDE(AddCCompilerFlag)
+
+ADD_C_COMPILER_FLAG(-Wall)
+ADD_C_COMPILER_FLAG(-fstrict-aliasing)
+ADD_C_COMPILER_FLAG(-Wstrict-aliasing)
+
+ADD_SUBDIRECTORY(libbitblit)
+ADD_SUBDIRECTORY(libmgr)
+ADD_SUBDIRECTORY(tools)
+ADD_SUBDIRECTORY(mgr)
+ADD_SUBDIRECTORY(clients)
