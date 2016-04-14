@@ -11,8 +11,8 @@ include ../../../Configfile
 
 CFLAGS=		$(CCFLAGS) $(CPPFLAGS) -I..
 
-CFILES= blit.c line.c pixel.c bitmap.c bit_size.c
-OBJS= blit.o line.o pixel.o bitmap.o bit_size.o
+CFILES= blit.c line.c pixel.c bitmap.c bit_size.c bit_blit.c bit_on.c palette.c screen.c
+OBJS= blit.o line.o pixel.o bitmap.o bit_size.o bit_blit.o bit_on.o palette.o screen.o
 HFILES= bitmap.h screen.h
 OTHER=Makefile README
 LIB=blitlib.a

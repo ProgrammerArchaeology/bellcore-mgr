@@ -47,32 +47,3 @@ BITMAP *bitmap;
    free(bitmap);
    return (0);
 }
-
-/* create a bitmap as a sub-rectangle of another bitmap */
-
-BITMAP *
-bit_create(map, x, y, wide, high)
-BITMAP *map;
-int x, y, wide, high;
-{
-   register BITMAP *result;
-
-   if (x + wide > map->wide)
-      wide = map->wide - x;
-   if (y + high > map->high)
-      high = map->high - y;
-   if (wide < 1 || high < 1)
-      return (BIT_NULL);
-
-   if ((result = (BITMAP *) malloc(sizeof(BITMAP))) == (BITMAP *) 0)
-      return (BIT_NULL);
-
-   result->data = map->data;
-   result->x0 = map->x0 + x;
-   result->y0 = map->y0 + y;
-   result->wide = wide;
-   result->high = high;
-   result->primary = map->primary;
-   result->type = map->type;
-   return (result);
-}

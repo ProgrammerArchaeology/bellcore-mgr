@@ -105,7 +105,6 @@ typedef struct bitmap {
 int mem_rop();
 int bit_destroy();
 int bit_line();
-BITMAP * bit_create();
 BITMAP * bit_alloc();
 BITMAP * bit_open();
 
