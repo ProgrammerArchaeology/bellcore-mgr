@@ -75,7 +75,7 @@ struct font *
 get_font(name)
 char *name;
    {
-   static count = 0;
+   static int count = 0;
    register struct list *ptr;
    register int found=0;
 

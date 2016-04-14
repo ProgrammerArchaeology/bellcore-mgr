@@ -12,7 +12,6 @@ Michael
 */
 /*}}}  */
 /*{{{  #includes*/
-#define _POSIX_SOURCE
 #include <termios.h>
 #include <sys/stat.h>
 #include <limits.h>
@@ -25,6 +24,7 @@ Michael
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
 #include <pwd.h>
 #include <netdb.h>
 #include <sysexits.h>

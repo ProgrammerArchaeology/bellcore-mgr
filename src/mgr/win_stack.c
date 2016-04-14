@@ -13,6 +13,7 @@
 /*{{{  #includes*/
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <mgr/bitblit.h>
 #include <mgr/font.h>

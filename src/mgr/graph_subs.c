@@ -29,8 +29,8 @@ static long resid(a,b,x,y) register int a,b,x,y;
    long result = 0;
    long u = b*((long)a*a - (long)x*x);
    long v = (long)a*y*y;
-   register q = u>BIG? HUGE/u: BIG;
-   register r = v>BIG? HUGE/v: BIG;
+   register int q = u>BIG? HUGE/u: BIG;
+   register int r = v>BIG? HUGE/v: BIG;
    while(a || b) {
       if(result>=0 && b) {
          if(q>b) q = b;
@@ -120,7 +120,7 @@ int *rx, *ry;
    {
    long eps, exy;   /*integers but many bits*/
    int d, dy;
-   register dx;
+   register int dx;
    eps = sq(x2) + sq(y2) - sq(x1) - sq(y1);
    d = eps>0? -1: 1;
    for( ; ; eps=exy, x2+=dx, y2+=dy) {
@@ -150,12 +150,12 @@ int x1;
 register int y1;
 int r, f;
 {
-   register err = 0;		/* x^2 + y^2 - r^2 */
-   register dxsq = 1;		/* (x+dx)^2-x^2*/
-   register dysq = 1 - 2*r;
-   register exy;
+   register int err = 0;		/* x^2 + y^2 - r^2 */
+   register int dxsq = 1;		/* (x+dx)^2-x^2*/
+   register int dysq = 1 - 2*r;
+   register int exy;
    int x0 = x1;
-   register y0 = y1 - r;
+   register int y0 = y1 - r;
 
    y1 += r;
    while(y1 > y0) {
@@ -212,8 +212,8 @@ void arc(bp, x0,y0, x2,y2, x1,y1, f)
 register BITMAP *bp;
 int x0,y0,x2,y2,x1,y1,f;
    {
-   register dx, dy;
-   register eps;   /* x^2 + y^2 - r^2 */
+   register int dx, dy;
+   register int eps;   /* x^2 + y^2 - r^2 */
    int dxsq, dysq;   /* (x+dx)^2-x^2, ...*/
    int ex, ey, exy;
 

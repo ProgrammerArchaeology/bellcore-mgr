@@ -222,7 +222,7 @@ register int x0,y0,wide,high;
 static int
 in_win(win,x0,y0,x1,y1)
 register WINDOW *win;
-register x0,y0,x1,y1;
+register int x0,y0,x1,y1;
    {
    return(
       W(x0) + BIT_WIDE(W(border)) <= x0 ||
