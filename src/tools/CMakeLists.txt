@@ -1,7 +1,5 @@
 PROJECT(bitmaptoc C)
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
-
 SET(bitmaptoc_SOURCES
     bitmaptoc.c
 )

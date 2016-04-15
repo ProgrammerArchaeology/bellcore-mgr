@@ -4,8 +4,6 @@ SET(MGR_BITBLIT_BACKEND "stub-backend" CACHE STRING "libbitblit backend renderer
 SET_PROPERTY(CACHE MGR_BITBLIT_BACKEND PROPERTY STRINGS stub-backend sdl-backend)
 MESSAGE(STATUS "bitblit-backend=${MGR_BITBLIT_BACKEND}")
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
-
 SET(bitblit_SOURCES
     bitmap/bit_alloc.c
     bitmap/bit_create.c
