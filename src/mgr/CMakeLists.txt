@@ -9,6 +9,16 @@ ADD_DEFINITIONS(-DMOUSE_DEV="fix-me")
 ADD_DEFINITIONS(-DSCREEN_DEV="fix-me")
 ADD_DEFINITIONS(-DTERMNAME="mgr")
 
+OPTION(MGR_ENABLE_BUCKEY "Keyboard operated 'mouse' commands." OFF)
+IF(MGR_ENABLE_BUCKEY)
+  ADD_DEFINITIONS(-DBUCKEY)
+ENDIF()
+
+OPTION(MGR_ENABLE_STRETCH "Mouse reshaping windows by stretching a corner." OFF)
+IF(MGR_ENABLE_STRETCH)
+  ADD_DEFINITIONS(-DSTRETCH)
+ENDIF()
+
 ADD_CUSTOM_COMMAND(
     OUTPUT default_font.h
     COMMAND fonttoc < ${DEFAULT_FONT} default_font > default_font.h
