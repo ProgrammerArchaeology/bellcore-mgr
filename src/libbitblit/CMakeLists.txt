@@ -1,7 +1,10 @@
 PROJECT(bitblit C)
 
+SET(MGR_BITBLIT_BACKEND "stub-backend" CACHE STRING "libbitblit backend renderer")
+SET_PROPERTY(CACHE MGR_BITBLIT_BACKEND PROPERTY STRINGS stub-backend sdl-backend)
+MESSAGE(STATUS "bitblit-backend=${MGR_BITBLIT_BACKEND}")
+
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/stub-backend)
 
 SET(bitblit_SOURCES
     bitmap/bit_alloc.c
@@ -14,21 +17,27 @@ SET(bitblit_SOURCES
     seqbitmap/bit_save.c
     seqbitmap/bitmapread.c
     seqbitmap/bitmapwrite.c
-    stub-backend/bit_blit.c
-    stub-backend/bit_on.c
-    stub-backend/bit_size.c
-    stub-backend/bitmap.c
-    stub-backend/blit.c
-    stub-backend/line.c
-    stub-backend/palette.c
-    stub-backend/pixel.c
-    stub-backend/screen.c
 )
 
 SET(bitblit_HEADERS
-    stub-backend/bitmap.h
-    stub-backend/screen.h
 )
+
+IF(MGR_BITBLIT_BACKEND MATCHES "stub-backend")
+  INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/stub-backend)
+  LIST(APPEND bitblit_SOURCES
+       stub-backend/bit_blit.c
+       stub-backend/bit_on.c
+       stub-backend/bit_size.c
+       stub-backend/bitmap.c
+       stub-backend/blit.c
+       stub-backend/line.c
+       stub-backend/palette.c
+       stub-backend/pixel.c
+       stub-backend/screen.c)
+  LIST(APPEND bitblit_HEADERS
+       stub-backend/bitmap.h
+       stub-backend/screen.h)
+ENDIF()
 
 ADD_LIBRARY(bitblit
             STATIC
