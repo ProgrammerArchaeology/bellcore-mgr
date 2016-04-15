@@ -1,7 +1,7 @@
 PROJECT(bitblit C)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/stub_lib)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/stub-backend)
 
 SET(bitblit_SOURCES
     bitmap/bit_alloc.c
@@ -14,20 +14,20 @@ SET(bitblit_SOURCES
     seqbitmap/bit_save.c
     seqbitmap/bitmapread.c
     seqbitmap/bitmapwrite.c
-    stub_lib/bit_blit.c
-    stub_lib/bit_on.c
-    stub_lib/bit_size.c
-    stub_lib/bitmap.c
-    stub_lib/blit.c
-    stub_lib/line.c
-    stub_lib/palette.c
-    stub_lib/pixel.c
-    stub_lib/screen.c
+    stub-backend/bit_blit.c
+    stub-backend/bit_on.c
+    stub-backend/bit_size.c
+    stub-backend/bitmap.c
+    stub-backend/blit.c
+    stub-backend/line.c
+    stub-backend/palette.c
+    stub-backend/pixel.c
+    stub-backend/screen.c
 )
 
 SET(bitblit_HEADERS
-    stub_lib/bitmap.h
-    stub_lib/screen.h
+    stub-backend/bitmap.h
+    stub-backend/screen.h
 )
 
 ADD_LIBRARY(bitblit

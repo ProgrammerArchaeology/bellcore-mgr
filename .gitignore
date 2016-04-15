@@ -48,5 +48,5 @@ src/clients/tests/spot
 src/clients/tests/test_menu
 src/clients/tests/test_rop
 src/clients/tests/trans
-src/libbitblit/stub_lib/blitlib.a
+src/libbitblit/stub-backend/blitlib.a
 src/libmgr/libmgr.a
