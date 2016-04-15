@@ -136,11 +136,11 @@ void set_size(WINDOW *win)
   if (W(flags)&W_NOREPORT) return;	/* just return if user requested */
   if (W(text.wide) > 0)
   {
-    set_winsize(ACTIVE(to_fd),W(text.high)/FSIZE(high),W(text.wide)/FSIZE(wide));
+    set_winsize(ACTIVE(to_fd),W(text.high)/FSIZE(high),W(text.wide)/FSIZE(wide), 0, 0);
   }
   else
   {
-    set_winsize(W(to_fd),BIT_HIGH(W(window))/FSIZE(high),BIT_WIDE(W(window))/FSIZE(wide));
+    set_winsize(W(to_fd),BIT_HIGH(W(window))/FSIZE(high),BIT_WIDE(W(window))/FSIZE(wide), 0, 0);
   }
 }
 /*}}}  */
