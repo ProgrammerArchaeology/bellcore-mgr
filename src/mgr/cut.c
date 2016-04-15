@@ -90,7 +90,7 @@ enter(int item, int value, int type)
 }
 /*}}}  */
 /*{{{  get_match -- find a character match in current font*/
-static unsigned char
+static char
 get_match(
     WINDOW *win,
     BITMAP *map, /* bitmap containing text */
@@ -125,8 +125,8 @@ get_match(
 }
 /*}}}  */
 /*{{{  fixline -- change trailing white space into \n*/
-static unsigned char *
-fixline(unsigned char *s, unsigned char *pnt)
+static char *
+fixline(char *s, char *pnt)
 {
   while (*--pnt == ' ' && pnt > s)
     ;
@@ -135,16 +135,16 @@ fixline(unsigned char *s, unsigned char *pnt)
 }
 /*}}}  */
 /*{{{  to_tabs -- change spaces to tabs*/
-static unsigned char *
+static char *
 to_tabs(
-    int pos,           /* starting col # */
-    unsigned char *in, /* input str */
-    unsigned char *out /* output str - tabs */
+    int pos,  /* starting col # */
+    char *in, /* input str */
+    char *out /* output str - tabs */
     )
 {
-  unsigned char *s = out; /* start of out str */
-  unsigned char c;        /* current input char */
-  int spaces = 0;         /* # pending spaces */
+  char *s = out;  /* start of out str */
+  char c;         /* current input char */
+  int spaces = 0; /* # pending spaces */
 
   dbgprintf('C', (stderr, "-> TABS"));
   while (pos++, c = *in++) {
@@ -211,9 +211,9 @@ int cut(int mode)
   int hcode;               /* hash code */
   int button = BUTTON_SYS; /* button from move_mouse */
   int linelen;
-  unsigned char c = 0;      /* matched char */
-  unsigned char *pntr;      /* current char in line */
-  unsigned char *line;      /* buffer to receive text */
+  char c = 0;               /* matched char */
+  char *pntr;               /* current char in line */
+  char *line;               /* buffer to receive text */
   BITMAP *src, *shrunk_src; /* source bitmaps */
 
   if (!mode) {
@@ -304,7 +304,7 @@ int cut(int mode)
 
   pntr = line = malloc(linelen = (1 + (1 + maxcol) * (rows + 1))); /* max possible cut */
   if (mode) {
-    unsigned char *opntr, *startpntr;
+    char *opntr, *startpntr;
 
     pntr += linelen / 2;
     opntr = pntr;
@@ -424,7 +424,7 @@ int cut(int mode)
         to_tabs(col, line, line);
 
       if (snarf && button < BUTTON_SYS) { /* add to cut buffer */
-        unsigned char *tmp = malloc(strlen(snarf) + strlen(line) + 1);
+        char *tmp = malloc(strlen(snarf) + strlen(line) + 1);
         count += strlen(snarf);
         strcpy(tmp, snarf);
         strcat(tmp, line);

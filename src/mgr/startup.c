@@ -81,7 +81,7 @@ lastchar(char *cp)
 #endif
 
 static void
-dowindow(int x, int y, int dx, int dy, int font, char *shell[], int flags, unsigned char *init, unsigned char *start)
+dowindow(int x, int y, int dx, int dy, int font, char *shell[], int flags, char *init, char *start)
 {
   struct font *fp = Get_font(font);
   int i, mouse_was_on;

@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
 {
   /*{{{  variables*/
   int x, login_y, password_y;
-  unsigned char loginstr[9], passwordstr[9], ret;
+  char loginstr[9], passwordstr[9], ret;
   char ttystr[_POSIX_PATH_MAX];
   char *background = (char *)0;
   char *fontname = (char *)0;

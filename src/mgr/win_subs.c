@@ -139,7 +139,7 @@ void win_map(WINDOW *win, BITMAP *window)
   if (W(code) == T_BITMAP)
   /*{{{  convert external bitmap data from snarf buffer to tmp bitmap*/
   {
-    W(bitmap) = bit_load(p[0], p[1], p[4], p[cnt], W(snarf));
+    W(bitmap) = bit_load(p[0], p[1], p[4], p[cnt], (unsigned char *)W(snarf));
     p[4] = p[5];
     p[5] = p[6];
     cnt--;

@@ -146,14 +146,14 @@ void set_size(WINDOW *win)
 }
 /*}}}  */
 /*{{{  put_window -- send a string to a window, interpret ESCs, return # of processed character*/
-int put_window(WINDOW *win, unsigned char *buff, int buff_count)
+int put_window(WINDOW *win, char *buff, int buff_count)
 {
   /*{{{  variables*/
   BITMAP *window;             /* bitmap to update */
   BITMAP *text = (BITMAP *)0; /* current text region */
   int indx;                   /* index into buff */
   int cnt;                    /* # of esc. numbers */
-  unsigned char c;            /* current char */
+  char c;                     /* current char */
   int done = 0;               /* set to 1 to exit */
   int bell = 0;               /* 1 if screen flashed once */
   int sub_window = 0;         /* sub window created */

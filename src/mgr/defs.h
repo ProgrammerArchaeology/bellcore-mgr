@@ -264,14 +264,14 @@ typedef struct window {        /* primary window structure */
 
   unsigned long flags; /* misc. window flags (see defines above) */
 
-  unsigned char buff[MAXSHELL]; /* shell input buffer */
-  int max;                      /* the # of chars in buff */
-  int current;                  /* the current char in buff */
-  int to_fd;                    /* file descriptor to shell */
-  int from_fd;                  /* file descriptor from shell */
-  int pid;                      /* process number of the shell */
-  int setid;                    /* window set id, 1..N, one per pid */
-  int num;                      /* window number ( for multiple window/proc) */
+  char buff[MAXSHELL]; /* shell input buffer */
+  int max;             /* the # of chars in buff */
+  int current;         /* the current char in buff */
+  int to_fd;           /* file descriptor to shell */
+  int from_fd;         /* file descriptor from shell */
+  int pid;             /* process number of the shell */
+  int setid;           /* window set id, 1..N, one per pid */
+  int num;             /* window number ( for multiple window/proc) */
   /* The window set id and the window number together
                       uniquely identify a window. */
 
