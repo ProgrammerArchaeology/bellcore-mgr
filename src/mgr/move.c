@@ -25,34 +25,33 @@
 /*}}}  */
 
 /*{{{  move_window*/
-void move_window()
-   {
-   int button;
-   int dx = BIT_WIDE(ACTIVE(border));
-   int dy = BIT_HIGH(ACTIVE(border));
-   int sx = ACTIVE(x0);
-   int sy = ACTIVE(y0);
+void move_window(void)
+{
+  int button;
+  int dx = BIT_WIDE(ACTIVE(border));
+  int dy = BIT_HIGH(ACTIVE(border));
+  int sx = ACTIVE(x0);
+  int sy = ACTIVE(y0);
 
-   move_box(screen,mouse,&sx,&sy,dx,dy,0);
+  move_box(screen, mouse, &sx, &sy, dx, dy, 0);
 
-   /* adjust window state */
+  /* adjust window state */
 
-   mousex += sx-ACTIVE(x0);
-   mousey += sy-ACTIVE(y0);
+  mousex += sx - ACTIVE(x0);
+  mousey += sy - ACTIVE(y0);
 
-   shape(sx,sy,dx,dy);
+  shape(sx, sy, dx, dy);
 #ifdef MGR_ALIGN
-   if (dx != BIT_WIDE(ACTIVE(border)) || dy != BIT_HIGH(ACTIVE(border)))
-      do_event(EVENT_SHAPE,active,E_MAIN);
-   else
+  if (dx != BIT_WIDE(ACTIVE(border)) || dy != BIT_HIGH(ACTIVE(border)))
+    do_event(EVENT_SHAPE, active, E_MAIN);
+  else
 #endif
-      do_event(EVENT_MOVE,active,E_MAIN);
+    do_event(EVENT_MOVE, active, E_MAIN);
 
-   /* wait till button is released */
+  /* wait till button is released */
 
-   do {
-      button=mouse_get(mouse,&sx,&sy);
-      }
-   while (button!=0);
-   }
+  do {
+    button = mouse_get(mouse, &sx, &sy);
+  } while (button != 0);
+}
 /*}}}  */

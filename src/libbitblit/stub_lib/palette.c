@@ -9,16 +9,14 @@
 #include "screen.h"
 
 /* returns the color index in the color lookup table of the foreground */
-unsigned int fg_color_idx( void){ return 63;}
+unsigned int fg_color_idx(void) { return 63; }
 
-void
-setpalette(BITMAP *bp, unsigned int index, unsigned int red,
-		unsigned int green, unsigned int blue, unsigned int maxi)
+void setpalette(BITMAP *bp, unsigned int index, unsigned int red,
+    unsigned int green, unsigned int blue, unsigned int maxi)
 {
 }
 
-void
-getpalette(BITMAP *bp, unsigned int index, unsigned int *red,
-		unsigned int *green, unsigned int *blue, unsigned int *maxi)
+void getpalette(BITMAP *bp, unsigned int index, unsigned int *red,
+    unsigned int *green, unsigned int *blue, unsigned int *maxi)
 {
 }

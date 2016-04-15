@@ -14,36 +14,35 @@
 /* open the display */
 
 BITMAP *
-bit_open(name)
-char *name;			/* name of frame buffer */
+bit_open(
+    char *name /* name of frame buffer */
+    )
 {
-   BITMAP *result;
+  BITMAP *result;
 
-   if ((result = (BITMAP *) malloc(sizeof(BITMAP))) == (BITMAP *) 0)
-      return (BIT_NULL);
+  if ((result = (BITMAP *)malloc(sizeof(BITMAP))) == (BITMAP *)0)
+    return (BIT_NULL);
 
-	/* do what you need to do here yo initialize the display */
+  /* do what you need to do here yo initialize the display */
 
-   result->primary = result;
-   result->data = 0;
-   result->x0 = 0,
-   result->y0 = 0,
-   result->wide = 1000;
-   result->high = 900;
-   result->type = _SCREEN;
-   return (result);
+  result->primary = result;
+  result->data = 0;
+  result->x0 = 0,
+  result->y0 = 0,
+  result->wide = 1000;
+  result->high = 900;
+  result->type = _SCREEN;
+  return (result);
 }
 
 /* destroy a bitmap, free up space (might nedd special code for the display) */
 
-int
-bit_destroy(bitmap)
-BITMAP *bitmap;
+int bit_destroy(BITMAP *bitmap)
 {
-   if (bitmap == (BITMAP *) 0)
-      return (-1);
-   if (IS_MEMORY(bitmap) && IS_PRIMARY(bitmap))
-      free(bitmap->data);
-   free(bitmap);
-   return (0);
+  if (bitmap == (BITMAP *)0)
+    return (-1);
+  if (IS_MEMORY(bitmap) && IS_PRIMARY(bitmap))
+    free(bitmap->data);
+  free(bitmap);
+  return (0);
 }

@@ -15,17 +15,18 @@
 */
 
 #ifndef FB_AD /* for NEED_ADJUST code */
-#define FB_AD(bp,pp) (pp)
+#define FB_AD(bp, pp) (pp)
 #endif
 
-int bit_on( bp, x, y ) BITMAP	*bp; int x, y;
+int bit_on(bp, x, y) BITMAP *bp;
+int x, y;
 {
-	int	mask = 1 << (7 - x % 8);
+  int mask = 1 << (7 - x % 8);
 
-	DATA	*ip;
+  DATA *ip;
 
-	if( x < 0 || x >= BIT_WIDE(bp) || y < 0 ||  y >= BIT_HIGH(bp) )
-		return  0;
-	ip = BIT_DATA( bp) + y * BIT_LINE(bp) + (x >> 3);
-	return  (*FB_AD(bp,ip) & mask) != 0;
+  if (x < 0 || x >= BIT_WIDE(bp) || y < 0 || y >= BIT_HIGH(bp))
+    return 0;
+  ip = BIT_DATA(bp) + y * BIT_LINE(bp) + (x >> 3);
+  return (*FB_AD(bp, ip) & mask) != 0;
 }

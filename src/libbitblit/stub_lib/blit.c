@@ -14,12 +14,16 @@
  *  General memory-to-memory rasterop
  */
 
-int
-mem_rop(dest, dx, dy, width, height, func, source, sx, sy)
-int sx, sy, dx, dy;		/* properly clipped source and dest */
-int width, height;		/* rectangle to be transferred */
-BITMAP *source, *dest;		/* bit map pointers */
-int func;			/* rasterop function */
-   {
-    return -1;
-   }
+int mem_rop(
+    BITMAP *dest, /* bit map pointers */
+    int dx,
+    int dy, /* properly clipped source and dest */
+    int width,
+    int height, /* rectangle to be transferred */
+    int func,   /* rasterop function */
+    BITMAP *source,
+    int sx,
+    int sy)
+{
+  return -1;
+}

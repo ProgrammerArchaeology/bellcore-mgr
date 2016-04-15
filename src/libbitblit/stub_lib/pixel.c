@@ -10,11 +10,7 @@
 
 #include "bitmap.h"
 
-int
-bit_point(map, dx, dy, func)
-BITMAP *map;
-int dx, dy;
-int func;
-   {
-    return -1;
-   }
+int bit_point(BITMAP *map, int dx, int dy, int func)
+{
+  return -1;
+}

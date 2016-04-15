@@ -13,12 +13,12 @@ int m_getwindowposition(int *xpos, int *ypos)
   m_getinfo(G_COORDS);
   m_gets(m_linebuf);
   _m_ttyreset();
-  if( sscanf(m_linebuf,"%d %d",&x,&y) < 2)
-    return( -1);
-  if( xpos)
+  if (sscanf(m_linebuf, "%d %d", &x, &y) < 2)
+    return (-1);
+  if (xpos)
     *xpos = x;
-  if( ypos)
+  if (ypos)
     *ypos = y;
-  return( 0);
+  return (0);
 }
 /*}}}  */

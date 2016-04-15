@@ -118,13 +118,13 @@ K	[a-zA-Z_][a-zA-Z0-9_]*
 	   dprintf(stderr,"%s%s%s","[PS]",yytext,"[PE]");
 	}
 <start>{K}/{W}\( {		/* look for key words  - might be functions */
-	if (is_entry(keywords,HSIZE,yytext)) 
+	if (is_entry(keywords,HSIZE,yytext))
 	   printf("%s%s%s",ks,yytext,ke);
  	else
 	   printf("%s%s%s",fs,yytext,fe);
 	}
 <start>{K} {			/* look for key words  - might be identifiers */
-	if (is_entry(keywords,HSIZE,yytext)) 
+	if (is_entry(keywords,HSIZE,yytext))
 	   printf("%s%s%s",ks,yytext,ke);
  	else
 	   printf("%s%s%s",is,yytext,ie);
@@ -134,95 +134,94 @@ K	[a-zA-Z_][a-zA-Z0-9_]*
 #define GET_OPT(i)	\
 	strlen(argv[i])>2 ? argv[i]+2 : argv[++i]
 
-int
-main(argc,argv)
-int argc;
-char **argv;
-   {
-   int i;
-   char c = '\0';
+int main (int argc, char **argv)
+{
+  int i;
+  char c = '\0';
 
-   /* set default values */
+  /* set default values */
 
-   ks = "\\fB";		/* keywords in bold */
-   ke = "\\fP";
-   cs = "\\fI";		/* comments in bold */
-   ce = "\\fP";
-   is = "";
-   ie = "";
-   fs = "";
-   fe = "";
-   ps = "\\fB";		/* cpp decl's in bold */
-   pe = "";
+  ks = "\\fB";		/* keywords in bold */
+  ke = "\\fP";
+  cs = "\\fI";		/* comments in bold */
+  ce = "\\fP";
+  is = "";
+  ie = "";
+  fs = "";
+  fe = "";
+  ps = "\\fB";		/* cpp decl's in bold */
+  pe = "";
 
-   debug = getenv("DEBUG") != NULL;
+  debug = getenv("DEBUG") != NULL;
 
-   /* get arguments */
+  /* get arguments */
 
-   for(i=1;i<argc;i++) {
-      if (*argv[i] == '-')
-         switch (c = argv[i][1]) {
-            case 'a':	/* add keyword to list */
-               add_entry(keywords,HSIZE,GET_OPT(i));
-               break;
-            case 'd':	/* delete keyword from list */
-               dlt_entry(keywords,HSIZE,GET_OPT(i));
-               break;
-            case 'F':	/* force processing without .SS */
-               unput('\n');unput('S'); unput('S'); unput('.');
-               force++;
-               break;
-            case 'l':	/* don't pass any ligatures to troff */
-               no_lig++;	
-               break;
-            case 't':	/* don't futz with \, | or - \n */
-               no_troff++;	
-               break;
-            case 'p':	/* set pre-processor escape prefix */
-               ps = GET_OPT(i);
-               break;
-            case 'i':	/* set identifier escape prefix */
-               is = GET_OPT(i);
-               break;
-            case 'f':	/* set function escape prefix */
-               fs = GET_OPT(i);
-               break;
-            case 'k':	/* set keyword escape prefix */
-               ps = ks = GET_OPT(i);
-               break;
-            case 'c':	/* set comment escape prefix */
-               cs = GET_OPT(i);
-               break;
-            case 'e':	/* set all ending escape prefixen */
-               ie = pe = fe = ke = ce = GET_OPT(i);
-               break;
-            default:
-               fprintf(stderr,"%s: flag %s ignored\n",*argv,argv[i]);
-               break;
-            }
-         else switch(c) {	/* optional turn-off codes */
-            case 'p':
-               pe = argv[i];
-               break;
-            case 'i':
-               ie = argv[i];
-               break;
-            case 'f':
-               fe = argv[i];
-               break;
-            case 'k':
-               pe = ke = argv[i];
-               break;
-            case 'c':
-               ce = argv[i];
-               break;
-            default:
-               fprintf(stderr,"%s: arg [%s] ignored\n",*argv,argv[i]);
-               break;
-            }
+  for(i = 1; i < argc; i++) {
+    if (*argv[i] == '-') {
+      switch (c = argv[i][1]) {
+        case 'a':	/* add keyword to list */
+           add_entry(keywords,HSIZE,GET_OPT(i));
+           break;
+        case 'd':	/* delete keyword from list */
+           dlt_entry(keywords,HSIZE,GET_OPT(i));
+           break;
+        case 'F':	/* force processing without .SS */
+           unput('\n');unput('S'); unput('S'); unput('.');
+           force++;
+           break;
+        case 'l':	/* don't pass any ligatures to troff */
+           no_lig++;	
+           break;
+        case 't':	/* don't futz with \, | or - \n */
+           no_troff++;	
+           break;
+        case 'p':	/* set pre-processor escape prefix */
+           ps = GET_OPT(i);
+           break;
+        case 'i':	/* set identifier escape prefix */
+           is = GET_OPT(i);
+           break;
+        case 'f':	/* set function escape prefix */
+           fs = GET_OPT(i);
+           break;
+        case 'k':	/* set keyword escape prefix */
+           ps = ks = GET_OPT(i);
+           break;
+        case 'c':	/* set comment escape prefix */
+           cs = GET_OPT(i);
+           break;
+        case 'e':	/* set all ending escape prefixen */
+           ie = pe = fe = ke = ce = GET_OPT(i);
+           break;
+        default:
+           fprintf(stderr,"%s: flag %s ignored\n",*argv,argv[i]);
+           break;
       }
-   yylex();
-   return 0;
-   }
+    } else {
+      switch(c) {	/* optional turn-off codes */
+        case 'p':
+           pe = argv[i];
+           break;
+        case 'i':
+           ie = argv[i];
+           break;
+        case 'f':
+           fe = argv[i];
+           break;
+        case 'k':
+           pe = ke = argv[i];
+           break;
+        case 'c':
+           ce = argv[i];
+           break;
+        default:
+           fprintf(stderr,"%s: arg [%s] ignored\n",*argv,argv[i]);
+           break;
+      }
+    }
+  }
+  yylex();
+  return 0;
+}
 
 int yywrap(void) { return 1; }

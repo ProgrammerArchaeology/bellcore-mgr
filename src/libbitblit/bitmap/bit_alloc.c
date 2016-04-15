@@ -14,47 +14,43 @@ BITMAP *bit_alloc(int wide, int high, DATA *data, unsigned char depth)
   int size;
 
 #ifdef DEBUG
-  if (wide<=0 || high <=0 || !(depth==8 || depth==1))
-  {
-    fprintf(stderr,"bit_alloc boo-boo %d x %d x %d\r\n",wide,high,depth);
-    return(NULL);
+  if (wide <= 0 || high <= 0 || !(depth == 8 || depth == 1)) {
+    fprintf(stderr, "bit_alloc boo-boo %d x %d x %d\r\n", wide, high, depth);
+    return (NULL);
   }
 #endif
-  if ((result=(BITMAP*)malloc(sizeof(BITMAP)))==(BITMAP*)0) return (result);
+  if ((result = (BITMAP *)malloc(sizeof(BITMAP))) == (BITMAP *)0)
+    return (result);
 
-  result->x0=0;
-  result->y0=0;
-  result->high=high;
-  result->wide=wide;
-  result->depth=depth;
-  result->cache=NULL;
-  result->color=0;
+  result->x0 = 0;
+  result->y0 = 0;
+  result->high = high;
+  result->wide = wide;
+  result->depth = depth;
+  result->cache = NULL;
+  result->color = 0;
 
-  size=bit_size(wide,high,depth);
+  size = bit_size(wide, high, depth);
 
-  if (data != (DATA *) 0)
-  {
+  if (data != (DATA *)0) {
     result->data = data;
-    /* convert from external to internal format (if required) */
+/* convert from external to internal format (if required) */
 #ifdef MOVIE
     log_alloc(result);
 #endif
-  }
-  else
-  {
-    if ((result->data = (DATA *) malloc(size)) == (DATA *) 0)
-    {
+  } else {
+    if ((result->data = (DATA *)malloc(size)) == (DATA *)0) {
       free(result);
-      return ((BITMAP *) 0);
+      return ((BITMAP *)0);
     }
 #ifdef MOVIE
-  log_alloc(result);
+    log_alloc(result);
 #endif
   }
 
   result->primary = result;
   result->type = _MEMORY;
-  result->id = 0;	/* assign elsewhere? */
+  result->id = 0; /* assign elsewhere? */
   result->deviceinfo = NULL;
   return (result);
 }

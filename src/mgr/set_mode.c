@@ -29,12 +29,12 @@
 static struct termios orig_tty;
 /*}}}  */
 /*{{{  set_tty*/
-void set_tty(file) int file;
+void set_tty(int file)
 {
   struct termios buff;
 
-  tcgetattr(file,&orig_tty);
-  buff=orig_tty;
+  tcgetattr(file, &orig_tty);
+  buff = orig_tty;
   buff.c_lflag = 0;
   buff.c_iflag = 0;
   buff.c_cflag &= ~CSIZE;
@@ -42,13 +42,13 @@ void set_tty(file) int file;
   buff.c_oflag &= ~XTABS;
   buff.c_cc[VMIN] = 1;
   buff.c_cc[VTIME] = 0;
-  tcsetattr(file,TCSANOW,&buff);
+  tcsetattr(file, TCSANOW, &buff);
 }
 /*}}}  */
 /*{{{  reset_tty*/
-void reset_tty(file) int file;
+void reset_tty(int file)
 {
-  tcsetattr(file,TCSANOW,&orig_tty);
+  tcsetattr(file, TCSANOW, &orig_tty);
 }
 /*}}}  */
 
@@ -56,22 +56,20 @@ void reset_tty(file) int file;
 static struct termios termio_b;
 /*}}}  */
 /*{{{  save_modes*/
-void save_modes(fd) int fd;
+void save_modes(int fd)
 {
-  tcgetattr(fd,&termio_b);
+  tcgetattr(fd, &termio_b);
 }
 /*}}}  */
 /*{{{  restore_modes*/
-void restore_modes(fd) int fd;
+void restore_modes(int fd)
 {
-  tcsetattr(fd,TCSANOW,&termio_b);
+  tcsetattr(fd, TCSANOW, &termio_b);
 }
 /*}}}  */
 
 /*{{{  adjust_mode*/
-void adjust_mode(disc,flags)
-int disc;
-int flags;
+void adjust_mode(int disc, int flags)
 {
   termio_b.c_lflag |= flags;
 }

@@ -22,48 +22,43 @@
 		size1p	number of bytes in a single line (including padding)
 */
 
-extern size_t fread( void *_ptr, size_t _size, size_t _nmemb, FILE *_stream);
-int bm_compressed=0;
-	
+extern size_t fread(void *_ptr, size_t _size, size_t _nmemb, FILE *_stream);
+int bm_compressed = 0;
+
 int bitmaphead(FILE *fp, int *wp, int *hp, unsigned char *dp, int *size1p)
 {
-	struct b_header	head;
-	
-	if( fread( (char *)&head, sizeof(struct old_b_header), 1, fp ) != 1 )
-		return  0;
-	if( BS_ISHDR( &head ) ) /* compressed bitmaps */
-		{
-		bm_compressed=1;
-		/* fprintf(stderr,"Got compressed header\n"); */
-		head.magic[1]='z';
-		}
-	else {
-		bm_compressed=0;
-		}
-	if( B_ISHDR8( &head ) ) {	/* modern, self-describing
+  struct b_header head;
+
+  if (fread((char *)&head, sizeof(struct old_b_header), 1, fp) != 1)
+    return 0;
+  if (BS_ISHDR(&head)) /* compressed bitmaps */
+  {
+    bm_compressed = 1;
+    /* fprintf(stderr,"Got compressed header\n"); */
+    head.magic[1] = 'z';
+  } else {
+    bm_compressed = 0;
+  }
+  if (B_ISHDR8(&head)) { /* modern, self-describing
 					bitmap, 8-bit alignment */
-		if( fread( &head.depth, sizeof head - sizeof(struct old_b_header), 1, fp ) != 1 )
-			return  0;
-		B_GETHDR8( &head, *wp, *hp, *dp );
-		*size1p = B_SIZE8(*wp, 1, *dp);
-	}
-	else if( B_ISHDR32( &head ) ) {	/* 1 bit deep, 32 bits align */
-		B_GETOLDHDR( &head, *wp, *hp );
-		*size1p = B_SIZE32(*wp, 1, 1);
-		*dp = 1;
-	}
-	else if ( B_ISHDR16(&head) ) {	/* 1 bit deep, 16 bits align */
-		B_GETOLDHDR( &head, *wp, *hp );
-		*size1p = B_SIZE16(*wp, 1, 1);
-		*dp = 1;
-	}
-	else if ( B8_ISHDR(&head) ) {	/* 8 bits deep, 16 bits align */
-		B_GETOLDHDR( &head, *wp, *hp );
-		*size1p = B8_SIZE(*wp, 1);
-		*dp = 8;
-	}
-	else {
-		return  0;
-	}
-	return  1;
+    if (fread(&head.depth, sizeof head - sizeof(struct old_b_header), 1, fp) != 1)
+      return 0;
+    B_GETHDR8(&head, *wp, *hp, *dp);
+    *size1p = B_SIZE8(*wp, 1, *dp);
+  } else if (B_ISHDR32(&head)) { /* 1 bit deep, 32 bits align */
+    B_GETOLDHDR(&head, *wp, *hp);
+    *size1p = B_SIZE32(*wp, 1, 1);
+    *dp = 1;
+  } else if (B_ISHDR16(&head)) { /* 1 bit deep, 16 bits align */
+    B_GETOLDHDR(&head, *wp, *hp);
+    *size1p = B_SIZE16(*wp, 1, 1);
+    *dp = 1;
+  } else if (B8_ISHDR(&head)) { /* 8 bits deep, 16 bits align */
+    B_GETOLDHDR(&head, *wp, *hp);
+    *size1p = B8_SIZE(*wp, 1);
+    *dp = 8;
+  } else {
+    return 0;
+  }
+  return 1;
 }

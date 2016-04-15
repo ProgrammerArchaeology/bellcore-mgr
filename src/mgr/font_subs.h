@@ -6,23 +6,23 @@
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
 
-#define H_SIZE	1999		/* size of hash table for cut/paste */
+#define H_SIZE 1999 /* size of hash table for cut/paste */
 
 struct entry {
-   unsigned char value;		/* character at this location */
-   unsigned char type;          /* type: bold or underline */
-   struct entry *next;		/* pntr to next char */
-   };
+  unsigned char value; /* character at this location */
+  unsigned char type;  /* type: bold or underline */
+  struct entry *next;  /* pntr to next char */
+};
 
-#define	MAXGLYPHS	256
+#define MAXGLYPHS 256
 
 struct font {
-   struct font_header head;	/* font header */
-   BITMAP *data;		/* all the glyphs strung together */
-   BITMAP **glyph;              /* pointers to individual glyphs */
-   short ident;			/* font id */
-   struct entry **table;	/* pointer to hash table for cut/paste */
-   };
+  struct font_header head; /* font header */
+  BITMAP *data;            /* all the glyphs strung together */
+  BITMAP **glyph;          /* pointers to individual glyphs */
+  short ident;             /* font id */
+  struct entry **table;    /* pointer to hash table for cut/paste */
+};
 
 struct font *open_font(char *file);
 void free_font(struct font *dead_font);

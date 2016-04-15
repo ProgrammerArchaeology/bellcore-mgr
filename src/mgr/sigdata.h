@@ -1,1 +1,1 @@
-void catch(int sig);
+void catch (int sig);

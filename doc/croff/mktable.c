@@ -20,119 +20,122 @@
 
 #include "hash.h"
 
-#define SIZE		71
-#define MIN_SIZE	5
+#define SIZE 71
+#define MIN_SIZE 5
 
 char key[80];
 char value[80];
 
-int
-main(argc,argv)
-int argc;
-char **argv;
-   {
-   int i,code, count = 0;
-   TABLE **table;			/* place to build hash table into */
-   TABLE *list, *next;
-   char *name;				/* name of table */
-   char *prog = *argv;
-   int len=0, size;
-   char tmp[80];
+int main(int argc, char **argv)
+{
+  int i, code, count = 0;
+  TABLE **table; /* place to build hash table into */
+  TABLE *list, *next;
+  char *name; /* name of table */
+  char *prog = *argv;
+  int len = 0, size;
+  char tmp[80];
 
-   int r_flag = 0;			/* reverse sense of keyword-value */
-   int n_flag = 0;			/* no values */
+  int r_flag = 0; /* reverse sense of keyword-value */
+  int n_flag = 0; /* no values */
 
-   for(;argc>1 && *argv[1]=='-';argv++,argc--)
-      switch(argv[1][1]) {
-         case 'r': r_flag++; break;
-         case 'n': case '1': n_flag++; *value='\0'; break;
-         default : fprintf(stderr,"%s: flag %s ignored\n",prog,argv[1]);
-         }
+  for (; argc > 1 && *argv[1] == '-'; argv++, argc--)
+    switch (argv[1][1]) {
+    case 'r':
+      r_flag++;
+      break;
+    case 'n':
+    case '1':
+      n_flag++;
+      *value = '\0';
+      break;
+    default:
+      fprintf(stderr, "%s: flag %s ignored\n", prog, argv[1]);
+    }
 
-   if (argc < 3) {
-      fprintf(stderr,"usage: %s [-r -n] <name> <number of buckets>\n",prog);
-      exit(1);
-      }
+  if (argc < 3) {
+    fprintf(stderr, "usage: %s [-r -n] <name> <number of buckets>\n", prog);
+    exit(1);
+  }
 
-   name = argv[1];
+  name = argv[1];
 
-   if ((size = atoi(argv[2])) < MIN_SIZE)
-      size = SIZE;
+  if ((size = atoi(argv[2])) < MIN_SIZE)
+    size = SIZE;
 
-   if ((table = (TABLE **) malloc(size * sizeof(TABLE))) == NULL) {
-      perror("Can't alloc space for table");
-      exit(1);
-      }
+  if ((table = (TABLE **)malloc(size * sizeof(TABLE))) == NULL) {
+    perror("Can't alloc space for table");
+    exit(1);
+  }
 
-   bzero(table,size*sizeof(TABLE));
+  bzero(table, size * sizeof(TABLE));
 
-   /* build the hash table */
+  /* build the hash table */
 
-   while(1) {
-      if (n_flag)
-         code = scanf("%s\n",key);
-      else if (r_flag)
-         code = scanf("%s %s\n",value,key);
+  while (1) {
+    if (n_flag)
+      code = scanf("%s\n", key);
+    else if (r_flag)
+      code = scanf("%s %s\n", value, key);
+    else
+      code = scanf("%s %s\n", key, value);
+
+    if (code == EOF)
+      break;
+    add_entry(table, size, key);
+    put_entry(table, size, key, value);
+    count++;
+  }
+
+  /* print out data */
+
+  printf("/* hash table: %d items in %d buckets */\n\n", count, size);
+  printf("#include <stdio.h>\n");
+  printf("#include \"hash.h\"\n\n");
+  printf("#define SIZE_%s	%d\n\n", name, size);
+  printf("struct table_entry %s_data[] = {\n", name);
+
+  for (count = 0, i = 0; i < size; i++) {
+    for (code = 0, list = table[i]; list != (TABLE *)0; list = next, count++) {
+      next = list->next;
+      printf("   {\"%s\", \"%s\", %d, 0x%x, %s},",
+          list->name, list->value, list->count, HASH_STATIC,
+          next ? sprintf(tmp, "&%s_data[%d]", name, count + 1), tmp : "NULL");
+      if (code++ == 0)
+        printf("	/*  %d */\n", i);
       else
-         code = scanf("%s %s\n",key,value);
+        printf("\n");
+    }
+  }
+  printf("   };\n\n");
 
-      if (code == EOF)
-         break;
-      add_entry(table,size,key);
-      put_entry(table,size,key,value);
+  /* print out hash table */
+
+  printf("/* hash table: %d items */\n\n", size);
+  printf("struct table_entry *%s[] = {\n  ", name);
+
+  for (len = 2, code = count = i = 0; i < size; i++) {
+    for (list = table[i]; list != (TABLE *)0; list = list->next) {
       count++;
-      }
+      code++;
+    }
+    if (code) {
+      sprintf(tmp, " &%s_data[%d],", name, count - code);
+      code = 0;
+    } else
+      sprintf(tmp, " NULL,");
 
-   /* print out data */
+    len += strlen(tmp);
 
-   printf("/* hash table: %d items in %d buckets */\n\n",count,size);
-   printf("#include <stdio.h>\n");
-   printf("#include \"hash.h\"\n\n");
-   printf("#define SIZE_%s	%d\n\n",name,size);
-   printf("struct table_entry %s_data[] = {\n",name);
-
-   for(count=0,i=0;i<size;i++) {
-      for(code=0,list=table[i];list != (TABLE *) 0; list = next,count++) {
-         next = list->next;
-         printf("   {\"%s\", \"%s\", %d, 0x%x, %s},",
-               list->name, list->value, list->count, HASH_STATIC,
-               next ? sprintf(tmp,"&%s_data[%d]",name,count+1),tmp : "NULL");
-         if (code++ == 0)
-            printf("	/*  %d */\n",i);
-         else
-            printf("\n");
-         }
-      }
-   printf("   };\n\n");
-
-   /* print out hash table */
-
-   printf("/* hash table: %d items */\n\n",size);
-   printf("struct table_entry *%s[] = {\n  ",name);
-
-   for(len=2,code=count=i=0;i<size;i++) {
-      for(list=table[i]; list != (TABLE *) 0; list = list->next) {
-         count++;
-         code++;
-         }
-      if (code) {
-         sprintf(tmp," &%s_data[%d],",name,count-code);
-         code = 0;
-         }
-      else
-         sprintf(tmp," NULL,");
-
-      len += strlen(tmp);
-
-      if (len > 78) {
-         printf("\n  ");
-         len = 2 + strlen(tmp);
-         }
-
-      printf("%s",tmp);
-      }
-   if (len)
+    if (len > 78) {
       printf("\n  ");
-   printf(" };\n\n");
-   exit(0);
-   }
+      len = 2 + strlen(tmp);
+    }
+
+    printf("%s", tmp);
+  }
+  if (len)
+    printf("\n  ");
+  printf(" };\n\n");
+  exit(0);
+}

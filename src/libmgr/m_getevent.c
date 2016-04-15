@@ -46,29 +46,28 @@ int m_getevent(int timeout, int *keypress, char *eventstr, size_t eventstrsize)
   m_flush();
   /*{{{  set m_termin as only descriptor*/
   FD_ZERO(&readfds);
-  FD_SET(fileno(m_termin),&readfds);
+  FD_SET(fileno(m_termin), &readfds);
   /*}}}  */
   /*{{{  compute timeval struct*/
-  timeoutval.tv_sec=timeout/1000;
-  timeoutval.tv_usec=(timeout%1000)*1000;
+  timeoutval.tv_sec = timeout / 1000;
+  timeoutval.tv_usec = (timeout % 1000) * 1000;
   /*}}}  */
-  if ((n=select(32,&readfds,(fd_set*)0,(fd_set*)0,&timeoutval))>=0)
-  {
-    if (FD_ISSET(fileno(m_termin),&readfds))
+  if ((n = select(32, &readfds, (fd_set *)0, (fd_set *)0, &timeoutval)) >= 0) {
+    if (FD_ISSET(fileno(m_termin), &readfds))
     /*{{{  we have something to read, whatever it is*/
     {
-      if ((*keypress=fgetc(m_termin))!=PREFIX)
+      if ((*keypress = fgetc(m_termin)) != PREFIX)
       /*{{{  keyboard input*/
       {
-        *keypress=getkey(*keypress);
+        *keypress = getkey(*keypress);
         m_clearmode(M_DUPKEY);
         return EV_KEYPRESS;
       }
       /*}}}  */
-      else if ((*keypress=fgetc(m_termin))==PREFIX)
+      else if ((*keypress = fgetc(m_termin)) == PREFIX)
       /*{{{  this is the dup key*/
       {
-        *keypress=getkey(*keypress);
+        *keypress = getkey(*keypress);
         m_clearmode(M_DUPKEY);
         return EV_KEYPRESS;
       }
@@ -76,21 +75,19 @@ int m_getevent(int timeout, int *keypress, char *eventstr, size_t eventstrsize)
       else
       /*{{{  this is an event string*/
       {
-        *eventstr++=*keypress;
-        fgets(eventstr,eventstrsize-1,m_termin);
+        *eventstr++ = *keypress;
+        fgets(eventstr, eventstrsize - 1, m_termin);
         m_clearmode(M_DUPKEY);
         return EV_EVENTSTR;
       }
       /*}}}  */
     }
     /*}}}  */
-    else
-    {
+    else {
       m_clearmode(M_DUPKEY);
       return EV_TIMEOUT;
     }
-  } else
-  {
+  } else {
     m_clearmode(M_DUPKEY);
     return EV_ERROR;
   }

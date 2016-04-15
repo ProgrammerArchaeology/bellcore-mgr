@@ -24,14 +24,16 @@ static char *cmd;
 /*}}}  */
 
 /*{{{  usage*/
-static void usage()
+static void
+usage(void)
 {
-  fprintf(stderr,"Usage: %s <icon_file> ...  > <icon>.c\n", cmd);
+  fprintf(stderr, "Usage: %s <icon_file> ...  > <icon>.c\n", cmd);
   exit(1);
 }
 /*}}}  */
 /*{{{  dofile*/
-static void dofile(filename) char *filename;
+static void
+dofile(char *filename)
 {
   FILE *filep;
   unsigned char *cp, *endp;
@@ -39,53 +41,57 @@ static void dofile(filename) char *filename;
   BITMAP *map;
   char *name;
 
-  if ((filep = fopen(filename,"r")) == (FILE*)0)
-  {
-    fprintf(stderr,"%s: Can\'t open %s\n",cmd,filename);
+  if ((filep = fopen(filename, "r")) == (FILE *)0) {
+    fprintf(stderr, "%s: Can\'t open %s\n", cmd, filename);
     exit(2);
   }
 
-  if(!(map=bitmapread(filep)))
-  {
-    fprintf(stderr,"%s: %s is not a bitmap file.\n",cmd,filename);
+  if (!(map = bitmapread(filep))) {
+    fprintf(stderr, "%s: %s is not a bitmap file.\n", cmd, filename);
     fclose(filep);
     exit(3);
   }
   fclose(filep);
 
-  if ((name=strrchr(filename,'/'))) name++; else name=filename;
+  if ((name = strrchr(filename, '/')))
+    name++;
+  else
+    name = filename;
 
   /* print comment */
 
   printf("\n/* bitmap for \"%s\", %d wide, %d high, %d bit%s deep */\n",
-  name, BIT_WIDE(map), BIT_HIGH(map),
-  BIT_DEPTH(map), BIT_DEPTH(map) > 1 ? "s" : "");
+      name, BIT_WIDE(map), BIT_HIGH(map),
+      BIT_DEPTH(map), BIT_DEPTH(map) > 1 ? "s" : "");
 
   /* print out data */
 
   cp = (unsigned char *)BIT_DATA(map);
-  endp = cp + bit_size(BIT_WIDE(map),BIT_HIGH(map),BIT_DEPTH(map));
+  endp = cp + bit_size(BIT_WIDE(map), BIT_HIGH(map), BIT_DEPTH(map));
   printf("char %s_data[%lu] = {\n\t", name, endp - cp);
-  for (i=1; cp<endp; cp++,i++)
-    printf("0%03o%s", *cp, i%10 ? ", " : ",\n\t");
+  for (i = 1; cp < endp; cp++, i++)
+    printf("0%03o%s", *cp, i % 10 ? ", " : ",\n\t");
   printf("\n\t};\n");
 
   /* print out header */
 
   printf("bit_static(%s, %d, %d, %s_data, 1, 0);\n", name,
-         BIT_WIDE(map), BIT_HIGH(map), name);
-  free( map);
+      BIT_WIDE(map), BIT_HIGH(map), name);
+  free(map);
 }
 /*}}}  */
 
 /*{{{  main*/
-int main(argc,argv) int argc; char **argv;
+int main(int argc, char **argv)
 {
   cmd = *argv;
-  argv++; argc--;
-  if (argc < 1) usage();
+  argv++;
+  argc--;
+  if (argc < 1)
+    usage();
 
-  for(; argc>0; argv++, argc--) dofile(*argv);
+  for (; argc > 0; argv++, argc--)
+    dofile(*argv);
 
   exit(0);
 }

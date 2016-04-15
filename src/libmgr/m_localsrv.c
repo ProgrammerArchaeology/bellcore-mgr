@@ -21,13 +21,15 @@
 #define LEN 65
 static int is_local = -1;
 
-int m_localsrv( void) {
-    if( is_local < 0) {
-	char myhost[LEN], mgrhost[LEN];
+int m_localsrv(void)
+{
+  if (is_local < 0) {
+    char myhost[LEN], mgrhost[LEN];
 
-	is_local = (m_gethostname( mgrhost, LEN) == 0
-		    && gethostname( myhost, LEN) == 0)
-		    ? (strncmp( mgrhost, myhost, LEN) == 0): 0;
-    }
-    return is_local;
+    is_local = (m_gethostname(mgrhost, LEN) == 0
+                   && gethostname(myhost, LEN) == 0)
+        ? (strncmp(mgrhost, myhost, LEN) == 0)
+        : 0;
+  }
+  return is_local;
 }

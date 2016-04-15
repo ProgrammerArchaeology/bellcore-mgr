@@ -10,5 +10,5 @@
 
 int bit_size(int wide, int high, unsigned char depth)
 {
-  return BIT_Size(wide,high,depth);
+  return BIT_Size(wide, high, depth);
 }

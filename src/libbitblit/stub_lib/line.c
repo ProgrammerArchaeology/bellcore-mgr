@@ -10,11 +10,7 @@
 
 #include "bitmap.h"
 
-int
-bit_line(dest, x0, y0, x1, y1, func)
-BITMAP *dest;
-int x0, y0, x1, y1;
-int func;
-   {
-    return -1;
-   }
+int bit_line(BITMAP *dest, int x0, int y0, int x1, int y1, int func)
+{
+  return -1;
+}

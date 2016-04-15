@@ -1,0 +1,5 @@
+BasedOnStyle: WebKit
+AlignTrailingComments: true
+IndentWidth: 2
+PointerAlignment: Right
+SortIncludes: false

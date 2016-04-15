@@ -22,41 +22,38 @@
 /*}}}  */
 
 /*{{{  scroll -- scroll a bitmap*/
-void scroll(win,map,start,end,delta,op)
-WINDOW *win;	/* window to scroll */
-BITMAP *map;	/* bitmap in window to scroll */
-int start,end,delta,op;	/* starting line, ending line, # of lines */
-   {
-   int ems = end-start;
-   if (delta > 0) {
-      if (end-start > delta)
+void scroll(win, map, start, end, delta, op)
+    WINDOW *win;           /* window to scroll */
+BITMAP *map;               /* bitmap in window to scroll */
+int start, end, delta, op; /* starting line, ending line, # of lines */
+{
+  int ems = end - start;
+  if (delta > 0) {
+    if (end - start > delta)
 #ifdef MGR_ALIGN
-         if (win->window == map) {
-            dbgprintf('F',(stderr,"fast scroll %s\r\n",W(tty)));
-            /* special high-speed byte-aligned scroller */
+      if (win->window == map) {
+        dbgprintf('F', (stderr, "fast scroll %s\r\n", W(tty)));
+        /* special high-speed byte-aligned scroller */
 
-            bit_bytescroll(map,BIT_X(map),BIT_Y(map) + start,
-                     BIT_WIDE(map) + W(borderwid), end-start, delta);
-            }
-         else
+        bit_bytescroll(map, BIT_X(map), BIT_Y(map) + start,
+            BIT_WIDE(map) + W(borderwid), end - start, delta);
+      } else
 #endif /* MGR_ALIGN */
-            bit_blit(map,0,start,BIT_WIDE(map),ems-delta,BIT_SRC,map,0,start+delta);
-      bit_blit(map,0,end-delta,BIT_WIDE(map),delta,op,0,0,0);
-      }
+        bit_blit(map, 0, start, BIT_WIDE(map), ems - delta, BIT_SRC, map, 0, start + delta);
+    bit_blit(map, 0, end - delta, BIT_WIDE(map), delta, op, 0, 0, 0);
+  }
 
-   else if (delta < 0) {
-      if (ems + delta > 0)
-         bit_blit(map,0,start-delta,BIT_WIDE(map),ems+delta,
-             BIT_SRC,map,0,start);
-      bit_blit(map,0,start,BIT_WIDE(map),-delta,op,NULL_DATA,0,0);
-      }
+  else if (delta < 0) {
+    if (ems + delta > 0)
+      bit_blit(map, 0, start - delta, BIT_WIDE(map), ems + delta,
+          BIT_SRC, map, 0, start);
+    bit_blit(map, 0, start, BIT_WIDE(map), -delta, op, NULL_DATA, 0, 0);
+  }
 
-
-   if (Do_clip()) 
-      Set_clip(W(text).x,
-               W(text).y + start,
-               W(text).x + BIT_WIDE(map),
-               W(text).y + BIT_HIGH(map)
-              );
-   }
+  if (Do_clip())
+    Set_clip(W(text).x,
+        W(text).y + start,
+        W(text).x + BIT_WIDE(map),
+        W(text).y + BIT_HIGH(map));
+}
 /*}}}  */

@@ -20,63 +20,48 @@
 /*}}}  */
 
 /*{{{  intersect*/
-int intersect(win1,win2) WINDOW *win1, *win2;
+int intersect(WINDOW *win1, WINDOW *win2)
 {
-	return 
-        (!(
-	    win1->x0 + BIT_WIDE(win1->border) < win2->x0 ||
-	    win2->x0 + BIT_WIDE(win2->border) < win1->x0 ||
-	    win1->y0 + BIT_HIGH(win1->border) < win2->y0 ||
-	    win2->y0 + BIT_HIGH(win2->border) < win1->y0
-        ));
+  return (!(
+      win1->x0 + BIT_WIDE(win1->border) < win2->x0 || win2->x0 + BIT_WIDE(win2->border) < win1->x0 || win1->y0 + BIT_HIGH(win1->border) < win2->y0 || win2->y0 + BIT_HIGH(win2->border) < win1->y0));
 }
 /*}}}  */
 /*{{{  alone -- see if any window intersects any other*/
-int
-alone(check)
-WINDOW *check;
+int alone(WINDOW *check)
 {
-	WINDOW *win;
+  WINDOW *win;
 
-        for(win=active;win != (WINDOW *) 0;win=win->next)
-          if (check!=win && intersect(check,win))
-             return(0);
-        return(1);
+  for (win = active; win != (WINDOW *)0; win = win->next)
+    if (check != win && intersect(check, win))
+      return (0);
+  return (1);
 }
 /*}}}  */
 /*{{{  mousein -- see if mouse is in window*/
-int mousein(x,y,win,how)
-int x,y;
-WINDOW *win;
-int how;		/* how:  0-> intersect   else -> point */
+int mousein(
+    int x,
+    int y,
+    WINDOW *win,
+    int how /* how:  0-> intersect   else -> point */
+    )
 {
-   if (how == 0)
-	return(!(
-	    x+16 < W(x0) || x > W(x0) + BIT_WIDE(win->border) ||
-            y+16 < W(y0) || y > W(y0) + BIT_HIGH(win->border)
-            ));
-   else
-	return(!(
-	    x < W(x0) || x > W(x0) + BIT_WIDE(win->border) ||
-            y < W(y0) || y > W(y0) + BIT_HIGH(win->border)
-            ));
+  if (how == 0)
+    return (!(
+        x + 16 < W(x0) || x > W(x0) + BIT_WIDE(win->border) || y + 16 < W(y0) || y > W(y0) + BIT_HIGH(win->border)));
+  else
+    return (!(
+        x < W(x0) || x > W(x0) + BIT_WIDE(win->border) || y < W(y0) || y > W(y0) + BIT_HIGH(win->border)));
 }
 /*}}}  */
 /*{{{  in_text -- see if mouse is in text region*/
-int
-in_text(x,y,win)
-int x,y;
-WINDOW *win;
-   {
-   if (W(text.wide)) {
-      int x0 = W(x0)+W(text.x);
-      int y0 = W(y0)+W(text.y);
-      return(!(
-	    x < x0 || x > x0 + W(text.wide) ||
-            y < y0 || y > y0 + W(text.high)
-            ));
-      }
-   else
-      return(mousein(x,y,win,1));
-   }
+int in_text(int x, int y, WINDOW *win)
+{
+  if (W(text.wide)) {
+    int x0 = W(x0) + W(text.x);
+    int y0 = W(y0) + W(text.y);
+    return (!(
+        x < x0 || x > x0 + W(text.wide) || y < y0 || y > y0 + W(text.high)));
+  } else
+    return (mousein(x, y, win, 1));
+}
 /*}}}  */

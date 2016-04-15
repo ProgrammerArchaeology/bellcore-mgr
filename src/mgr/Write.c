@@ -15,30 +15,26 @@
 
 #include "defs.h"
 
-#define MAX_RETRY	3		/* max retries after EWOULDBLOCK */
-#define TTYMAX		100		/* max chunk size in write */
+#define MAX_RETRY 3 /* max retries after EWOULDBLOCK */
+#define TTYMAX 100  /* max chunk size in write */
 
-int
-Write(fd,buff,len)
-int fd, len;
-char *buff;
-   {
-   int count = 0;
-   int code;
-   int retry=0;
+int Write(int fd, char *buff, int len)
+{
+  int count = 0;
+  int code;
+  int retry = 0;
 
-   while (count < len) {
-      code = write(fd,buff+count,Min(TTYMAX,len-count));
-      if (code > 0)
-         count += code;
-      else if (errno == EWOULDBLOCK) {
-         if (retry++ > MAX_RETRY)
-            break;
-         sleep(1);
-         continue;
-         }
-      else 
-         break;
-      }
-   return(count);
-   }
+  while (count < len) {
+    code = write(fd, buff + count, Min(TTYMAX, len - count));
+    if (code > 0)
+      count += code;
+    else if (errno == EWOULDBLOCK) {
+      if (retry++ > MAX_RETRY)
+        break;
+      sleep(1);
+      continue;
+    } else
+      break;
+  }
+  return (count);
+}
