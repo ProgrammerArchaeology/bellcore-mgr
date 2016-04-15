@@ -28,9 +28,8 @@
 /*}}}  */
 
 /*{{{  glyph_create*/
-static void glyph_create(font, glyph, offset) struct font *font;
-BITMAP **glyph;
-int offset;
+static void
+glyph_create(struct font *font, BITMAP **glyph, int offset)
 {
   int i, x;
   int first = font->head.start;
@@ -66,8 +65,8 @@ int offset;
 }
 /*}}}  */
 /*{{{  open_sfont -- set up a static font file*/
-static struct font *open_sfont(head, data) struct font_header head;
-BITMAP *data;
+static struct font *
+open_sfont(struct font_header head, BITMAP *data)
 {
   struct font *font;
 

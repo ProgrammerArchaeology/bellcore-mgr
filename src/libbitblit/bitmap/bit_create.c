@@ -6,8 +6,8 @@
 /*}}}  */
 
 /*{{{  bit_create -- create a bitmap as a sub-rectangle of another bitmap*/
-BITMAP *bit_create(map, x, y, wide, high) BITMAP *map;
-int x, y, wide, high;
+BITMAP *
+bit_create(BITMAP *map, int x, int y, int wide, int high)
 {
   BITMAP *result;
 

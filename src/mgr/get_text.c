@@ -30,10 +30,8 @@
 #define INVERT(screen, x, y, wide, high) \
   bit_blit(screen, x, y, wide, high, BIT_NOT(BIT_DST), NULL_DATA, 0, 0);
 
-static void tbox(screen, x1, y1, dx, dy, side)
-    BITMAP *screen;
-int x1, y1, dx, dy;
-int side;
+static void
+tbox(BITMAP *screen, int x1, int y1, int dx, int dy, int side)
 {
   switch (side) {
   case TOP:
@@ -65,13 +63,19 @@ int side;
 /*}}}  */
 /*{{{  do_box -- piece boxes*/
 static int
-    do_box(screen, x1, y1, px, py, top, left, cols, rows, gx, gy)
-        BITMAP *screen;
-int x1, y1;     /* starting pos in rows/cols */
-int *px, *py;   /* ending delta in rows/cols */
-int top, left;  /* start of window in pixels */
-int cols, rows; /* size of window */
-int gx, gy;     /* character size (in pixels) */
+do_box(
+    BITMAP *screen,
+    int x1,
+    int y1, /* starting pos in rows/cols */
+    int *px,
+    int *py, /* ending delta in rows/cols */
+    int top,
+    int left, /* start of window in pixels */
+    int cols,
+    int rows, /* size of window */
+    int gx,
+    int gy /* character size (in pixels) */
+    )
 {
   int dx = *px;
   int dy = *py;
@@ -115,14 +119,16 @@ int gx, gy;     /* character size (in pixels) */
 /*}}}  */
 
 /*{{{  get_text*/
-int
-    get_text(screen, mouse, x, y, dx, dy, win, c)
-        BITMAP *screen; /* where to sweep out the box */
-int mouse;              /* file to get mouse coords from */
-int x, y;               /* starting position */
-int *dx, *dy;           /* box width,height */
-WINDOW *win;            /* text window */
-int c;                  /* E_SWTEXT or E_SWTEXTT */
+int get_text(
+    BITMAP *screen, /* where to sweep out the box */
+    int mouse,      /* file to get mouse coords from */
+    int x,
+    int y, /* starting position */
+    int *dx,
+    int *dy,     /* box width,height */
+    WINDOW *win, /* text window */
+    int c        /* E_SWTEXT or E_SWTEXTT */
+    )
 {
   int button;
   int left, top;

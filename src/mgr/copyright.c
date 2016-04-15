@@ -79,7 +79,7 @@ static struct st {
 /*}}}  */
 
 /*{{{  init_all*/
-void init_all(where) BITMAP *where;
+void init_all(BITMAP *where)
 {
   maxv = BIT_HIGH(where);
   hmaxv = maxv >> 1;
@@ -125,11 +125,8 @@ cordic(short *x, short *y, int scale, int count)
 }
 /*}}}  */
 /*{{{  xplot*/
-static int xplot(where, x, y, col, state)
-    BITMAP *where;
-int x, y;
-int col;
-int state;
+static int
+xplot(BITMAP *where, int x, int y, int col, int state)
 {
   /* are we on the screen? If not, let the caller know*/
   if (x < 0 || x >= maxh || y < 0 || y >= maxv)
@@ -147,11 +144,8 @@ int state;
 }
 /*}}}  */
 /*{{{  project*/
-static int project(where, x, y, z, col, state)
-    BITMAP *where;
-short x, y, z;
-int col;
-short state;
+static int
+project(BITMAP *where, int x, int y, int z, int col, int state)
 {
 
   /* one-point perspective projection */
@@ -164,7 +158,8 @@ short state;
 }
 /*}}}  */
 /*{{{  fly*/
-static void fly(where) BITMAP *where;
+static void
+fly(BITMAP *where)
 {
   short i;
   struct st *stp;
@@ -182,7 +177,8 @@ static void fly(where) BITMAP *where;
 }
 /*}}}  */
 /*{{{  dofly*/
-static void dofly(where) BITMAP *where;
+static void
+dofly(BITMAP *where)
 {
   short i;
   struct st *stp;

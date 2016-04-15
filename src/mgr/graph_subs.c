@@ -26,7 +26,8 @@
 /*}}}  */
 
 /*{{{  resid -- calculate b*b*x*x + a*a*y*y - a*a*b*b avoiding ovfl*/
-static long resid(a, b, x, y) int a, b, x, y;
+static long
+resid(int a, int b, int x, int y)
 {
   long result = 0;
   long u = b * ((long)a * a - (long)x * x);
@@ -55,9 +56,7 @@ static long resid(a, b, x, y) int a, b, x, y;
  * from x1,y1 to x2,y2
  */
 
-void ellip1(screen, x0, y0, a, b, x1, y1, x2, y2, f)
-    BITMAP *screen;
-int x0, y0, a, b, x1, y1, x2, y2, f;
+void ellip1(BITMAP *screen, int x0, int y0, int a, int b, int x1, int y1, int x2, int y2, int f)
 {
   int z;
   int dx = y1 > 0 ? 1 : y1 < 0 ? -1 : x1 > 0 ? -1 : 1;
@@ -101,7 +100,7 @@ int x0, y0, a, b, x1, y1, x2, y2, f;
 /*}}}  */
 /*{{{  Labs*/
 static long
-    Labs(x) long x;
+Labs(long x)
 {
   return (x < 0 ? -x : x);
 }
@@ -115,8 +114,7 @@ static long
  *
  */
 
-void nearby(x1, y1, x2, y2, rx, ry) int x1, y1, x2, y2;
-int *rx, *ry;
+void nearby(int x1, int y1, int x2, int y2, int *rx, int *ry)
 {
   long eps, exy; /*integers but many bits*/
   int d, dy;
@@ -143,11 +141,7 @@ int *rx, *ry;
 /*}}}  */
 
 /*{{{  circle  -- circle of radius r centered at x1,y1*/
-void circle(b, x1, y1, r, f)
-    BITMAP *b;
-int x1;
-int y1;
-int r, f;
+void circle(BITMAP *b, int x1, int y1, int r, int f)
 {
   int err = 0;  /* x^2 + y^2 - r^2 */
   int dxsq = 1; /* (x+dx)^2-x^2*/
@@ -181,11 +175,7 @@ int r, f;
 }
 /*}}}  */
 /*{{{  ellipse -- draw an ellipse centered at x0,y0 with half-axes a,b*/
-void ellipse(screen, x, y, a, b, f)
-    BITMAP *screen;
-int x, y;
-int a, b;
-int f;
+void ellipse(BITMAP *screen, int x, int y, int a, int b, int f)
 {
   if (a == 0 || b == 0)
     bit_line(screen, x - a, y - b, x + a, y + b, f);
@@ -207,9 +197,7 @@ int f;
  *	the horizontal, vertical, and diagonal axes
  */
 
-void arc(bp, x0, y0, x2, y2, x1, y1, f)
-    BITMAP *bp;
-int x0, y0, x2, y2, x1, y1, f;
+void arc(BITMAP *bp, int x0, int y0, int x2, int y2, int x1, int y1, int f)
 {
   int dx, dy;
   int eps;        /* x^2 + y^2 - r^2 */

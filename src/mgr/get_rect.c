@@ -23,9 +23,7 @@
 /*}}}  */
 
 /*{{{  box -- draw a box*/
-void box(screen, x1, y1, dx, dy)
-    BITMAP *screen;
-int x1, y1, dx, dy;
+void box(BITMAP *screen, int x1, int y1, int dx, int dy)
 {
   if (dx < 0)
     x1 += dx, dx = -dx;
@@ -43,12 +41,15 @@ int x1, y1, dx, dy;
 }
 /*}}}  */
 /*{{{  get_rect*/
-void get_rect(screen, mouse, x, y, dx, dy, type)
-    BITMAP *screen; /* where to sweep out the box */
-int mouse;          /* file to get mouse coords from */
-int x, y;           /* starting position */
-int *dx, *dy;       /* box width,height */
-int type;           /* rectangle or line */
+void get_rect(
+    BITMAP *screen, /* where to sweep out the box */
+    int mouse,      /* file to get mouse coords from */
+    int x,
+    int y, /* starting position */
+    int *dx,
+    int *dy, /* box width,height */
+    int type /* rectangle or line */
+    )
 {
   int x_mouse, y_mouse;
   int button;

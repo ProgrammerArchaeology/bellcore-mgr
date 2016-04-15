@@ -18,8 +18,7 @@
 #define FB_AD(bp, pp) (pp)
 #endif
 
-int bit_on(bp, x, y) BITMAP *bp;
-int x, y;
+int bit_on(BITMAP *bp, int x, int y)
 {
   int mask = 1 << (7 - x % 8);
 

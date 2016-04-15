@@ -288,11 +288,7 @@ void restore_win(
  *				all buttons released completes the action.
  */
 
-int
-    move_mouse(screen, mouse, x, y, how)
-        BITMAP *screen;
-int mouse, *x, *y;
-int how;
+int move_mouse(BITMAP *screen, int mouse, int *x, int *y, int how)
 {
   int mx = *x, my = *y;
   int button = 0;
@@ -509,11 +505,7 @@ void suspend(void)
 /*}}}  */
 #ifdef MGR_ALIGN
 /*{{{  alignwin -- align a window so a byte boundary occurs somewhere insode the border*/
-void
-    alignwin(screen, x, dx, slop)
-        BITMAP *screen;
-int *x, *dx;
-int slop;
+void alignwin(BITMAP *screen, int *x, int *dx, int slop)
 {
   int adjust = (BIT_X(screen) + *x) & 7;
 
@@ -535,9 +527,9 @@ int slop;
 #endif /* MGR_ALIGN */
 
 /*{{{  cursor_ok -- make sure icon is valid*/
-int
-    cursor_ok(map)
-        BITMAP *map; /* cursor icon */
+int cursor_ok(
+    BITMAP *map /* cursor icon */
+    )
 {
   return (map != NULL && BIT_WIDE(map) >= 16 && BIT_HIGH(map) >= 32);
   /* might like to check contents of bitmap to be reasonable */

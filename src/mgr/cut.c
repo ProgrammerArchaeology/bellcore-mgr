@@ -49,10 +49,14 @@ static struct entry **table; /* hash table */
 /*}}}  */
 
 /*{{{  get_hash -- given bitmap, get hash code*/
-int get_hash(map, x, y, w, h, how)
-    BITMAP *map;
-int x, y, w, h; /* where in map */
-int how;        /* 0-> normal, 1->inverted */
+int get_hash(
+    BITMAP *map,
+    int x,
+    int y,
+    int w,
+    int h,  /* where in map */
+    int how /* 0-> normal, 1->inverted */
+    )
 {
   unsigned long sum = 0;
   int j;
@@ -86,10 +90,15 @@ enter(int item, int value, int type)
 }
 /*}}}  */
 /*{{{  get_match -- find a character match in current font*/
-static unsigned char get_match(win, map, x, y, w, h)
-    WINDOW *win;
-BITMAP *map;    /* bitmap containing text */
-int x, y, w, h; /* position of glyph in "map" */
+static unsigned char
+get_match(
+    WINDOW *win,
+    BITMAP *map, /* bitmap containing text */
+    int x,
+    int y,
+    int w,
+    int h /* position of glyph in "map" */
+    )
 {
   struct entry *entry;
   int code; /* hash code */

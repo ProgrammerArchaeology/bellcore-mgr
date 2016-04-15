@@ -157,7 +157,8 @@ write_char(char *buff, int cnt)
 }
 /*}}}  */
 /*{{{  check_map -- check bitmap, register and/or download if needed*/
-static int check_map(map) BITMAP *map;
+static int
+check_map(BITMAP *map)
 {
   if (map && map->primary->id == 0) {
     /* static bitmap */
@@ -270,9 +271,7 @@ void log_blit(BITMAP *dst_map, int xd, int yd, int w, int h, int op, BITMAP *src
 }
 /*}}}  */
 /*{{{  log_line -- log lines*/
-void log_line(dst, x0, y0, x1, y1, op) BITMAP *dst;
-int x0, y0, x1, y1;
-int op;
+void log_line(BITMAP *dst, int x0, int y0, int x1, int y1, int op)
 {
   check_map(dst);
   if (do_save) {
@@ -281,10 +280,7 @@ int op;
 }
 /*}}}  */
 /*{{{  log_point -- log points*/
-void log_point(dst, x, y, op)
-    BITMAP *dst;
-int x, y;
-int op;
+void log_point(BITMAP *dst, int x, int y, int op)
 {
   check_map(dst);
   if (do_save) {
@@ -293,7 +289,7 @@ int op;
 }
 /*}}}  */
 /*{{{  log_open -- log bit_open*/
-void log_open(bp) BITMAP *bp;
+void log_open(BITMAP *bp)
 {
   bp->id = get_mid();
   reg_map(bp);
@@ -302,7 +298,7 @@ void log_open(bp) BITMAP *bp;
 }
 /*}}}  */
 /*{{{  log_destroy -- log bit_destroy*/
-void log_destroy(bitmap) BITMAP *bitmap;
+void log_destroy(BITMAP *bitmap)
 {
   if (do_save)
     SEND_KILL(bitmap->id);
@@ -311,7 +307,7 @@ void log_destroy(bitmap) BITMAP *bitmap;
 }
 /*}}}  */
 /*{{{  log_alloc -- log bit_alloc*/
-void log_alloc(bp) BITMAP *bp;
+void log_alloc(BITMAP *bp)
 {
   int id;
 
@@ -323,7 +319,7 @@ void log_alloc(bp) BITMAP *bp;
 }
 /*}}}  */
 /*{{{  log_create -- log bit_create*/
-void log_create(bp) BITMAP *bp;
+void log_create(BITMAP *bp)
 {
   if (bp->id == 0) { /* static bitmap */
     bp->id = get_mid();

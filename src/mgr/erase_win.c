@@ -13,12 +13,8 @@
 /*}}}  */
 
 /*{{{  Bit_pattern -- fill DST bitmap with SRC, preserving alignment*/
-static void Bit_pattern(dst, dx, dy, wide, high, func, src)
-    BITMAP *dst,
-    *src;
-int dx, dy;
-int wide, high;
-int func;
+static void
+Bit_pattern(BITMAP *dst, int dx, int dy, int wide, int high, int func, BITMAP *src)
 {
   int incr;
   int sw = BIT_WIDE(src);

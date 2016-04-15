@@ -35,8 +35,11 @@
 /*}}}  */
 
 /*{{{  get_map -- find bitmap associated with window id*/
-static BITMAP *get_map(id, sub) int id; /* pid of process controlling window */
-int sub;                                /* window number of this window */
+static BITMAP *
+get_map(
+    int id, /* pid of process controlling window */
+    int sub /* window number of this window */
+    )
 {
   WINDOW *win;
   BITMAP *map;
@@ -55,8 +58,7 @@ int sub;                                /* window number of this window */
 /*}}}  */
 
 /*{{{  down_load*/
-void down_load(win, window, text) WINDOW *win;
-BITMAP *window, *text;
+void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
 {
   WINDOW *win2;
   int cnt;

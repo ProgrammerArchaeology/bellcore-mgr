@@ -37,10 +37,11 @@
 /*}}}  */
 
 /*{{{  get_info*/
-void get_info(win, window, text)
-    WINDOW *win; /* window info is about */
-BITMAP *window;  /* window's bitmap data */
-BITMAP *text;    /* window's text region */
+void get_info(
+    WINDOW *win,    /* window info is about */
+    BITMAP *window, /* window's bitmap data */
+    BITMAP *text    /* window's text region */
+    )
 {
   int cnt = W(esc_cnt); /* # of leading ESC #'s */
   int count;            /* whatever */

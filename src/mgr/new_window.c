@@ -175,11 +175,7 @@ int setup_window(WINDOW *win, struct font *curr_font, int x, int y, int dx, int 
 }
 /*}}}  */
 /*{{{  make_window -- draw the window on the screen*/
-int make_window(screen, x, y, dx, dy, fnt, start)
-    BITMAP *screen;
-int x, y, dx, dy;
-int fnt;
-char *start;
+int make_window(BITMAP *screen, int x, int y, int dx, int dy, int fnt, char *start)
 {
   WINDOW *win = active;
   struct font *curr_font;
