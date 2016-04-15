@@ -48,8 +48,5 @@ src/clients/tests/spot
 src/clients/tests/test_menu
 src/clients/tests/test_rop
 src/clients/tests/trans
-src/libbitblit/blit/blitlib.a
-src/libbitblit/colorport/screen.h
-src/libbitblit/pixrect/screen.h
 src/libbitblit/stub_lib/blitlib.a
 src/libmgr/libmgr.a
