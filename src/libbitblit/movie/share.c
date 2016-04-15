@@ -152,7 +152,7 @@ static void write_char(buff,cnt) char *buff; int cnt;
 }
 /*}}}  */
 /*{{{  check_map -- check bitmap, register and/or download if needed*/
-static int check_map(map) register BITMAP *map;
+static int check_map(map) BITMAP *map;
 {
   if (map && map->primary->id == 0)
   {
@@ -339,7 +339,7 @@ void log_bytescroll(BITMAP *dst, int x, int y, int w, int h, int delta)
 void send_sync()
 {
   BITMAP *map;
-  register int i;
+  int i;
 
   for(i=1;i<next_id;i++)
   {
@@ -369,7 +369,7 @@ void log_time(void)
 {
   if (do_save)
   {
-    register unsigned int time = timestamp();
+    unsigned int time = timestamp();
     _m.type = T_TIME;
     _m.stuff[0] = time>>16;
     _m.stuff[1] = time&0xffff;

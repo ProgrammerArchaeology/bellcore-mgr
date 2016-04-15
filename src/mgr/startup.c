@@ -51,7 +51,7 @@ static void save_fields( cpp, fields )
 char	**cpp;
 char	*fields[];
 {
-	register int	i;
+	int	i;
 	char		savestr[MAXLINE];
 
 	if( *cpp )
@@ -146,7 +146,7 @@ void startup(name) char *name;
    char *fields[MAXFIELDS];			/*  "  */
    int curr_font = 0;				/* font # for this window */
    int flags = 0;				/* window flags */
-   register int i;
+   int i;
    int count,  gotwindow = 0, gotnewwindow = 0;
    int setactive = 0, activesetid = 0;
    int windowsetid = 0;

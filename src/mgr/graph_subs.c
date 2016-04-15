@@ -24,13 +24,13 @@
 /*}}}  */
 
 /*{{{  resid -- calculate b*b*x*x + a*a*y*y - a*a*b*b avoiding ovfl*/
-static long resid(a,b,x,y) register int a,b,x,y;
+static long resid(a,b,x,y) int a,b,x,y;
    {
    long result = 0;
    long u = b*((long)a*a - (long)x*x);
    long v = (long)a*y*y;
-   register int q = u>BIG? HUGE/u: BIG;
-   register int r = v>BIG? HUGE/v: BIG;
+   int q = u>BIG? HUGE/u: BIG;
+   int r = v>BIG? HUGE/v: BIG;
    while(a || b) {
       if(result>=0 && b) {
          if(q>b) q = b;
@@ -61,10 +61,10 @@ int x0,y0, a,b,x1,y1, x2, y2, f;
    int dy = x1>0? -1: x1<0? 1: y1>0? -1: 1;
    long a2 = (long)a*a;
    long b2 = (long)b*b;
-   register long dex = b2*(2*dx*x1+1);
-   register long e;
-   register long dey = a2*(2*dy*y1+1);
-   register long ex, ey, exy;
+   long dex = b2*(2*dx*x1+1);
+   long e;
+   long dey = a2*(2*dy*y1+1);
+   long ex, ey, exy;
 
    e = resid(a, b, x1, y1);
    a2 *= 2;
@@ -115,12 +115,12 @@ long x;
  */
 
 void nearby(x1,y1, x2,y2, rx, ry)
-register int x1, y1, x2, y2;
+int x1, y1, x2, y2;
 int *rx, *ry;
    {
    long eps, exy;   /*integers but many bits*/
    int d, dy;
-   register int dx;
+   int dx;
    eps = sq(x2) + sq(y2) - sq(x1) - sq(y1);
    d = eps>0? -1: 1;
    for( ; ; eps=exy, x2+=dx, y2+=dy) {
@@ -147,15 +147,15 @@ int *rx, *ry;
 void circle(b,x1,y1,r,f)
 BITMAP  *b;
 int x1;
-register int y1;
+int y1;
 int r, f;
 {
-   register int err = 0;		/* x^2 + y^2 - r^2 */
-   register int dxsq = 1;		/* (x+dx)^2-x^2*/
-   register int dysq = 1 - 2*r;
-   register int exy;
+   int err = 0;		/* x^2 + y^2 - r^2 */
+   int dxsq = 1;		/* (x+dx)^2-x^2*/
+   int dysq = 1 - 2*r;
+   int exy;
    int x0 = x1;
-   register int y0 = y1 - r;
+   int y0 = y1 - r;
 
    y1 += r;
    while(y1 > y0) {
@@ -209,11 +209,11 @@ int f;
  */
 
 void arc(bp, x0,y0, x2,y2, x1,y1, f)
-register BITMAP *bp;
+BITMAP *bp;
 int x0,y0,x2,y2,x1,y1,f;
    {
-   register int dx, dy;
-   register int eps;   /* x^2 + y^2 - r^2 */
+   int dx, dy;
+   int eps;   /* x^2 + y^2 - r^2 */
    int dxsq, dysq;   /* (x+dx)^2-x^2, ...*/
    int ex, ey, exy;
 

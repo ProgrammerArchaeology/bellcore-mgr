@@ -40,7 +40,7 @@
 /*{{{  _quit -- really quit*/
 void _quit(void)
    {
-   register WINDOW *win;
+   WINDOW *win;
    static int really_quit=0;
 
    if (really_quit++) {
@@ -87,7 +87,7 @@ void _quit(void)
 /*{{{  redraw -- redraw screen, restore contents of saved windows*/
 void redraw(void)
    {
-   register WINDOW *win;
+   WINDOW *win;
 
    dbgprintf('b',(stderr,"\r\n\tREDRAW\r\n"));
    for(win=active;win != (WINDOW *) 0;win=W(next)) {
@@ -166,11 +166,11 @@ void quit(void)
 /*{{{  do_button -- figure out what to do with a button push*/
 void do_button(button) int button;
    {
-   register WINDOW *win;		/* window of interest */
+   WINDOW *win;		/* window of interest */
    int choice;				/* current menu choice */
    int choice_ok;			/* valid choice flag */
    struct menu_state *state;		/* place to keep menu state */
-   register int which_menu;		/* which menu indicator */
+   int which_menu;		/* which menu indicator */
 
    dbgprintf('b',(stderr,"do button %d (button state id %d)\n",button,button_state));
 

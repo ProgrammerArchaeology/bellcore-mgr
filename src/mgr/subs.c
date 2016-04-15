@@ -52,9 +52,9 @@
 
 /*{{{  set_covered -- deactivate all windows covered by win*/
 void set_covered(check)
-register WINDOW *check;			/* window to check covering against */
+WINDOW *check;			/* window to check covering against */
    {
-   register WINDOW *win;
+   WINDOW *win;
 
    for(win=active;win != (WINDOW *) 0;win=win->next)
        if (win!=check && intersect(win,check) && W(flags)&W_ACTIVE) {
@@ -70,8 +70,8 @@ register WINDOW *check;			/* window to check covering against */
 /*{{{  un_covered -- find and activate all windows previously covered by win*/
 void un_covered()
    {
-   register WINDOW *win,*check;
-   register int cover;
+   WINDOW *win,*check;
+   int cover;
 
    for(win=active;win != (WINDOW *) 0;win=W(next)) {
       dbgprintf('U',(stderr,"	invalidate cliplist: %s)\r\n",W(tty)));
@@ -109,7 +109,7 @@ void un_covered()
 /*}}}  */
 /*{{{  expose -- bring a window to the top*/
 void expose(win)
-register WINDOW *win;			/* window to expose */
+WINDOW *win;			/* window to expose */
    {
    dbgprintf('o',(stderr,"exposing %s\r\n",W(tty)));
    
@@ -155,7 +155,7 @@ register WINDOW *win;			/* window to expose */
 /*{{{  bury -- move a window at the bottom of window list*/
 int
 bury(win)
-register WINDOW *win;			/* window to bury */
+WINDOW *win;			/* window to bury */
    {
    dbgprintf('o',(stderr,"burying %s\r\n",W(tty)));
    if (!win || !W(next))
@@ -177,7 +177,7 @@ register WINDOW *win;			/* window to bury */
 /*}}}  */
 /*{{{  hide -- bury a window at the bottom of the screen*/
 void hide(win)
-register WINDOW *win;			/* window to hide */
+WINDOW *win;			/* window to hide */
    {
    dbgprintf('o',(stderr,"hiding %s\r\n",W(tty)));
    if (bury(win)==0) return;
@@ -190,7 +190,7 @@ register WINDOW *win;			/* window to hide */
 /*{{{  repair -- repair effects of buried window*/
 void repair(WINDOW *clip)
    {
-   register WINDOW *win;
+   WINDOW *win;
 #ifdef NOCLIP
    for(win=ACTIVE(prev)->prev;win!=active;win=W(prev))
       if (!alone(win)) restore_win(win);
@@ -230,8 +230,8 @@ void save_win(WINDOW *win)
 
 void
 clip_win(win,clip)
-register WINDOW *win;			/* window to restore to screen */
-register WINDOW *clip;			/* clip window */
+WINDOW *win;			/* window to restore to screen */
+WINDOW *clip;			/* clip window */
    {
    int x0 = Max(W(x0),C(x0)) - W(x0);
    int y0 = Max(W(y0),C(y0)) - W(y0);
@@ -260,7 +260,7 @@ end of debug */
 /*{{{  restore_win -- restore a previously saved pixel image of the window*/
 void
 restore_win(win)
-register WINDOW *win;			/* window to restore to screen */
+WINDOW *win;			/* window to restore to screen */
    {
    if (W(save) != (BITMAP *) 0)
    bit_blit(W(border),0,0,BIT_WIDE(W(border)),BIT_HIGH(W(border)),
@@ -284,8 +284,8 @@ BITMAP *screen;
 int mouse, *x, *y;
 int how;
    {
-   register int mx = *x, my = *y;
-   register int button = 0;
+   int mx = *x, my = *y;
+   int button = 0;
    int dx,dy;
    MOUSE_ON(screen,mx,my);
    do {
@@ -311,13 +311,13 @@ int how;
 
 int
 parse(line,fields)
-register char *line;
-register char **fields;
+char *line;
+char **fields;
    {
    int inword = 0;
    int count = 0;
    char *start;
-   register char c;
+   char c;
 
    for(start = line;(c = *line) && c != '\n';line++)
       if (inword && iswhite(c)) {
@@ -347,9 +347,9 @@ trans(s)
 char *s;
    {
    char *result = s;
-   register int i=0;
-   register char c;
-   register int got_slash=0;
+   int i=0;
+   char c;
+   int got_slash=0;
 
    while((c = (*s++)&0x7f)) {
       if (got_slash){
@@ -431,7 +431,7 @@ void set_console(WINDOW *win, int on)
 void suspend(void)
    {
 #ifdef SIGSTOP
-   register WINDOW *win;
+   WINDOW *win;
 
    MOUSE_OFF(screen,mousex,mousey);
    sleep(1);	/* give the key time to go up */
@@ -486,11 +486,11 @@ void suspend(void)
 /*{{{  alignwin -- align a window so a byte boundary occurs somewhere insode the border*/
 void
 alignwin(screen,x,dx,slop)
-register BITMAP *screen;
-register int *x, *dx;
+BITMAP *screen;
+int *x, *dx;
 int slop;
    {
-   register int adjust = (BIT_X(screen)+ *x) & 7;
+   int adjust = (BIT_X(screen)+ *x) & 7;
 
    if (adjust>0 && adjust<(8-slop)) {
       *x -= adjust;
@@ -594,7 +594,7 @@ void cursor_off()
 int systemcmd(command) char *command;
 {
         int status, pid, w;
-        register void (*istat)(), (*qstat)();
+        void (*istat)(), (*qstat)();
 
 	if (!command  ||  *command == '\0')
 		return(0);

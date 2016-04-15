@@ -39,8 +39,8 @@ static BITMAP *get_map(id,sub)
 int id;				/* pid of process controlling window */
 int sub;			/* window number of this window */
 {
-  register WINDOW *win;
-  register BITMAP *map;
+  WINDOW *win;
+  BITMAP *map;
 
   for(win=active;win != (WINDOW *) 0;win=W(next))
   if (W(pid)==id && W(num)==sub)
@@ -55,7 +55,7 @@ int sub;			/* window number of this window */
 /*}}}  */
 
 /*{{{  down_load*/
-void down_load(win,window,text) register WINDOW *win; BITMAP *window, *text;
+void down_load(win,window,text) WINDOW *win; BITMAP *window, *text;
 {
   WINDOW *win2;
   int cnt;

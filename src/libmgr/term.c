@@ -140,7 +140,7 @@ int
 get_all(list)
 struct window_data *list;
    {
-   register int i;
+   int i;
 
    for(i=0;  get_eachwin( list );  i++ )
       list++;
@@ -161,7 +161,7 @@ int
 get_client(list)
 struct window_data *list;
    {
-   register int i;
+   int i;
 
    _m_ttyset();
    m_getinfo(G_ALLMINE);
@@ -174,7 +174,7 @@ struct window_data *list;
 /*{{{  get_mouse -- get the mouse coords*/
 int get_mouse(x,y) int *x, *y;
    { 
-   register int count;
+   int count;
 
    if ((count = get_info(G_MOUSE2,m_fields)) >= 3) {
       if (x)
@@ -192,7 +192,7 @@ get_cursor(x,y)
 int *x, *y;
 
    { 
-   register int count;
+   int count;
 
    if ((count = get_info(G_CURSOR,m_fields)) > 2) {
       if (x)
@@ -210,7 +210,7 @@ get_colrow(cols,rows)
 int *cols, *rows;
 
    { 
-   register int count;
+   int count;
 
    if ((count = get_info(G_WINSIZE,m_fields)) == 2) {
       if (cols)
@@ -267,7 +267,7 @@ int n;				/* menu number */
 int count;			/* number of menu items */
 struct menu_entry *text;	/* menu choices */
    {
-   register int i, len;
+   int i, len;
 
    /* calculate string lengths */
 

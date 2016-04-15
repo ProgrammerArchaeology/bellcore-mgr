@@ -18,8 +18,8 @@
 /*{{{  win_rop -- Do raster ops*/
 void win_rop(WINDOW *win, BITMAP *window)
 {
-  register int *p = W(esc);
-  register int op;
+  int *p = W(esc);
+  int op;
 
   op = W(op);
   dbgprintf('B',(stderr,"%s: blit\t",W(tty)));
@@ -101,7 +101,7 @@ void win_rop(WINDOW *win, BITMAP *window)
 
     if (p[6]>0 && W(bitmaps)[p[6]-1]==(BITMAP*)0)
     {
-      register int depth;
+      int depth;
 
       /* figure out depth of dest if we need to create it */
 
@@ -207,7 +207,7 @@ void win_map(WINDOW *win, BITMAP *window)
 /*{{{  win_plot -- plot a line*/
 void win_plot(WINDOW *win, BITMAP *window)
 {
-  register int *p = W(esc);
+  int *p = W(esc);
   int op;
 
   op = W(op);
@@ -256,12 +256,12 @@ void Bit_line(WINDOW *win, BITMAP *dst,int x1,int y1,int x2,int y2,int op)
 /*{{{  grunch -- experimantal graphics crunch mode*/
 void grunch(WINDOW *win, BITMAP *dst)
 {
-  register char *buf = W(snarf);
-  register int cnt = W(esc)[W(esc_cnt)];
+  char *buf = W(snarf);
+  int cnt = W(esc)[W(esc_cnt)];
   int op;
   int penup = 0;
   int *p = W(esc);
-  register int x,y,x1,y1;
+  int x,y,x1,y1;
 
   op = W(op);
 
@@ -305,7 +305,7 @@ void grunch(WINDOW *win, BITMAP *dst)
 /*{{{  circle_plot -- plot a circle*/
 void circle_plot(WINDOW *win,BITMAP *window)
 {
-  register int *p = W(esc);
+  int *p = W(esc);
   int op;
 
   op = W(op);
@@ -362,7 +362,7 @@ void circle_plot(WINDOW *win,BITMAP *window)
 /*{{{  win_go -- move the graphics pointer*/
 void win_go(WINDOW *win)
 {
-  register int *p = W(esc);
+  int *p = W(esc);
 
   switch (W(esc_cnt)) 
   {

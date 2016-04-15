@@ -54,8 +54,8 @@ BITMAP *map;
 int x,y,w,h;		/* where in map */
 int how;		/* 0-> normal, 1->inverted */
 {
-  register unsigned long sum = 0;
-  register int j;
+  unsigned long sum = 0;
+  int j;
   bit_blit(glyph,0,0,32,h,BIT_CLR,NULL_DATA,0,0);
   bit_blit(glyph,32-w,0,w,h,how ? BIT_NOT(BIT_SRC) : BIT_SRC,map,x,y);
   for (j=0;j<h;j++)
@@ -67,7 +67,7 @@ int how;		/* 0-> normal, 1->inverted */
 /*{{{  enter -- enter a glyph into the hash table*/
 static void enter(item,value,type) int item; unsigned char value; int type;
 {
-  register struct entry *entry;
+  struct entry *entry;
 
   if (table[item] == (struct entry *) 0)
   {
@@ -92,7 +92,7 @@ WINDOW *win;
 BITMAP *map;				/* bitmap containing text */
 int x,y,w,h;				/* position of glyph in "map" */
 {
-  register struct entry *entry;
+  struct entry *entry;
   int code;				/* hash code */
   int size = sizeof(data[0]) * h;
 
@@ -121,7 +121,7 @@ int x,y,w,h;				/* position of glyph in "map" */
 }
 /*}}}  */
 /*{{{  fixline -- change trailing white space into \n*/
-static unsigned char *fixline(s,pnt) unsigned char *s; register unsigned char *pnt;
+static unsigned char *fixline(s,pnt) unsigned char *s; unsigned char *pnt;
 {
   while (*--pnt == ' ' && pnt > s);
   *++pnt = '\n';
@@ -130,13 +130,13 @@ static unsigned char *fixline(s,pnt) unsigned char *s; register unsigned char *p
 /*}}}  */
 /*{{{  to_tabs -- change spaces to tabs*/
 static unsigned char *to_tabs(pos,in,out)
-register int pos;				/* starting col # */
-register unsigned char *in;				/* input str */
-register unsigned char *out;				/* output str - tabs */
+int pos;				/* starting col # */
+unsigned char *in;				/* input str */
+unsigned char *out;				/* output str - tabs */
 {
   unsigned char *s = out;				/* start of out str */
-  register unsigned char c;				/* current input char */
-  register int spaces = 0;			/* # pending spaces */
+  unsigned char c;				/* current input char */
+  int spaces = 0;			/* # pending spaces */
    
   dbgprintf('C',(stderr,"-> TABS"));
   while(pos++,c = *in++) 
@@ -198,8 +198,8 @@ void paste(void)
 int cut(mode)
   int mode;
 {
-  register int i,j;
-  register WINDOW *win = active;		/* window to cut text from */
+  int i,j;
+  WINDOW *win = active;		/* window to cut text from */
   int count = 0;				/* # of snarfed chars */
   int errors = 0;				/* number of misses */
   int cols=1, rows=0;				/* rows and cols swept */
@@ -481,8 +481,8 @@ rubber_band_cut( void) {
 /*{{{  zap_fhash -- zap a font hash table*/
 void zap_fhash(fnt) struct font *fnt;
 {
-  register struct entry *entry, *next;
-  register int i;
+  struct entry *entry, *next;
+  int i;
 
   if (fnt->table) 
   {

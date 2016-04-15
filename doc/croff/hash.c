@@ -31,8 +31,8 @@ Hash(key,max)
 char *key;		/* key to hash on */
 int max;		/* max should be a prime number */
    {
-   register int i = 0;
-   register long sum;
+   int i = 0;
+   long sum;
    for(sum = 0; *key != '\0';i++, sum += (*key++)<<(i&7));
    return((int) (sum % max));
    }
@@ -44,10 +44,10 @@ int max;		/* max should be a prime number */
 
 int
 hash(key,max)
-register char *key;		/* key to hash on */
+char *key;		/* key to hash on */
 int max;			/* max should be a prime number */
    {
-   register int sum;
+   int sum;
         
    for (sum = *key; *key; sum += (*key) * (*(++key)));
    return( (sum += *(key-2)) % max);
@@ -65,7 +65,7 @@ char *name;			/* name to be put in table */
 	{
 	int index;
 	char *alloc(), *save_line();
-	register TABLE *list;
+	TABLE *list;
 
 	index=HASH(name,size);
 	for(list=table[index]; list != (TABLE *) 0; list = list -> next)
@@ -93,7 +93,7 @@ int size;			/* size of hash table */
 char *name;			/* name to be put in table */
 	{
 	int index;
-	register struct table_entry *list, *temp= (struct table_entry *) 0;
+	struct table_entry *list, *temp= (struct table_entry *) 0;
 	index=HASH(name,size);
 	for(list=table[index]; list != (TABLE *) 0; temp=list,list = list->next)
 	   if (Same(list->name,name)) {
@@ -129,7 +129,7 @@ int size;
 char *name;			/* name to be put in table */
 	{
 	int index;
-	register struct table_entry *list;
+	struct table_entry *list;
 
 	index=HASH(name,size);
 	for(list=table[index]; list != (TABLE *) 0; list = list -> next)
@@ -150,7 +150,7 @@ int size;
 char *name;			/* name to be put in table */
 	{
 	int index;
-	register struct table_entry *list;
+	struct table_entry *list;
 
 	index=HASH(name,size);
 	for(list=table[index]; list != (TABLE *) 0; list = list -> next)
@@ -172,7 +172,7 @@ char *name;			/* name to be put in table */
 char *value;			/* value to be put into table */
 	{
 	int index;
-	register struct table_entry *list;
+	struct table_entry *list;
 
 	index=HASH(name,size);
 	for(list=table[index]; list != (TABLE *) 0; list = list -> next)

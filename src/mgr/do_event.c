@@ -44,7 +44,7 @@ char *str;        /*  beginning of args */
 int *count;       /* # of args */
 int *args;        /* where to put args */
 	{
-	register char c, *pntr = str;    /* 1st char of args */
+	char c, *pntr = str;    /* 1st char of args */
 
 	while (((c = *++pntr) >= '0' && c <= '9') || c==',' || c=='-')
 		;
@@ -53,7 +53,7 @@ int *args;        /* where to put args */
 	}
 /*}}}  */
 /*{{{  get_id -- compute a unique window id*/
-static char *get_id(win) register WINDOW *win;
+static char *get_id(win) WINDOW *win;
 	{
 	int sub = W(num);	/* subwindow number */
 	int main = W(pid);	/* main window id */
@@ -65,8 +65,8 @@ static char *get_id(win) register WINDOW *win;
 /*}}}  */
 /*{{{  sub_event -- substitute %x into str, returns true if an area was swept.*/
 static int sub_event(win,str,c,swept,count,args)
-register WINDOW *win;
-register char *str,c;
+WINDOW *win;
+char *str,c;
 int swept;     /* if swept, don't do sweeps */
 int count;     /* # of sweep args */
 int *args;     /* the arg list */
@@ -79,7 +79,7 @@ int *args;     /* the arg list */
  
 #ifdef DEBUG
 	if (debug) {
-		register int i;
+		int i;
 		dbgprintf('e',(stderr,"%s) event (%c) args:",W(tty),c));
 		for(i=0;i<count;i++)
 			dbgprintf('e',(stderr," %d",args[i]));
@@ -238,7 +238,7 @@ char *list;				/* list of valid event chars */
 	char data[SUB_SIZE];
 	int args[4];         /* arguments to sweep event */
 	int count;           /* # of args */
-	register char *start;
+	char *start;
 	char *end;
 	int swept = 0;			/* already did a sweep */
 
@@ -263,10 +263,10 @@ char *list;				/* list of valid event chars */
 /*{{{  do_event -- do a button event*/
 void do_event(event,win,flag)
 int event;				/* event number */
-register WINDOW *win;			/* window event applies to */
+WINDOW *win;			/* window event applies to */
 int flag;				/* type of window */
 	{
-	register char *buff;
+	char *buff;
 
 	if (!win) return;
 

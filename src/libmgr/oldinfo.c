@@ -23,7 +23,7 @@ static char *m_fields[16];
 /*{{{  get_size -- get the window size*/
 int get_size(x,y,wide,high) int *x, *y, *wide, *high;
    { 
-   register int count;
+   int count;
 
    if ((count = get_info(G_COORDS,m_fields)) >= 4) {
       if (x)
@@ -42,7 +42,7 @@ int get_size(x,y,wide,high) int *x, *y, *wide, *high;
 /*{{{  get_param -- get system parameters*/
 int get_param(host,xmax,ymax,border) char *host; int *xmax, *ymax, *border;
    { 
-   register int count;
+   int count;
 
    if ((count = get_info(G_SYSTEM,m_fields)) >= 4) {
       if (host)
@@ -64,7 +64,7 @@ get_font(wide,high)
 int  *wide, *high;
 
    { 
-   register int count, result;
+   int count, result;
 
    if ((count = get_info(G_FONT,m_fields)) >= 3) {
       if (wide)

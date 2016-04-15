@@ -23,11 +23,11 @@
 
 /*{{{  scroll -- scroll a bitmap*/
 void scroll(win,map,start,end,delta,op)
-register WINDOW *win;	/* window to scroll */
-register BITMAP *map;	/* bitmap in window to scroll */
+WINDOW *win;	/* window to scroll */
+BITMAP *map;	/* bitmap in window to scroll */
 int start,end,delta,op;	/* starting line, ending line, # of lines */
    {
-   register int ems = end-start;
+   int ems = end-start;
    if (delta > 0) {
       if (end-start > delta)
 #ifdef MGR_ALIGN

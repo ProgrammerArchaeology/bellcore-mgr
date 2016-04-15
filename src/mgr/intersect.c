@@ -20,7 +20,7 @@
 /*}}}  */
 
 /*{{{  intersect*/
-int intersect(win1,win2) register WINDOW *win1, *win2;
+int intersect(win1,win2) WINDOW *win1, *win2;
 {
 	return 
         (!(
@@ -34,9 +34,9 @@ int intersect(win1,win2) register WINDOW *win1, *win2;
 /*{{{  alone -- see if any window intersects any other*/
 int
 alone(check)
-register WINDOW *check;
+WINDOW *check;
 {
-	register WINDOW *win;
+	WINDOW *win;
 
         for(win=active;win != (WINDOW *) 0;win=win->next)
           if (check!=win && intersect(check,win))
@@ -46,8 +46,8 @@ register WINDOW *check;
 /*}}}  */
 /*{{{  mousein -- see if mouse is in window*/
 int mousein(x,y,win,how)
-register int x,y;
-register WINDOW *win;
+int x,y;
+WINDOW *win;
 int how;		/* how:  0-> intersect   else -> point */
 {
    if (how == 0)
@@ -65,8 +65,8 @@ int how;		/* how:  0-> intersect   else -> point */
 /*{{{  in_text -- see if mouse is in text region*/
 int
 in_text(x,y,win)
-register int x,y;
-register WINDOW *win;
+int x,y;
+WINDOW *win;
    {
    if (W(text.wide)) {
       int x0 = W(x0)+W(text.x);

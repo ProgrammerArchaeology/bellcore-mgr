@@ -31,9 +31,9 @@ main(argc,argv)
 int argc;
 char **argv;
    {
-   register int i,code, count = 0;
+   int i,code, count = 0;
    TABLE **table;			/* place to build hash table into */
-   register TABLE *list, *next;
+   TABLE *list, *next;
    char *name;				/* name of table */
    char *prog = *argv;
    int len=0, size;

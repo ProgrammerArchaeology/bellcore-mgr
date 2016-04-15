@@ -39,7 +39,7 @@ static int sintab[] = {
 	1024, 1024,
 	} ;
 
-static int isin(n) register int n;		/* angle in degrees */
+static int isin(n) int n;		/* angle in degrees */
    {
    if (n < 0)
       return(-isin(-n));
@@ -59,7 +59,7 @@ static int isin(n) register int n;		/* angle in degrees */
 
 static int
 icos(n)
-register int n;
+int n;
    {
    if (n < 0)
       n=-n;

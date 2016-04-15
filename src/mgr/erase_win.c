@@ -14,14 +14,14 @@
 
 /*{{{  Bit_pattern -- fill DST bitmap with SRC, preserving alignment*/
 static void Bit_pattern(dst,dx,dy,wide,high,func,src)
-register BITMAP *dst,*src;
-register int dx,dy;
+BITMAP *dst,*src;
+int dx,dy;
 int wide,high;
 int func;
    {
-   register int incr;
-   register int sw = BIT_WIDE(src);
-   register int sh = BIT_HIGH(src);
+   int incr;
+   int sw = BIT_WIDE(src);
+   int sh = BIT_HIGH(src);
    int x = BIT_X(dst) + dx;
    int y = BIT_Y(dst) + dy;
    int xdel = x % sw;

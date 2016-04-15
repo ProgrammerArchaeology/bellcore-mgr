@@ -38,7 +38,7 @@
 
 /*{{{  get_info*/
 void get_info(win,window,text)
-register WINDOW *win;			/* window info is about */
+WINDOW *win;			/* window info is about */
 BITMAP *window;				/* window's bitmap data */
 BITMAP *text;				/* window's text region */
    {
@@ -46,7 +46,7 @@ BITMAP *text;				/* window's text region */
    int count;				/* whatever */
    char coords[1024];			/* space for return value */
 char *start = coords;		/* start of reply */
-   register WINDOW *win2;		/* generic window pntr */
+   WINDOW *win2;		/* generic window pntr */
 
 	if (W(flags)&W_DUPKEY) {
 		sprintf(coords,"%c ",W(dup));
@@ -96,7 +96,7 @@ char *start = coords;		/* start of reply */
            break;
       case G_FONT:					/* font wide, high, # */
            {
-           register int id = W(font)->ident;
+           int id = W(font)->ident;
            sprintf(start,"%d %d %d %s\n", FSIZE(wide),
               FSIZE(high),id,id>0?fontlist[id-1]:
               "default");
@@ -139,7 +139,7 @@ char *start = coords;		/* start of reply */
       case G_ALLMINE:			/* window status for client windows */
       case G_ALL:				/* complete window status */
            {
-           register char status;
+           char status;
            for(win2=active;win2!=(WINDOW *) 0;win2=win2->next) {
               if (*W(esc)==G_ALLMINE && win2->main != W(main))
                  continue;
@@ -165,7 +165,7 @@ char *start = coords;		/* start of reply */
            break;
       case G_NOTIFY:			/* list windows with notify set  */
            {
-           register char *str;
+           char *str;
            for(win2=active;win2!=(WINDOW *) 0;win2=win2->next) {
               dbgprintf('i',(stderr,"  checking %s\r\n",win2->tty));
               if (IS_EVENT(win2,EVENT_NOTIFY) &&
@@ -209,8 +209,8 @@ char *start = coords;		/* start of reply */
 #ifdef OBSOLETE
       case G_ALLFONT:					/* font information */
            {
-           register struct font *temp;
-           register int i;
+           struct font *temp;
+           int i;
  
            sprintf(start,"%d %d",font->head.wide,
                                  font->head.high);

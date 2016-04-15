@@ -83,7 +83,7 @@ static struct st
 /*}}}  */
 
 /*{{{  init_all*/
-void init_all(where) register BITMAP *where;
+void init_all(where) BITMAP *where;
 {
   maxv = BIT_HIGH(where);
   hmaxv = maxv>>1;
@@ -105,10 +105,10 @@ static void flip(void) {
 
 static void cordic(x, y, scale, count)
 short *x, *y;
-register short scale, count;
+short scale, count;
 
 {
-  register short tempx, tempy;
+  short tempx, tempy;
 
   tempx = *x;
   tempy = *y;
@@ -132,9 +132,9 @@ register short scale, count;
 /*}}}  */
 /*{{{  xplot*/
 static int xplot(where,x, y, col, state)
-register BITMAP *where;
-register int x, y;
-register int col;
+BITMAP *where;
+int x, y;
+int col;
 int state;
 {
   /* are we on the screen? If not, let the caller know*/
@@ -152,10 +152,10 @@ int state;
 /*}}}  */
 /*{{{  project*/
 static int project(where,x, y, z, col, state)
-register BITMAP *where;
-register short x, y, z;
-register int col;
-register short state;
+BITMAP *where;
+short x, y, z;
+int col;
+short state;
 {
         
   /* one-point perspective projection */
@@ -171,8 +171,8 @@ register short state;
 /*{{{  fly*/
 static void fly (where) BITMAP *where;
 {
-  register short i;
-  register struct st *stp;
+  short i;
+  struct st *stp;
 
   init_all(where);     /* set up global variables */
   for (i=0,stp=stars; i<NSTARS; i++,stp++)
@@ -191,8 +191,8 @@ static void fly (where) BITMAP *where;
 /*{{{  dofly*/
 static void dofly (where) BITMAP *where;
 {
-  register short i;
-  register struct st *stp;
+  short i;
+  struct st *stp;
 
   i = NSTARS;
   stp = stars;

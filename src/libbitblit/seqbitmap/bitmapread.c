@@ -30,7 +30,7 @@ where:
   "as is".  */
   /* magic number is 'y' 'x' instead of 'y' 'z' */
 
-  register int kb, c;
+  int kb, c;
   static int repn=0, cr=0;
   kb=bcount*bct1;
 

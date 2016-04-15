@@ -73,8 +73,8 @@ int top,left;		/* start of window in pixels */
 int cols,rows;		/* size of window */
 int gx,gy;		/* character size (in pixels) */
    {
-   register int dx = *px;
-   register int dy = *py;
+   int dx = *px;
+   int dy = *py;
 
    if (dy < 0)
       dy = 0;
@@ -120,11 +120,11 @@ get_text(screen,mouse,x,y,dx,dy,win,c)
 BITMAP *screen;		/* where to sweep out the box */
 int mouse;			/* file to get mouse coords from */
 int x,y;			/* starting position */
-register int *dx,*dy;		/* box width,height */
+int *dx,*dy;		/* box width,height */
 WINDOW *win;			/* text window */
 int c;				/* E_SWTEXT or E_SWTEXTT */
    {
-   register int button;
+   int button;
    int left,top;
    int cols,rows;
    int gx,gy;

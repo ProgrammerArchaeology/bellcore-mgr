@@ -40,11 +40,11 @@
 /*{{{  win_push -- push a window on the environment stack*/
 int
 win_push(win,level)
-register WINDOW *win;		/* window to push */
+WINDOW *win;		/* window to push */
 int level;			/* what things to push */
    {
-   register WINDOW *stack;	/* pushed window goes here */
-   register int i,j;
+   WINDOW *stack;	/* pushed window goes here */
+   int i,j;
 
    if ((stack = (WINDOW *) malloc(sizeof(WINDOW))) == (WINDOW *) 0)
       return(-1);
@@ -211,8 +211,8 @@ int
 win_pop(win)
 WINDOW *win;				/* window to pop to */
    {
-   register int i,j;
-   register WINDOW *stack = W(stack);	/* window to pop from */
+   int i,j;
+   WINDOW *stack = W(stack);	/* window to pop from */
 
    if (stack == (WINDOW *) 0) {
       dbgprintf('P',(stderr,"  No environment to pop\n"));

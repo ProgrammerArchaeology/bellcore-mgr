@@ -8,7 +8,7 @@
 /*{{{  bit_create -- create a bitmap as a sub-rectangle of another bitmap*/
 BITMAP *bit_create(map, x, y, wide, high) BITMAP *map; int x, y, wide, high;
 {
-  register BITMAP *result;
+  BITMAP *result;
 
   if (x + wide > map->wide) wide = map->wide - x;
   if (y + high > map->high) high = map->high - y;

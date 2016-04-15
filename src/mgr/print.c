@@ -112,7 +112,7 @@ char *print_flags(n)
 int n;
    {
    char *binary();
-   register int i,j;
+   int i,j;
 
    sprintf(buff,"(%s)",binary(n));
    for(j=1,i=0;flags[i];i++,j<<=1)
@@ -137,7 +137,7 @@ int n;		/* menu state */
 char *print_stack(n)
 int n;
    {
-   register int i,j;
+   int i,j;
    char *binary();
 
    sprintf(buff,"(%s)",binary(n));
@@ -154,7 +154,7 @@ int n;
 char *print_events(n)
 int n;
    {
-   register int i,j;
+   int i,j;
    char *binary();
 
    sprintf(buff,"(%s)",binary(n));
@@ -189,7 +189,7 @@ get_ps()
 void
 free_ps()
    {
-   register int i;
+   int i;
 
    for(i=0;i<p_count;i++) {
       if (list[i])
@@ -202,9 +202,9 @@ char *
 print_ps(tty)
 char *tty;
    {
-   register int i;
-   register char *check = tty + (strlen(tty) - 2);
-   register char *p1,*p2;
+   int i;
+   char *check = tty + (strlen(tty) - 2);
+   char *p1,*p2;
 
    *buff = '\0';
    for(i=0;i<p_count;i++)
@@ -227,7 +227,7 @@ char *
 binary(x)
 int x;
    {
-   register int i;
+   int i;
    static char out[33];
    int n=32;
 

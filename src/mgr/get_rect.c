@@ -49,14 +49,14 @@ void get_rect(screen,mouse,x,y,dx,dy,type)
 BITMAP *screen;		/* where to sweep out the box */
 int mouse;			/* file to get mouse coords from */
 int x,y;			/* starting position */
-register int *dx,*dy;		/* box width,height */
+int *dx,*dy;		/* box width,height */
 int type;			/* rectangle or line */
    {
    int x_mouse, y_mouse;
-   register int button;
-   register int newx;
-   register int newy;
-   register int skip=1;
+   int button;
+   int newx;
+   int newy;
+   int skip=1;
 
    newx = *dx;
    newy = *dy;

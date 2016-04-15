@@ -30,7 +30,7 @@
 /*{{{  glyph_create*/
 static void glyph_create(font,glyph,offset) struct font *font; BITMAP **glyph; int offset;
 {
-  register int i, x;
+  int i, x;
   int first = font->head.start;
   int last = first + font->head.count;
   int wide = font->head.wide;
@@ -86,10 +86,10 @@ static struct font *open_sfont(head,data) struct font_header head; BITMAP *data;
 /*}}}  */
 #ifndef MGRLOGIN
 /*{{{  font_purge -- look for and remove all references to a particular font*/
-static int font_purge(gone) register struct font *gone;	/* invalid font pointer */
+static int font_purge(gone) struct font *gone;	/* invalid font pointer */
    {
-   register WINDOW *win, *win2;
-   register int count=0;
+   WINDOW *win, *win2;
+   int count=0;
 
    /* re-reference current window font */
 
@@ -173,7 +173,7 @@ struct font *open_font(file) char *file;
 /*{{{  free_font -- deallocate a font*/
 void free_font(dead_font) struct font *dead_font;
 {
-  register int i;
+  int i;
   int count; /* # of glyphs to trash */
 
   if (!dead_font) return;
@@ -199,7 +199,7 @@ int enhance_font(font)struct font *font;                    /* font to be enhanc
   BITMAP *data;                           /* new bitmap data */
   BITMAP **glyph;                 /* new font glyphs */
   int size;                                       /* current font size */
-  register int i;
+  int i;
 
   if (font->head.type&0x80)            /* already enhanced */
     return(0);

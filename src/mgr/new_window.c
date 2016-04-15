@@ -96,8 +96,8 @@ int
 next_windowset_id()
    {
       char		list[ MAXWIN + 2 ];
-      register char	*cp;
-      register WINDOW	*win;
+      char	*cp;
+      WINDOW	*win;
 
       for( cp = list;  cp < &list[ MAXWIN + 2 ];  cp++ )
 	 *cp = 0;
@@ -116,11 +116,11 @@ next_windowset_id()
 /*{{{  setup_window -- initialize window state*/
 int
 setup_window(win,curr_font,x,y,dx,dy)
-register WINDOW *win;
+WINDOW *win;
 int x,y,dx,dy;
 struct font *curr_font;
    {
-   register int i;
+   int i;
 
 #ifdef MGR_ALIGN
    alignwin(screen,&x,&dx,SUM_BDR);
@@ -191,7 +191,7 @@ int x, y, dx, dy;
 int fnt;
 char *start;
    {
-   register WINDOW *win = active;
+   WINDOW *win = active;
    struct font *curr_font;
 
    if (dx<0)
@@ -267,7 +267,7 @@ int x,y,dx,dy;
 int font_num;
 char **argv;
    {
-   register WINDOW * win;
+   WINDOW * win;
 
    if (next_window >= MAXWIN)
        return(-1);
@@ -301,7 +301,7 @@ half_window(x,y,dx,dy,font_num)
 int x,y,dx,dy;
 int font_num;
    {
-   register WINDOW * win;
+   WINDOW * win;
    char *tty;
 
    if (next_window >= MAXWIN)

@@ -124,7 +124,7 @@ proc_mouse(mouse)
 int mouse;
    {
    int dx, dy;
-   register int button, done = 0;
+   int button, done = 0;
 
    do {
       button = mouse_get(mouse,&dx,&dy);
@@ -186,9 +186,9 @@ FD_SET_DIFF( fd_set *target, fd_set *left, fd_set *right) {
 /*{{{  main*/
 int main(argc,argv) int argc; char **argv;
    {
-   register WINDOW *win;		/* current window to update */
-   register int i;			/* counter */
-   register int count;			/* # chars read from shell */
+   WINDOW *win;		/* current window to update */
+   int i;			/* counter */
+   int count;			/* # chars read from shell */
    int maxbuf = MAXBUF;			/* # chars processed per window */
    int shellbuf = MAXSHELL;		/* # chars processed per shell */
    fd_set reads;			/* masks, result of select */

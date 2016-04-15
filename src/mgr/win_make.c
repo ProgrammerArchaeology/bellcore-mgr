@@ -39,7 +39,7 @@ void win_make(WINDOW *win, int indx)
 /* window issuing make-call */
 /* current index into char string (yuk!) */
    {
-   register int *p = W(esc);	/* array of ESC digits */
+   int *p = W(esc);	/* array of ESC digits */
    char buff[20];
    WINDOW *win2=win;
 

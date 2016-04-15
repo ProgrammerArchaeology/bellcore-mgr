@@ -55,7 +55,7 @@
 /*{{{  detach -- unlink an alternate window from list*/
 static void detach(win2) WINDOW *win2;
    {
-   register WINDOW *win = win2;
+   WINDOW *win = win2;
 
    if (!(W(main)))
       return;
@@ -65,7 +65,7 @@ static void detach(win2) WINDOW *win2;
    }
 /*}}}  */
 /*{{{  set_dead -- notify alternate windows of impending death*/
-static void set_dead(win) register WINDOW *win;
+static void set_dead(win) WINDOW *win;
    {
    for(win = W(alt); win != (WINDOW *) 0; win = W(alt)) {
       dbgprintf('d',(stderr,"%s: telling %d\r\n",W(tty),W(num)));
@@ -75,10 +75,10 @@ static void set_dead(win) register WINDOW *win;
 /*}}}  */
 
 /*{{{  unlink_win -- free all space associated with a window*/
-void unlink_win(win,how) register WINDOW *win;		/* window to unlink */
+void unlink_win(win,how) WINDOW *win;		/* window to unlink */
 int how;			/* if how, unlink window stack as well */
    {
-   register int i;
+   int i;
 
    dbgprintf('u',(stderr,"Unlinking %s %s\n",W(tty),how?"ALL":""));
 
@@ -113,7 +113,7 @@ int how;			/* if how, unlink window stack as well */
    }
 /*}}}  */
 /*{{{  destroy -- destroy a window*/
-int destroy(win) register WINDOW *win;
+int destroy(win) WINDOW *win;
    {
    int status;
 

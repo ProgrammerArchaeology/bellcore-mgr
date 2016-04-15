@@ -89,7 +89,7 @@ char *
 get_path(name)
 char *name;
    {
-   register char *next, *list;
+   char *next, *list;
 
    if (strchr("/.",*name))
       if (access(name,X_OK)==0) return(name);
@@ -116,7 +116,7 @@ char *name;
 int get_command(argv,file) char **argv; int *file;
 {
    /*{{{  variables*/
-   register int i;				/* counter */
+   int i;				/* counter */
    int fd;					/* file desc */
    pid_t pid;					/* pid of shell */
    int tty_slots;				/* # of tty slots */

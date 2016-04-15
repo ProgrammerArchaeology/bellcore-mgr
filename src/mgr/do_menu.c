@@ -42,7 +42,7 @@ add_result(state,list)
 struct menu_state *state;		/* menu to add choice to */
 struct menu_result *list;		/* current list of results */
    {
-   register struct menu_result *current;	/* current result */
+   struct menu_result *current;	/* current result */
 
    /* set up list */
 
@@ -75,8 +75,8 @@ char **fields;				/* resultant fields */
 char delim;				/* field delimeter */
 int max;				/* max # fields */
    {
-   register char c, *start;
-   register int count;
+   char c, *start;
+   int count;
  
    for(count=0,start=line; count<max && (c = *line); line++)
       if (c == delim) {
@@ -119,7 +119,7 @@ char *line;
 struct font *font;
 int color;		/* raster op containing colors */
    {
-   register int count;
+   int count;
    char *fields[MAXITEMS];
 
    count = get_fields(line+1,*line,fields,MAXITEMS)/2;
@@ -257,9 +257,9 @@ void go_menu(n)
 int n;					/* which menu button (0 or 1) */
    {
    struct menu_result *result = NULL;		/* result of menu selection */
-   register struct menu_result *current;	/* current action */
+   struct menu_result *current;	/* current action */
    int exit = EXIT_RIGHT;			/* enable sliding and paging */
-   register int menu = ACTIVE(menu[n]);
+   int menu = ACTIVE(menu[n]);
 
    dbgprintf('m',(stderr,"Starting menu %d, button %d\n",menu,n));
 

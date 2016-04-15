@@ -7,11 +7,11 @@
 
 int main(argc,argv) int argc; char **argv;
 {
-  register BITMAP *screen;
+  BITMAP *screen;
   BITMAP *src,*dst;
   int wait=1;
   int x0;
-  register int i;
+  int i;
 
   screen = bit_open(SCREEN_DEV);
   setscreen();

@@ -5,13 +5,13 @@
 
 extern int
 m_parse(line,fields)
-register char *line;
-register char **fields;
+char *line;
+char **fields;
    {
    int inword = 0;
    int count = 0;
    char *start;
-   register char c;
+   char c;
 
    for(start = line;(c = *line) && c != '\n';line++)
       if (inword && iswhite(c)) {

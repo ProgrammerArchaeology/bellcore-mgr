@@ -148,12 +148,12 @@ void set_size(WINDOW *win)
 int put_window(WINDOW *win, unsigned char *buff, int buff_count)
 {
   /*{{{  variables*/
-  register BITMAP *window;                     /* bitmap to update */
-  register BITMAP *text=(BITMAP*)0;            /* current text region */
-  register int indx;                           /* index into buff */
-  register int cnt;                            /* # of esc. numbers */
-  register unsigned char c;                    /* current char */
-  register int done=0;                         /* set to 1 to exit */
+  BITMAP *window;                     /* bitmap to update */
+  BITMAP *text=(BITMAP*)0;            /* current text region */
+  int indx;                           /* index into buff */
+  int cnt;                            /* # of esc. numbers */
+  unsigned char c;                    /* current char */
+  int done=0;                         /* set to 1 to exit */
   int bell=0;                                  /* 1 if screen flashed once */
   int sub_window = 0;                          /* sub window created */
   int fsizehigh, fsizewide;                    /* variables to save deref. */
@@ -278,7 +278,7 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
         /*{{{  E_ADDLINE    -- add a new line*/
         case E_ADDLINE:
               if (*W(esc)) {
-                 register int count = *W(esc);
+                 int count = *W(esc);
                  scroll(win,text,W(y)-fsizehigh,T_HIGH,- count*(fsizehigh),BG_OP);
                  }
               else {
@@ -290,7 +290,7 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
         /*{{{  E_ADDCHAR    -- insert a character*/
         case E_ADDCHAR:
               {
-              register int wide = (fsizewide) * (*W(esc) ? *W(esc) : 1);
+              int wide = (fsizewide) * (*W(esc) ? *W(esc) : 1);
               if (wide+W(x)>T_WIDE)
                  wide = T_WIDE-W(x);
               bit_blit(text,W(x)+wide,W(y)-fsizehigh,
@@ -304,7 +304,7 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
         /*{{{  E_DELETELINE -- delete a line*/
         case E_DELETELINE:             /* delete a line */
               if (*W(esc)) {
-                 register int count = *W(esc);
+                 int count = *W(esc);
                  scroll(win,text,W(y)-fsizehigh,T_HIGH,count*fsizehigh,
                      BG_OP);
                  }
@@ -318,7 +318,7 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
         /*{{{  E_DELETECHAR -- delete a character*/
         case E_DELETECHAR:
               {
-              register int wide = (fsizewide) * (*W(esc) ? *W(esc) : 1);
+              int wide = (fsizewide) * (*W(esc) ? *W(esc) : 1);
               if (wide+W(x)>T_WIDE)
                  wide = T_WIDE-W(x);
               bit_blit(text,W(x),W(y)-fsizehigh,
@@ -481,7 +481,7 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
         /*{{{  E_BLEEP      -- highlight a section of the screen*/
         case E_BLEEP:
               if (cnt>2) {
-                 register int *p = W(esc);
+                 int *p = W(esc);
                  if (p[0]<0 || p[1]<0 )
                     break;
                  p[2] = BETWEEN(1,p[2],BIT_WIDE(screen)-1);
@@ -653,8 +653,8 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
                                                                                /* ^[1,2,3X     display menu 3 at 1,2 */
                                                                                /* ^[1,2,3,4Xhighlight menu 3 item 4 at 1,2 */
               {
-              register int *p = W(esc);
-              register struct menu_state *menu;
+              int *p = W(esc);
+              struct menu_state *menu;
               switch(cnt) {
                  case 0:                       /* remove menu from display */
                     if (p[0]>=0 && p[0]<MAXMENU && (menu=W(menus[p[0]])))
@@ -685,8 +685,8 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
         /*{{{  E_MENU       -- get a menu*/
         case E_MENU:                   /* get a menu */
               {                        /* should be split into several cases */
-              register int b = (W(esc)[0]<0);          /* which button */
-              register int n = ABS(W(esc)[0]);         /* menu number */
+              int b = (W(esc)[0]<0);          /* which button */
+              int n = ABS(W(esc)[0]);         /* menu number */
 
               /* setup menu pointer */
 
@@ -989,8 +989,8 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
         case E_CUP:
               if (cnt < 1) break;
                  {
-                 register int x = W(esc)[cnt-1] * fsizewide;
-                 register int y = W(esc)[cnt] * fsizehigh;
+                 int x = W(esc)[cnt-1] * fsizewide;
+                 int y = W(esc)[cnt] * fsizehigh;
                  if (x == BETWEEN(-1,x,T_WIDE-fsizewide) &&
                      y == BETWEEN(-1,y,T_HIGH)) {
                      if (Do_clip())
@@ -1269,7 +1269,7 @@ int put_window(WINDOW *win, unsigned char *buff, int buff_count)
         /*{{{  E_HALFWIN    -- make a 1/2 window*/
         case E_HALFWIN:                /* make a 1/2 window */
              {
-             register int *p = W(esc);
+             int *p = W(esc);
              char *tty = (char*)0;
 
              if (cnt < 3 ||  cnt > 4)

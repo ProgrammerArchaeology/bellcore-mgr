@@ -10,8 +10,8 @@
 /*{{{  bit_alloc -- allocate space for, and create a memory bitmap*/
 BITMAP *bit_alloc(int wide, int high, DATA *data, unsigned char depth)
 {
-  register BITMAP *result;
-  register int size;
+  BITMAP *result;
+  int size;
 
 #ifdef DEBUG
   if (wide<=0 || high <=0 || !(depth==8 || depth==1))

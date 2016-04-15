@@ -57,10 +57,10 @@ static int cmp(const void *x,const void *y);	/* compare for qsort */
 static int gen_list(WINDOW *window)
    {
 
-   register WINDOW *win = window;
-   register struct rect_list *list, *prev = (struct rect_list *)0;
-   register int x_cnt = 2, y_cnt = 2;
-   register int i, j;
+   WINDOW *win = window;
+   struct rect_list *list, *prev = (struct rect_list *)0;
+   int x_cnt = 2, y_cnt = 2;
+   int i, j;
    int count = 0;
    int skip;		/* covered by another window - skip patch */
    int hold;		/* hold for coellessing */
@@ -172,15 +172,15 @@ DEBUG code, commented out! */
 /*{{{  do_update -- update obscured window*/
 static void do_update(WINDOW *win, rect *clipp)
 	{
-   register struct rect_list *list;	/* list of rectangle to clip to */
-   register rectangle *got;		/* intersecting region */
+   struct rect_list *list;	/* list of rectangle to clip to */
+   rectangle *got;		/* intersecting region */
 
 	dbgprintf('U',(stderr,"Updating background window to %d,%d => %d,%d\r\n",
 		      clipp->x1,clipp->y1,clipp->x2,clipp->y2));
 
 	for(list=(struct rect_list *)W(clip_list);list;list = list->next) {
 		if ((got = got_int(&(list->rect),clipp,W(borderwid)))) {
-			register int	x = got->x,
+			int	x = got->x,
 					y = got->y,
 					wide = got->wide,
 					high = got->high;
@@ -211,7 +211,7 @@ static rectangle *got_int(rectangle *r1, /* rect 1 */
 /*}}}  */
 /*{{{  in_mouseoff -- see if mouse in rectangle, if so turn the mouse off*/
 static void in_mouseoff(x0,y0,wide,high)
-register int x0,y0,wide,high;
+int x0,y0,wide,high;
    {
    if( !( x0 > mousex+16 || y0 > mousey+16 ||
         x0+wide < mousex || y0+high < mousey))
@@ -221,8 +221,8 @@ register int x0,y0,wide,high;
 /*{{{  in_win -- see if rectangle in window*/
 static int
 in_win(win,x0,y0,x1,y1)
-register WINDOW *win;
-register int x0,y0,x1,y1;
+WINDOW *win;
+int x0,y0,x1,y1;
    {
    return(
       W(x0) + BIT_WIDE(W(border)) <= x0 ||
@@ -244,8 +244,8 @@ const void *x, *y;
 /*{{{  zap_cliplist -- free window's clip list*/
 void zap_cliplist(WINDOW *win)
 	{
-	register struct rect_list *list = (struct rect_list *) W(clip_list);
-	register struct rect_list *next;
+	struct rect_list *list = (struct rect_list *) W(clip_list);
+	struct rect_list *next;
 
 	dbgprintf('U',(stderr,"Zapping clip list\r\n"));
 	for(;list;list=next) {
@@ -274,9 +274,9 @@ void update(WINDOW *win, rect *clipp)
 /*}}}  */
 /*{{{  clip_bad -- invalidate clip list for all windows affected by 'window'*/
 void clip_bad(window)
-register WINDOW *window;		/* this window has changed */
+WINDOW *window;		/* this window has changed */
 	{
-	register WINDOW *win;		/* working window */
+	WINDOW *win;		/* working window */
 
 	/* invalidate all intersecting window clip lists below this one */
 

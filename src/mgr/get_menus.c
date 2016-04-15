@@ -47,15 +47,15 @@
 void
 put_str(map,x,y,font,op,str)
 BITMAP *map;
-register int x;
+int x;
 int y;
 struct font *font;
 int op;
-register char *str;
+char *str;
    {
-   register unsigned char c;
-   register int wide = font->head.wide;
-   register int high = font->head.high;
+   unsigned char c;
+   int wide = font->head.wide;
+   int high = font->head.high;
 
    while ((c=*str++)!='\0')
    {
@@ -73,7 +73,7 @@ char *values[];			/* list of return values */
 int max;			/* max number of menu items */
 int color;		/* raster op function containing the colors to use for the menus */
    {
-   register int i, incr, count;	/* counters */
+   int i, incr, count;	/* counters */
    int size_x=0, size_y=0;
    struct menu_state *state;	/* menu state */
    BITMAP *menu,			/* menu image */
@@ -201,9 +201,9 @@ int mouse;			/* fd to read mouse data from */
 int button;			/* button termination condition (not yet)*/
 int exit;			/* off-menu exit codes */
    {
-   register BITMAP *inside;	/* the menu */
-   register int y_position;
-   register int x_position;
+   BITMAP *inside;	/* the menu */
+   int y_position;
+   int x_position;
    int push;
    int x_mouse, y_mouse;	/* mouse delta's */
    int done=0;
@@ -315,7 +315,7 @@ int
 menu_destroy(state)
 struct menu_state *state;
    {
-   register int i;
+   int i;
 
    menu_remove(state);
 
@@ -336,10 +336,10 @@ struct menu_state *state;
 /*{{{  menu_copy -- copy a menu  - for environment stacks*/
 struct menu_state *
 menu_copy(menu)
-register struct menu_state *menu;
+struct menu_state *menu;
    {
-   register struct menu_state *tmp;
-   register int i;
+   struct menu_state *tmp;
+   int i;
 
    if (menu == (struct menu_state *) 0)
       return(menu);

@@ -139,8 +139,8 @@ main(argc,argv)
 int argc;
 char **argv;
    {
-   register int i;
-   register char c = '\0';
+   int i;
+   char c = '\0';
 
    /* set default values */
 

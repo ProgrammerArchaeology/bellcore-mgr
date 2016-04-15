@@ -23,12 +23,12 @@
 void move_box(screen,mouse,x,y,dx,dy,how)
 BITMAP *screen;			/* where to sweep out the box */
 int mouse;			/* file to get mouse coords from */
-register int *x,*y;		/* starting position */
-register int dx,dy;             /* box size */
+int *x,*y;		/* starting position */
+int dx,dy;             /* box size */
 int how;					/* termination condition */
 {
   int x_mouse, y_mouse;
-  register int button, skip=1;
+  int button, skip=1;
 
   box(screen,*x,*y,dx,dy);
   do 

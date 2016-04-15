@@ -13,7 +13,7 @@
 int
 bit_point(map, dx, dy, func)
 BITMAP *map;
-register int dx, dy;
+int dx, dy;
 int func;
    {
     return -1;

@@ -18,11 +18,11 @@
 #define FB_AD(bp,pp) (pp)
 #endif
 
-int bit_on( bp, x, y ) register BITMAP	*bp; int x, y;
+int bit_on( bp, x, y ) BITMAP	*bp; int x, y;
 {
-	register int	mask = 1 << (7 - x % 8);
+	int	mask = 1 << (7 - x % 8);
 
-	register DATA	*ip;
+	DATA	*ip;
 
 	if( x < 0 || x >= BIT_WIDE(bp) || y < 0 ||  y >= BIT_HIGH(bp) )
 		return  0;

@@ -34,8 +34,8 @@ static void usage()
 static void dofile(filename) char *filename;
 {
   FILE *filep;
-  register unsigned char *cp, *endp;
-  register int i;
+  unsigned char *cp, *endp;
+  int i;
   BITMAP *map;
   char *name;
 

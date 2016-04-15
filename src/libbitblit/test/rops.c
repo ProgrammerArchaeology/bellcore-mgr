@@ -3,8 +3,8 @@
 
 int main(argc,argv) int argc; char **argv;
 {
-  register BITMAP *screen;
-  register int x,y,w,h,op,xs,ys;
+  BITMAP *screen;
+  int x,y,w,h,op,xs,ys;
   int maxx, maxy;
   int min,max;
   int count;

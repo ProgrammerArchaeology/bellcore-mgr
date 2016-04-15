@@ -37,7 +37,7 @@
 /*}}}  */
 
 /*{{{  do_it -- Given a WINDOW pointer, move that window to top.*/
-static void do_it(win) register WINDOW *win;
+static void do_it(win) WINDOW *win;
 {
 	MOUSE_OFF(screen,mousex,mousey);
 	cursor_off();
@@ -57,9 +57,9 @@ static void do_it(win) register WINDOW *win;
 	window from the set is moved to the top.
 */
 
-void topwin( winsetid, winnum ) register int winsetid, winnum;
+void topwin( winsetid, winnum ) int winsetid, winnum;
 {
-	register WINDOW	*win;
+	WINDOW	*win;
 
 	if( !active  ||  !ACTIVE(next) ) return;
 	/*	We look from the back of the list toward the front so that
@@ -82,7 +82,7 @@ void topwin( winsetid, winnum ) register int winsetid, winnum;
 	Returns 0 if not a buckey characater or not an function character.
 	Returns 1 if a function character.
 */
-int do_buckey(c) register unsigned char	c;
+int do_buckey(c) unsigned char	c;
 {
 	static int	*intp;
 	static int	windowflag = 0;	/* 1 when collecting window ID */
@@ -220,8 +220,8 @@ int do_buckey(c) register unsigned char	c;
 		{
 		extern BITMAP *bit_maps[];
 		extern unsigned short next_id;
-		register int i;
-		register BITMAP *b;
+		int i;
+		BITMAP *b;
 		for(i=0;i<next_id;i++)
 			if (b=bit_maps[i])
 				fprintf(stderr,"%d-%d: %d,%d %dx%d (%x->%x)\n",

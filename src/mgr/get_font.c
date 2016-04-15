@@ -36,7 +36,7 @@ struct list *list_top = (struct list*)0;
 /*}}}  */
 
 /*{{{  insert_font -- insert an element at the top of the list */
-static void insert_font(ptr) register struct list *ptr;
+static void insert_font(ptr) struct list *ptr;
    {
    ptr->next = list_top;
    ptr->prev = (struct list*)0;
@@ -46,7 +46,7 @@ static void insert_font(ptr) register struct list *ptr;
    }
 /*}}}  */
 /*{{{  unlink_font -- unlink an element from the list*/
-static void unlink_font(ptr) register struct list *ptr;
+static void unlink_font(ptr) struct list *ptr;
    {
    if (ptr->next != (struct list*)0)
       ptr->next->prev = ptr->prev;
@@ -57,7 +57,7 @@ static void unlink_font(ptr) register struct list *ptr;
 /*{{{  create_font -- get font, name for an element*/
 static void create_font(name,ptr)
 char *name;
-register struct list *ptr;
+struct list *ptr;
    {
    char *save_line();
 
@@ -76,8 +76,8 @@ get_font(name)
 char *name;
    {
    static int count = 0;
-   register struct list *ptr;
-   register int found=0;
+   struct list *ptr;
+   int found=0;
 
    if (name == (char *) 0 || *name == '\0')
       return((struct font *) 0);

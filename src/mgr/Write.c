@@ -20,12 +20,12 @@
 
 int
 Write(fd,buff,len)
-register int fd, len;
-register char *buff;
+int fd, len;
+char *buff;
    {
-   register int count = 0;
-   register int code;
-   register int retry=0;
+   int count = 0;
+   int code;
+   int retry=0;
 
    while (count < len) {
       code = write(fd,buff+count,Min(TTYMAX,len-count));

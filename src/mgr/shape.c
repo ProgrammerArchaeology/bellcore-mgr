@@ -38,7 +38,7 @@
 int shape(int x, int y, int dx, int dy)
 {
   int sx,sy,w,h;
-  register WINDOW *win;
+  WINDOW *win;
 
   if (dx>0)
   {
