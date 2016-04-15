@@ -33,7 +33,6 @@
 #include "write_ok.h"
 /*}}}  */
 /*{{{  #defines*/
-#define FSIZE(c) ((int)(W(font)->head.c)) /* from put_window.c */
 #define SUB_SIZE 256                      /* max temp str size */
 #define START_SIZE 16                     /* default starting size of sweep object */
 /*}}}  */

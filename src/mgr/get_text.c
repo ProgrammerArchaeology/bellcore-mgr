@@ -17,7 +17,6 @@
 #include "subs.h"
 /*}}}  */
 /*{{{  #defines*/
-#define FSIZE(c) ((int)(W(font)->head.c))
 #define THICK 2
 
 #define TOP 1
