@@ -92,11 +92,13 @@ get_path(char *name)
 {
   char *next, *list;
 
-  if (strchr("/.", *name))
-    if (access(name, X_OK) == 0)
+  if (strchr("/.", *name)) {
+    if (access(name, X_OK) == 0) {
       return (name);
-    else
+    } else {
       return ((char *)0);
+    }
+  }
 
   strcpy(start, getenv("PATH"));
   for (list = start; (next = strchr(list, ':')); list = next + 1) {

@@ -33,8 +33,8 @@
 #include "write_ok.h"
 /*}}}  */
 /*{{{  #defines*/
-#define SUB_SIZE 256                      /* max temp str size */
-#define START_SIZE 16                     /* default starting size of sweep object */
+#define SUB_SIZE 256  /* max temp str size */
+#define START_SIZE 16 /* default starting size of sweep object */
 /*}}}  */
 
 /*{{{  event_args -- extract numeric argument from sweep events*/
@@ -159,10 +159,13 @@ sub_event(
     code = 0;
     if (!swept)
       code = get_text(screen, mouse, mousex, mousey, &x, &y, win, c);
-    sprintf(str, code ? "%d %d %d %d" : "",
-        (mousex - (W(x0) + W(borderwid) + W(text.x))) / FSIZE(wide),
-        (mousey - (W(y0) + W(borderwid) + W(text.y))) / FSIZE(high),
-        x, y);
+    if (code)
+      sprintf(str, "%d %d %d %d",
+          (mousex - (W(x0) + W(borderwid) + W(text.x))) / FSIZE(wide),
+          (mousey - (W(y0) + W(borderwid) + W(text.y))) / FSIZE(high),
+          x, y);
+    else
+      *str = '\0';
     break;
   case E_NOTIFY: /* get other windows notify text */
     for (win = active; win != (WINDOW *)0; win = W(next)) {

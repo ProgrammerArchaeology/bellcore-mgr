@@ -227,7 +227,7 @@ int cut(int mode)
   for (win = active; win != (WINDOW *)0; win = W(next))
     if (mousein(mousex, mousey, win, 1))
       break;
-  if (!win || (W(flags) & W_SNARFABLE == 0))
+  if (!win || ((W(flags) & W_SNARFABLE) == 0))
     return (0);
 
   /* initialize comparison registers */

@@ -224,7 +224,7 @@ void startup(char *name)
           topwin(activesetid, -1);
         if (*shell)
           free(*shell);
-        *shell = '\0';
+        *shell = NULL;
         flags = 0;
         (void)memset(start, 0, MAXLINE);
         (void)memset(init, 0, MAXLINE);
