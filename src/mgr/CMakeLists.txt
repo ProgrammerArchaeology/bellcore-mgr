@@ -14,6 +14,21 @@ IF(MGR_ENABLE_BUCKEY)
   ADD_DEFINITIONS(-DBUCKEY)
 ENDIF()
 
+OPTION(MGR_ENABLE_CUT "Enable cut/paste between screen and snarfbuffer." OFF)
+IF(MGR_ENABLE_CUT)
+  ADD_DEFINITIONS(-DCUT)
+ENDIF()
+
+OPTION(MGR_ENABLE_DEBUG "Enable debugging code (for -d option)." OFF)
+IF(MGR_ENABLE_DEBUG)
+  ADD_DEFINITIONS(-DDEBUG)
+ENDIF()
+
+OPTION(MGR_ENABLE_EMUMIDMSBUT "Fake a middle mouse button with left and right button." OFF)
+IF(MGR_ENABLE_EMUMIDMSBUT)
+  ADD_DEFINITIONS(-DEMUMIDMSBUT)
+ENDIF()
+
 OPTION(MGR_ENABLE_STRETCH "Mouse reshaping windows by stretching a corner." OFF)
 IF(MGR_ENABLE_STRETCH)
   ADD_DEFINITIONS(-DSTRETCH)
