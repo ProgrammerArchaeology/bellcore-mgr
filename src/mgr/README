@@ -14,7 +14,6 @@ The following MGRFLAGS can be used:
   EMUMIDMSBUT         fake a middle mouse button with left and right button
   FASTMOUSE           xor mouse cursor
   FRACCHAR            fractional movement of cursor to place chars
-  KBD                 mess the kbd up (SunOS only)
   KILL                kills windows upon tty i/o errors
   MGR_ALIGN           align windows on byte boundaries for monochrome scrolling
   MOUSE_DEV="xxx"     usually /dev/mouse

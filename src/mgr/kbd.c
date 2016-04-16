@@ -26,15 +26,6 @@ Very ugly stuff to use machine dependent things.
 
 #include "proto.h"
 
-#ifdef KBD
-#ifdef sun
-#define u_char unsigned char
-#define u_short unsigned short
-#include <sundev/kbio.h>
-#include <sys/ioctl.h>
-#endif
-#endif
-
 #include "defs.h"
 /*}}}  */
 
@@ -43,11 +34,6 @@ Very ugly stuff to use machine dependent things.
 #ifdef sun
 static int ring = 0;
 static int bell_fd = -1;
-#endif
-#endif
-#ifdef KBD
-#ifdef sun
-static int kbd_fd = -1;
 #endif
 #endif
 /*}}}  */
@@ -141,59 +127,11 @@ int set_kbd(
     int how /* 1=direct, 0=no direct */
     )
 {
-#ifdef KBD
-#ifdef sun
-  int one = 1;
-  int zero = 0;
-  int cons;
-
-#ifndef KBD_CMD_RESET
-#define KBD_CMD_RESET 0x01 /* Should be in a header file, but .. */
-#endif
-  if (how == 0) { /* make sure kbd is released */
-    if (kbd_fd == -1)
-      return (-1);
-    ioctl(kbd_fd, KIOCSDIRECT, &zero);             /* turn off direct mode */
-    ioctl(kbd_fd, KIOCCMD, (void *)KBD_CMD_RESET); /* reset the keyboard */
-    close(kbd_fd);                                 /* close the keyboard */
-    cons = open("/dev/console", O_RDONLY);         /* put console messages back */
-    ioctl(cons, TIOCCONS, &one);
-    close(cons);
-    return (0);
-  } else { /* open the kbd for input */
-    kbd_fd = open("/dev/kbd", O_RDONLY);
-    ioctl(kbd_fd, KIOCSDIRECT, &one);              /* turn on direct mode */
-    ioctl(kbd_fd, KIOCCMD, (void *)KBD_CMD_RESET); /* reset the keyboard */
-  }
-  return (kbd_fd);
-#endif
-#else
   return (0);
-#endif
 }
 /*}}}  */
 /*{{{  initkbd -- initialize the keyboard, especially when it is a separate device*/
 void initkbd(void)
 {
-#ifdef KBD
-#ifdef sun
-  int fd;
-
-  if ((fd = set_kbd(1)) > 0) {
-    kbd_fd = 0;
-    close(kbd_fd);
-    dup(fd);
-    close(fd);
-  } else if (fd == 0)
-    return;
-  else {
-#ifdef DEBUG
-    if (debug)
-      fprintf(stderr, "Can't find keyboard, using stdin\n");
-#endif
-    kbd_fd = -1;
-  }
-#endif
-#endif
 }
 /*}}}  */
