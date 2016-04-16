@@ -9,8 +9,7 @@ SET(bitblit_SOURCES
     bitmap/bit_create.c
     bitmap/bit_open.c
     bitmap/bitmaphead.c
-    movie/share.c
-    movie/timestamp.c
+    movie/timestamp.c  # This is used by do_event and main in mgr-server.
     seqbitmap/bit_load.c
     seqbitmap/bit_save.c
     seqbitmap/bitmapread.c
@@ -19,6 +18,11 @@ SET(bitblit_SOURCES
 
 SET(bitblit_HEADERS
 )
+
+IF(MGR_ENABLE_MOVIE)
+  LIST(APPEND bitblit_SOURCES
+       movie/share.c)
+ENDIF()
 
 IF(MGR_BITBLIT_BACKEND MATCHES "stub-backend")
   INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/stub-backend)
