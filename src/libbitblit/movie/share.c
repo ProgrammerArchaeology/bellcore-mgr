@@ -7,7 +7,7 @@
 #include <signal.h>
 /*}}}  */
 /*{{{  #defines*/
-static int DO_MSG(struct share_msg msg, char *data);
+static void DO_MSG(struct share_msg msg, char *data);
 
 /* get an unused bitmap id */
 
@@ -120,13 +120,12 @@ static unsigned short freed_ids[MAX_MAPS]; /* list of freed id's */
 static unsigned short next_id = 1;         /* next availiable ID (0 is not used) */
 static int next_free = 0;                  /* next free id from free list */
 static struct share_msg _m;                /* place to hold the message */
-static struct share_msg do_m;              /* place to hold compressed message */
 static FILE *share_file;                   /* file to dump output to */
 static int do_save = 0;                    /* saving flag */
 /*}}}  */
 
 /*{{{  write_short -- write an array of short ints to log file*/
-static void write_short(short int *buff, int cnt)
+static void write_short(unsigned short int *buff, int cnt)
 {
   int i;
 
@@ -176,7 +175,7 @@ check_map(BITMAP *map)
 }
 /*}}}  */
 /*{{{  DO_MSG*/
-static int
+static void
 DO_MSG(
     struct share_msg msg, /* message to send */
     char *data            /* pointer to data */
@@ -220,7 +219,7 @@ DO_MSG(
   /*{{{  T_NOP*/
   case T_NOP:
     write_short(&(msg.type), 1);
-    if (msg.type & 0xF > 0)
+    if ((msg.type & 0xF) > 0)
       write_char(data, msg.type & 0xF);
   /*}}}  */
   /*{{{  T_POINT*/
