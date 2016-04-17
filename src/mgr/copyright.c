@@ -42,7 +42,6 @@ without paying fees.
 #define SSIZE 3 /* star size */
 
 #define MAXZ 500       /* maximum z depth */
-#define MAXZ 500       /* maximum z depth */
 #define NSTARS 256     /* maximum number of stars */
 #define SPEED 4        /* star speed */
 #define SCALE (short)6 /* for rotator */
