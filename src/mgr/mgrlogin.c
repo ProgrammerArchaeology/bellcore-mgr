@@ -75,7 +75,7 @@ void printchar(int x, int y, unsigned char c)
 }
 /*}}}  */
 /*{{{  printstr*/
-void printstr(int x, int y, char *s)
+void printstr(int x, int y, const char *s)
 {
   while (*s) {
     printchar(x, y, *s++);

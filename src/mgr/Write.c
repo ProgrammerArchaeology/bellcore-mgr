@@ -18,7 +18,7 @@
 #define MAX_RETRY 3 /* max retries after EWOULDBLOCK */
 #define TTYMAX 100  /* max chunk size in write */
 
-int Write(int fd, char *buff, int len)
+int Write(int fd, const char *buff, int len)
 {
   int count = 0;
   int code;

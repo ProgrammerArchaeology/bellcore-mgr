@@ -115,7 +115,7 @@ ms_setspeed(const int old, const int new,
 
 static int init = 0;
 
-void ms_init(int screen_w, int screen_h, char *mouse_type)
+void ms_init(int screen_w, int screen_h, const char *mouse_type)
 {
 
   mx = screen_w;

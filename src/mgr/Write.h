@@ -1,1 +1,1 @@
-int Write(int fd, char *buff, int len);
+int Write(int fd, const char *buff, int len);

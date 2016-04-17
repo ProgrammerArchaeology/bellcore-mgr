@@ -30,6 +30,6 @@ struct ms_event {
 extern int mfd;
 
 int get_ms_event(struct ms_event *ev);
-void ms_init(int screen_w, int screen_h, char *mouse_type);
+void ms_init(int screen_w, int screen_h, const char *mouse_type);
 
 #endif /* MOUSE_H */

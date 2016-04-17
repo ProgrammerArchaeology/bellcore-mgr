@@ -9,9 +9,9 @@
 
 /*{{{  signal names, descriptions (for debugging)*/
 static struct signame {
-  char *symbol;
+  const char *symbol;
   int number;
-  char *desc;
+  const char *desc;
 } signames[] = {
   {
       "SIGNONE", 0, "Internal mgr error",
@@ -100,7 +100,7 @@ static struct signame {
   {
       "SIGWINCH", 28, "window changed",
   },
-  { (char *)0, 0, (char *)0 },
+  { NULL, 0, NULL },
 };
 /*}}}  */
 

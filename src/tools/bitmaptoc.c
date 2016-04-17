@@ -20,7 +20,7 @@
 /*}}}  */
 
 /*{{{  variables*/
-static char *cmd;
+static const char *cmd;
 /*}}}  */
 
 /*{{{  usage*/
