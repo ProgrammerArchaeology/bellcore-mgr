@@ -58,7 +58,7 @@ static int gen_list(WINDOW *window)
 {
 
   WINDOW *win = window;
-  struct rect_list *list, *prev = (struct rect_list *)0;
+  struct rect_list *list = NULL, *prev = (struct rect_list *)0;
   int x_cnt = 2, y_cnt = 2;
   int i, j;
   int count = 0;
