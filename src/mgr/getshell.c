@@ -48,15 +48,6 @@ static char line[] = { "/dev/ptypX" };
 extern char **environ;
 /*}}}  */
 
-/*{{{  getdtablesize*/
-#ifdef SYSV
-extern int getdtablesize(void)
-{
-  return (20);
-}
-#endif
-/*}}}  */
-
 /*{{{  getapty -- get a pty line*/
 static int
 getapty(void)

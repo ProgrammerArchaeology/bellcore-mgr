@@ -71,11 +71,6 @@
 #define M_SPACE_NOP 3
 #define M_QUIT 4 /* confirm quit choice */
 
-#ifdef NO_STRCHR
-#define strchr index
-#define strrchr rindex
-#endif
-
 #ifdef DEBUG
 extern char debug_level[];
 #define dbgprintf(level, arglist)            \
