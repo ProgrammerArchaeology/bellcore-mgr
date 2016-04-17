@@ -146,7 +146,7 @@ int exit_code;                  /* valid exit codes */
   int first = 1;              /* true upon entry */
   int next;                   /* next menu # */
   struct menu_result *add_result();
-  char *print_menu();
+  const char *print_menu(int);
 
   /* set up menu, get menu 'cookie' */
 
