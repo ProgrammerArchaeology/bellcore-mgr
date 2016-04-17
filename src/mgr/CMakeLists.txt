@@ -44,6 +44,11 @@ IF(MGR_ENABLE_THIN_BORDER)
   ADD_DEFINITIONS(-DSUM_BDR=3)
 ENDIF()
 
+OPTION(MGR_ENABLE_WHO "Make utmp entries for windows." OFF)
+IF(MGR_ENABLE_WHO)
+  ADD_DEFINITIONS(-DWHO)
+ENDIF()
+
 ADD_CUSTOM_COMMAND(
     OUTPUT default_font.h
     COMMAND fonttoc < ${DEFAULT_FONT} default_font > default_font.h
@@ -128,7 +133,6 @@ SET(mgr_server_SOURCES
     move_box.c
     new_window.c
     popen.c
-    print.c
     put_window.c
     scroll.c
     set_mode.c
@@ -137,7 +141,6 @@ SET(mgr_server_SOURCES
     startup.c
     subs.c
     update.c
-    utmp.c
     win_make.c
     win_stack.c
     win_subs.c
@@ -179,7 +182,6 @@ SET(mgr_server_HEADERS
     move.h
     move_box.h
     new_window.h
-    print.h
     proto.h
     put_window.h
     scroll.h
@@ -189,13 +191,26 @@ SET(mgr_server_HEADERS
     startup.h
     subs.h
     update.h
-    utmp.h
     version.h
     win_make.h
     win_stack.h
     win_subs.h
     write_ok.h
 )
+
+IF(MGR_ENABLE_DEBUG)
+  LIST(APPEND mgr_server_SOURCES
+       print.c)
+  LIST(APPEND mgr_server_HEADERS
+       print.h)
+ENDIF()
+
+IF(MGR_ENABLE_WHO)
+  LIST(APPEND mgr_server_SOURCES
+       utmp.c)
+  LIST(APPEND mgr_server_HEADERS
+       utmp.h)
+ENDIF()
 
 ADD_EXECUTABLE(mgr-server
                ${mgr_server_SOURCES}
