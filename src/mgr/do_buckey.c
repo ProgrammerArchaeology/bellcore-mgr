@@ -346,7 +346,6 @@ int do_buckey(int c)
   case 'Q': /* Quit nicely */
     _quit();
     exit(0);
-    break;
 #ifdef DEBUG
   case 'I': /* temporary (status + process info) */
     if (!debug)

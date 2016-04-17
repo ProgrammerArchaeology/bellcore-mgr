@@ -212,8 +212,7 @@ int get_command(char **argv, int *file)
   putenv("TERM=" TERMNAME);
   execve(name, argv, environ);
   _exit(1);
-  return (-1); /* for lint, of course */
-               /*}}}  */
+  /*}}}  */
 }
 /*}}}  */
 /*{{{  half_open -- half open a ptty then return*/
