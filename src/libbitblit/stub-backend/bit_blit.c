@@ -12,11 +12,6 @@
 #include <string.h>
 #include "screen.h"
 /*}}}  */
-/*{{{  #defines*/
-#define dprintf  \
-  if (bit_debug) \
-  fprintf
-/*}}}  */
 
 /*{{{  bit_blit -- map bit_blits into mem_rops, caching 8 bit images as needed*/
 void bit_blit(
