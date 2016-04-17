@@ -607,7 +607,7 @@ void cursor_off(void)
 /*{{{  system command - turn off root privaleges*/
 /* system command - turn off root privaleges */
 
-int systemcmd(char *command)
+int systemcmd(const char *command)
 {
   int status, pid, w;
   void (*istat)(), (*qstat)();

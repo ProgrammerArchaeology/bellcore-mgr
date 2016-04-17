@@ -94,9 +94,9 @@ get_path(char *name)
 
   if (strchr("/.", *name)) {
     if (access(name, X_OK) == 0) {
-      return (name);
+      return name;
     } else {
-      return ((char *)0);
+      return NULL;
     }
   }
 
@@ -105,14 +105,14 @@ get_path(char *name)
     *next = '\0';
     sprintf(Path, "%s/%s", list, name);
     if (access(Path, X_OK) == 0)
-      return (Path);
+      return Path;
   }
 
   sprintf(Path, "%s/%s", list, name);
   if (list && access(Path, X_OK) == 0) {
-    return (Path);
+    return Path;
   } else {
-    return ((char *)0);
+    return NULL;
   }
 }
 /*}}}  */

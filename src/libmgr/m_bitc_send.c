@@ -95,7 +95,7 @@ int m_bitc_sendh(/* send bitmap from client to server */
       struct b_header head;
 
       B_PUTHDR8(&head, w, h, d);
-      if (fwrite((char *)&head, sizeof(head), 1, filep) != 1) {
+      if (fwrite((const char *)&head, sizeof(head), 1, filep) != 1) {
         fclose(filep);
         filep = NULL;
       }
@@ -132,7 +132,7 @@ int m_bitc_sendh(/* send bitmap from client to server */
  * but it must be preceded by m_bitc_sendh and followed by m_bitc_sent.
  * Return 0 for success, -1 for failure.
  */
-int m_bitc_sendb(char *data, /* start of portion of bitmap data */
+int m_bitc_sendb(const char *data, /* start of portion of bitmap data */
     size_t len               /* length in bytes of portion */
     )
 {

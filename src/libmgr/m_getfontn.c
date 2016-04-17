@@ -20,8 +20,8 @@ char *m_getfontname(void)
     *(--p) = '\0';
     while (p > m_linebuf && *p != ' ')
       p--;
-    return (*p == ' ' ? p + 1 : (char *)0);
+    return *p == ' ' ? p + 1 : NULL;
   } else
-    return (char *)0;
+    return NULL;
 }
 /*}}}  */

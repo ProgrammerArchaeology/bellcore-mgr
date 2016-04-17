@@ -29,7 +29,7 @@ typedef struct
 } hfont_scaled;
 /*}}}  */
 
-hfont_raw *hfont_open(char *name);
+hfont_raw *hfont_open(const char *name);
 hfont_scaled *hfont_scale(hfont_raw *f, int xres_u, int yres_u, int point_p);
-void hfont_printto(int buf, hfont_scaled *f, int *x, int *y, int angle, unsigned char *s);
+void hfont_printto(int buf, hfont_scaled *f, int *x, int *y, int angle, unsigned const char *s);
 #endif

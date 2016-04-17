@@ -16,4 +16,4 @@ void alignwin(BITMAP *screen, int *x, int *dx, int slop);
 int cursor_ok(BITMAP *map);
 void cursor_on(void);
 void cursor_off(void);
-int systemcmd(char *command);
+int systemcmd(const char *command);

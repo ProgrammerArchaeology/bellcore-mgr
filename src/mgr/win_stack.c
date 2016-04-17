@@ -46,8 +46,8 @@ int win_push(
   WINDOW *stack; /* pushed window goes here */
   int i, j;
 
-  if ((stack = (WINDOW *)malloc(sizeof(WINDOW))) == (WINDOW *)0)
-    return (-1);
+  if ((stack = (WINDOW *)malloc(sizeof(WINDOW))) == NULL)
+    return -1;
 
   if (level == 0)
     level = P_DEFAULT;
@@ -61,15 +61,15 @@ int win_push(
 
   for (j = 0; j < MAXMENU; j++)
     S(menus)
-    [j] = (struct menu_state *)0;
+    [j] = NULL;
   for (j = 0; j < MAXEVENTS; j++)
     S(events)
-    [j] = (char *)0;
+    [j] = NULL;
   for (j = 0; j < MAXBITMAPS; j++)
     S(bitmaps)
-    [j] = (BITMAP *)0;
-  S(save) = (BITMAP *)0;
-  S(clip_list) = (char *)0;
+    [j] = NULL;
+  S(save) = NULL;
+  S(clip_list) = NULL;
 
   /* setup each pushed item */
 
@@ -82,7 +82,7 @@ int win_push(
           S(menus)
           [j] = W(menus)[j];
           W(menus)
-          [j] = (struct menu_state *)0;
+          [j] = NULL;
           dbgprintf('P', (stderr, "%d ", j));
         } else if (W(menus)[j]) {
           S(menus)
@@ -107,7 +107,7 @@ int win_push(
           S(events)
           [j] = W(events)[j];
           W(events)
-          [j] = (char *)0;
+          [j] = NULL;
           dbgprintf('P', (stderr, "%d ", j));
         } else if (W(events)[j]) {
           S(events)
@@ -127,7 +127,7 @@ int win_push(
           S(bitmaps)
           [j] = W(bitmaps)[j];
           W(bitmaps)
-          [j] = (BITMAP *)0;
+          [j] = NULL;
           dbgprintf('P', (stderr, "%d ", j));
         } else if (W(bitmaps)[j]) {
           S(bitmaps)
@@ -218,11 +218,11 @@ int win_push(
     }
 
   S(code) = level;
-  S(window) = (BITMAP *)0;
-  S(border) = (BITMAP *)0;
-  S(snarf) = (char *)0;
-  S(bitmap) = (BITMAP *)0;
-  return (level);
+  S(window) = NULL;
+  S(border) = NULL;
+  S(snarf) = NULL;
+  S(bitmap) = NULL;
+  return level;
 }
 /*}}}  */
 /*{{{  win_pop -- pop the window stack */
@@ -233,9 +233,9 @@ int win_pop(
   int i, j;
   WINDOW *stack = W(stack); /* window to pop from */
 
-  if (stack == (WINDOW *)0) {
+  if (stack == NULL) {
     dbgprintf('P', (stderr, "  No environment to pop\n"));
-    return (-1);
+    return -1;
   }
 
   dbgprintf('P', (stderr, "%s popping %s\n", W(tty), print_stack(S(code))));
@@ -258,10 +258,10 @@ int win_pop(
           W(menus)
           [j] = S(menus)[j];
           S(menus)
-          [j] = (struct menu_state *)0;
+          [j] = NULL;
         } else
           W(menus)
-          [j] = (struct menu_state *)0;
+          [j] = NULL;
       }
       dbgprintf('P', (stderr, "\n"));
       break;
@@ -276,7 +276,7 @@ int win_pop(
         W(events)
         [j] = S(events)[j];
         S(events)
-        [j] = (char *)0;
+        [j] = NULL;
       }
       W(event_mask) = S(event_mask);
       dbgprintf('P', (stderr, "\n"));
@@ -295,7 +295,7 @@ int win_pop(
         W(bitmaps)
         [j] = S(bitmaps)[j];
         S(bitmaps)
-        [j] = (BITMAP *)0;
+        [j] = NULL;
       }
       dbgprintf('P', (stderr, "  bitmaps\n"));
       break;

@@ -51,7 +51,7 @@ int x;
 int y;
 struct font *font;
 int op;
-char *str;
+const char *str;
 {
   unsigned char c;
   int wide = font->head.wide;
@@ -67,8 +67,8 @@ char *str;
 struct menu_state *
 menu_define(
     struct font *font, /* which font to use for menu */
-    char *list[],      /* list of menu items */
-    char *values[],    /* list of return values */
+    const char *list[],      /* list of menu items */
+    const char *values[],    /* list of return values */
     int max,           /* max number of menu items */
     int color          /* raster op function containing the colors to use for the menus */
     )
@@ -122,7 +122,7 @@ menu_define(
 
   /* get the values */
 
-  if (values != (char **)0) {
+  if (values != NULL) {
     state->action = malloc(count * sizeof(struct menu_action));
     if (state->action)
       for (i = 0; i < count; i++) {

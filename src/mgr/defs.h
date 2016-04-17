@@ -78,7 +78,6 @@
 
 #ifdef DEBUG
 extern char debug_level[];
-char *strchr();
 #define dbgprintf(level, arglist)            \
   do {                                       \
     if (debug && strchr(debug_level, level)) \
@@ -286,11 +285,11 @@ void new_window(), move_window();
 #include <sys/time.h>
 #include <sys/types.h>
 
-extern char *full_menu[];
-extern char *main_menu[];
-extern char *active_menu[];
-extern char *test_menu[];
-extern char *quit_menu[];
+extern const char *full_menu[];
+extern const char *main_menu[];
+extern const char *active_menu[];
+extern const char *test_menu[];
+extern const char *quit_menu[];
 extern function full_functions[];
 extern function main_functions[];
 extern function active_functions[];
@@ -307,8 +306,8 @@ extern WINDOW *last_active;
 extern int button_state;
 extern int mouse, mousex, mousey, mouse_on;
 extern int debug;
-extern char *fontlist[], *font_dir;
-extern char *icon_dir;
+extern char *fontlist[];
+extern const char *font_dir, *icon_dir;
 extern char *snarf;
 extern char *message;
 extern int id_message;

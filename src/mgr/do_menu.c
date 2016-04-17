@@ -69,7 +69,7 @@ static int
 get_fields(
     char *line,    /* line to break into fields */
     int delim,     /* field delimeter */
-    char **fields, /* resultant fields */
+    const char **fields, /* resultant fields */
     int max        /* max # fields */
     )
 {
@@ -118,7 +118,7 @@ do_menu(
     )
 {
   int count;
-  char *fields[MAXITEMS];
+  const char *fields[MAXITEMS];
 
   count = get_fields(line + 1, *line, fields, MAXITEMS) / 2;
 

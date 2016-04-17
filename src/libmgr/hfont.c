@@ -80,7 +80,7 @@ icos(int n)
 /*}}}  */
 
 /*{{{  hfont_open -- read hershey font from file*/
-hfont_raw *hfont_open(char *name)
+hfont_raw *hfont_open(const char *name)
 {
   /*{{{  variables*/
   FILE *fp;
@@ -208,7 +208,7 @@ hfont_scaled *hfont_scale(hfont_raw *f, int xres_u, int yres_u, int point_p)
 }
 /*}}}  */
 /*{{{  hfont_print -- print a string as hershey font characters*/
-void hfont_printto(int buf, hfont_scaled *f, int *x, int *y, int angle, unsigned char *s)
+void hfont_printto(int buf, hfont_scaled *f, int *x, int *y, int angle, unsigned const char *s)
 {
   int cx, cy, num, l, xc, yc, i, j;
   struct hfont_vector *c;

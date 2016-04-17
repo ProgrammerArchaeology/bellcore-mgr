@@ -29,7 +29,7 @@ static void nothing(void) {}
 
 /* menus */
 
-char *active_menu[] = { /* active-window menu */
+const char *active_menu[] = { /* active-window menu */
 #ifdef STRETCH          /* first menu item: something you can safely click by accident */
   "move",
   "stretch",
@@ -42,29 +42,29 @@ char *active_menu[] = { /* active-window menu */
   "bury",
   "- - - -",
   "destroy",
-  (char *)0
+  NULL
 };
 
-char *main_menu[] = { /* primary menu */
+const char *main_menu[] = { /* primary menu */
   "new window",
   "redraw",
   "quit",
-  (char *)0
+  NULL
 };
 
-char *full_menu[] = { /* primary menu  - no more windows allowed */
+const char *full_menu[] = { /* primary menu  - no more windows allowed */
   "redraw",
   "quit",
-  (char *)0
+  NULL
 };
 
-char *quit_menu[] = { /* to verify quit */
+const char *quit_menu[] = { /* to verify quit */
   "cancel",
   "lock screen",
   "suspend",
   "- - - -",
   "really quit",
-  (char *)0
+  NULL
 };
 
 /* menu functions - these have a 1-1 correspondance with the menu items */
@@ -100,11 +100,11 @@ function active_functions[] = {
 
 /* default font info */
 
-char *font_dir = FONTDIR;
+const char *font_dir = FONTDIR;
 char *fontlist[MAXFONT];
 
 /* default icon info */
-char *icon_dir = ICONDIR;
+const char *icon_dir = ICONDIR;
 
 /* color index map for fixed colors */
 
@@ -130,8 +130,8 @@ int button_state = 0;                 /* state of the mouse buttons */
 int mouse, mousex, mousey;            /* mouse fd, x-coord, y-coord */
 int debug = 0;                        /* ==1 for debug prints */
 int mouse_on = 0;                     /* 1 iff mouse track is on */
-char *snarf = (char *)0;              /* place to keep snarfed text */
-char *message = (char *)0;            /* place to keep message */
+char *snarf = NULL;                   /* place to keep snarfed text */
+char *message = NULL;                 /* place to keep message */
 int id_message = 0;                   /* id of message sender */
 unsigned int init_flags = INIT_FLAGS; /* initial flags for new windows */
 fd_set mask;                          /* process mask for select */

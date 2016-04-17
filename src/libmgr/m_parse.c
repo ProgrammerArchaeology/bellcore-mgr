@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 /*{{{  m_parse -- parse a line into fields*/
 #ifndef iswhite
 #define iswhite(x) ((x) == ' ' || (x) == '\t')
@@ -28,7 +30,7 @@ m_parse(char *line, char **fields)
     if (c == '\n')
       *line = '\0';
   }
-  *fields = (char *)0;
+  *fields = NULL;
   return (count);
 }
 /*}}}  */

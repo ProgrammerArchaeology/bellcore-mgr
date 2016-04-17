@@ -18,10 +18,10 @@
 /*}}}  */
 
 /*{{{  write_ok -- ok for user to write this file*/
-int write_ok(char *name)
+int write_ok(const char *name)
 {
   struct stat buff;
-  char *ptr;
+  const char *ptr;
   int result;
 
   if (access(name, F_OK) == 0) {
@@ -43,10 +43,10 @@ int write_ok(char *name)
 }
 /*}}}  */
 /*{{{  read_ok -- see if ok to read a file*/
-int read_ok(char *name)
+int read_ok(const char *name)
 {
   struct stat buff;
-  extern char *icon_dir;
+  extern const char *icon_dir;
 
   if (access(name, R_OK) == 0) {
     return (1);
@@ -57,7 +57,7 @@ int read_ok(char *name)
 }
 /*}}}  */
 /*{{{  mode_ok -- make sure tty mode is ok for message passing*/
-int mode_ok(char *name, int mask)
+int mode_ok(const char *name, int mask)
 {
   struct stat buff;
   if (stat(name, &buff) < 0)
