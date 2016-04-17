@@ -238,8 +238,8 @@ int do_buckey(int c)
     int i;
     BITMAP *b;
     for (i = 0; i < next_id; i++)
-      if (b = bit_maps[i])
-        fprintf(stderr, "%d-%d: %d,%d %dx%d (%x->%x)\n",
+      if ((b = bit_maps[i]))
+        fprintf(stderr, "%d-%d: %d,%d %dx%d (%p->%p)\n",
             i, b->id, b->x0, b->y0, b->wide, b->high, b, b->primary);
   } break;
 #endif      /* debug */

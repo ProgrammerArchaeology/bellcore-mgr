@@ -72,6 +72,7 @@
 #define M_QUIT 4 /* confirm quit choice */
 
 #ifdef DEBUG
+#include <string.h>
 extern char debug_level[];
 #define dbgprintf(level, arglist)            \
   do {                                       \
