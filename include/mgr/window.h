@@ -17,7 +17,7 @@
 #define T_FONT		1	/* down load a new font */
 #define T_MENU		2	/* down load a menu */
 #define T_EVENT		3	/* down load an event string */
-#define T_YANK		4	/* fill the yank bufffer */
+#define T_YANK		4	/* fill the yank buffer */
 #define T_BITMAP	5	/* down load a bit map */
 #define T_COMMAND	6	/* start a new window & command in it */
 #define T_GIMME		7	/* send me stuff */
@@ -104,8 +104,8 @@
 #define ESC		'\033'	/* escape character */
 
 #define E_MINUS		'-'	/* set the minus flag */
-#define E_SEP1		','	/* primary field seperator */
-#define E_SEP2		';'	/* secondary field seperator */
+#define E_SEP1		','	/* primary field separator */
+#define E_SEP2		';'	/* secondary field separator */
 #define E_MOUSE		'?'	/* move the mouse or change cursor  */
 #define E_ADDLINE	'a'	/* add a new line  */
 #define E_ADDCHAR	'A'	/* add a character  */
@@ -125,7 +125,7 @@
 #define E_BLEEP		'H'	/* blink a section of the screen */
 #define E_GETINFO	'I'	/* get info from mgr */
 #define E_STANDOUT	'i'	/* start standout mode */
-#define E_FCOLOR	'j'	/* set forground color */
+#define E_FCOLOR	'j'	/* set foreground color */
 #define E_BCOLOR	'J'	/* set background color */
 #define E_COLORPALETTE	'K'	/* set/get color palette */
 #define E_LINE		'l'	/* Plot a line  */
@@ -170,7 +170,7 @@
 #define C_ACTIVE	'a'	/* window has input focus */
 #define C_NOTACTIVE	'n'	/* window is obscured */
 #define C_OBSCURED	'o'	/* window is obscured */
-#define C_NAME		"px|mgr|mgr teminal emulator"
+#define C_NAME		"px|mgr|mgr terminal emulator"
 
 #define C_NULL		'\000'	/* null */
 #define C_BS		'\b'	/* back space */

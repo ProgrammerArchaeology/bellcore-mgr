@@ -107,7 +107,7 @@ int bit_line();
 BITMAP *bit_alloc();
 BITMAP *bit_open();
 
-/* for non existant color support */
+/* for non-existent color support */
 
 #define DEPTH 1 /* bits per pixel */
 #define NOCOLOR 0xF

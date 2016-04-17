@@ -1673,7 +1673,7 @@
                      right margin of the text region.
 
            0x002000  Overstrike mode is turned on.  Characters are  written  to
-                     the  window  using the the current drawing mode, as set by
+                     the  window  using the current drawing mode, as set by
                      m_func().
 
            0x004000  The window is in _a_b_s_o_l_u_t_e window coordinate mode.
@@ -1969,7 +1969,7 @@
            accessed using m_font().
 
       P_MENU
-           All downloaded menus and menu links are moved to the the stack along
+           All downloaded menus and menu links are moved to the stack along
            with the currently selected menu number.  The menus become undefined
            in the current context.
 

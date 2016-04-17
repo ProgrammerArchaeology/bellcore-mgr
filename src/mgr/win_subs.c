@@ -1,6 +1,6 @@
 /*{{{}}}*/
 /*{{{  Notes*/
-/* Teminal emulator functions called from put_window() and down_load() */
+/* Terminal emulator functions called from put_window() and down_load() */
 /*}}}  */
 /*{{{  #includes*/
 #include <stdlib.h>
@@ -247,7 +247,7 @@ void Bit_line(WINDOW *win, BITMAP *dst, int x1, int y1, int x2, int y2, int op)
   }
 }
 /*}}}  */
-/*{{{  grunch -- experimantal graphics crunch mode*/
+/*{{{  grunch -- experimental graphics crunch mode*/
 void grunch(WINDOW *win, BITMAP *dst)
 {
   char *buf = W(snarf);

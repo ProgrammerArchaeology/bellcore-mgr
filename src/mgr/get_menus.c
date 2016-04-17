@@ -289,7 +289,7 @@ int menu_get(
   return (0);
 }
 /*}}}  */
-/*{{{  menu_remove -- remove the menu drom the screen, restore previous screen contents*/
+/*{{{  menu_remove -- remove the menu from the screen, restore previous screen contents*/
 struct menu_state *
 menu_remove(struct menu_state *state)
 {

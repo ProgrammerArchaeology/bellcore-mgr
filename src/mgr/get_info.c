@@ -76,7 +76,7 @@ void get_info(
     int lines = T_HIGH / FSIZE(high);
     int cols = T_WIDE / FSIZE(wide);
 
-    sprintf(start, "px|mgr|mgr-%d|mgr teminal emulator:%s:li#%d:co#%d:bs:km:cl=^L:ta=^I:ce=\\E%c:cd=\\E%c:cm=\\E%%r%%d%c%%d%c:cs=\\E%%d%c%%d%c:al=\\E%c:dl=\\E%c:AL=\\E%%d%c:DL=\\E%%d%c:ic=\\E%c:dc=\\E%c:IC=\\E%%d%c:DC=\\E%%d%c:up=\\E%c:do=\\E%c:nd=\\E%c:hu=\\E1%c2%c:hd=\\E1%c2%c:ku=\\E[A:kd=\\E[B:kr=\\E[C:kl=\\E[D:so=\\E%c:se=\\E%c:us=\\E4%c:ue=\\E0%c:md=\\E2%c:mr=\\E1%c:me=\\E0%c:RA=\\E%d%c:SA=\\E%d%c:vs=\\E%d%c:vi=\\E%d%c:ve=\\E%c:\n",
+    sprintf(start, "px|mgr|mgr-%d|mgr terminal emulator:%s:li#%d:co#%d:bs:km:cl=^L:ta=^I:ce=\\E%c:cd=\\E%c:cm=\\E%%r%%d%c%%d%c:cs=\\E%%d%c%%d%c:al=\\E%c:dl=\\E%c:AL=\\E%%d%c:DL=\\E%%d%c:ic=\\E%c:dc=\\E%c:IC=\\E%%d%c:DC=\\E%%d%c:up=\\E%c:do=\\E%c:nd=\\E%c:hu=\\E1%c2%c:hd=\\E1%c2%c:ku=\\E[A:kd=\\E[B:kr=\\E[C:kl=\\E[D:so=\\E%c:se=\\E%c:us=\\E4%c:ue=\\E0%c:md=\\E2%c:mr=\\E1%c:me=\\E0%c:RA=\\E%d%c:SA=\\E%d%c:vs=\\E%d%c:vi=\\E%d%c:ve=\\E%c:\n",
         lines, (W(flags) & W_NOWRAP) ? ".am" : "am", lines, cols,
         E_CLEAREOL, E_CLEAREOS,
         E_SEP1, E_CUP, E_SEP1, E_TEXTREGION,

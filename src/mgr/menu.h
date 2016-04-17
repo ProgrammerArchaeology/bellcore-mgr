@@ -51,7 +51,7 @@ struct menu_action {
 };
 
 struct menu_result {
-  char *value;              /* value string for this menu chioce */
+  char *value;              /* value string for this menu choice */
   struct menu_result *next; /* next string */
 };
 

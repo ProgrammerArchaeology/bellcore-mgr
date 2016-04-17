@@ -11,7 +11,7 @@
 /* defines for mgr */
 /*}}}  */
 
-/* potentially changable defines for mgr */
+/* potentially changeable defines for mgr */
 
 #define MAXWIN 24 /* Maximum number of windows */
 /* < getdtablesize()-5 */

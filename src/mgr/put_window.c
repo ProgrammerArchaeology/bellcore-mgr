@@ -262,7 +262,7 @@ int put_window(WINDOW *win, char *buff, int buff_count)
         [W(esc_cnt)] = n;
       } break;
       /*}}}  */
-      /*{{{  E_SEP1, E_SEP2 field seperators*/
+      /*{{{  E_SEP1, E_SEP2 field separators*/
       case E_SEP1:
       case E_SEP2:
         if (W(esc_cnt) + 1 < MAXESC)
@@ -395,7 +395,7 @@ int put_window(WINDOW *win, char *buff, int buff_count)
         }
         break;
       /*}}}  */
-      /*{{{  E_FCOLOR     -- set forground color*/
+      /*{{{  E_FCOLOR     -- set foreground color*/
       case E_FCOLOR:
         if (W(flags) & W_STANDOUT) {
           standend(win);

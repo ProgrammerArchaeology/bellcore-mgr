@@ -8,7 +8,7 @@
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
 
-/* misc window and screen mangement routines */
+/* misc window and screen management routines */
 /*}}}  */
 /*{{{  #includes*/
 #include <sys/wait.h>
@@ -470,7 +470,7 @@ void suspend(void)
   close(mouse);
   reset_tty(0);
 
-  do_cmd('s'); /* do the suspention command */
+  do_cmd('s'); /* do the suspension command */
 
   /* courtesy DVW */
   signal(SIGTSTP, SIG_DFL);
@@ -504,7 +504,7 @@ void suspend(void)
 }
 /*}}}  */
 #ifdef MGR_ALIGN
-/*{{{  alignwin -- align a window so a byte boundary occurs somewhere insode the border*/
+/*{{{  alignwin -- align a window so a byte boundary occurs somewhere inside the border*/
 void alignwin(BITMAP *screen, int *x, int *dx, int slop)
 {
   int adjust = (BIT_X(screen) + *x) & 7;
@@ -604,8 +604,8 @@ void cursor_off(void)
   do_cursor(active);
 }
 /*}}}  */
-/*{{{  system command - turn off root privaleges*/
-/* system command - turn off root privaleges */
+/*{{{  system command - turn off root privileges*/
+/* system command - turn off root privileges */
 
 int systemcmd(const char *command)
 {

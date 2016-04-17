@@ -43,7 +43,7 @@ FILE *popen(const char *cmd, const char *mode)
   myside = tst(p[WTR], p[RDR]);
   hisside = tst(p[RDR], p[WTR]);
   if ((pid = vfork()) == 0) {
-    /* turn off root privilages */
+    /* turn off root privileges */
     int uid = getuid();
     int gid = getgid();
     setreuid(uid, uid);

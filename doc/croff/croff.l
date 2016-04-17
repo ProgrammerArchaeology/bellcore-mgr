@@ -18,11 +18,11 @@
 extern struct table_entry keywords_data[];
 extern struct table_entry *keywords[];
 
-char *ks,*ke;	/* keyword delimeters */
-char *cs,*ce;	/* comment delimeters */
-char *is,*ie;	/* identifier delimeters */
-char *fs,*fe;	/* function delimeters */
-char *ps,*pe;	/* pre-proc delimeters */
+char *ks,*ke;	/* keyword delimiters */
+char *cs,*ce;	/* comment delimiters */
+char *is,*ie;	/* identifier delimiters */
+char *fs,*fe;	/* function delimiters */
+char *ps,*pe;	/* pre-proc delimiters */
 
 int force = 0;		/* force xlation without .SS */
 int no_troff = 0;	/* dont xlate \ etc */

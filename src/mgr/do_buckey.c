@@ -80,7 +80,7 @@ void topwin(int winsetid, int winnum)
 	Check if the character is a "buckey" character, i.e. has the eighth bit
 	on.  If it does, it may be a function character which causes some
 	action.
-	Returns 0 if not a buckey characater or not an function character.
+	Returns 0 if not a buckey character or not an function character.
 	Returns 1 if a function character.
 */
 int do_buckey(int c)
@@ -268,7 +268,7 @@ int do_buckey(int c)
     MOUSE_ON(screen, mousex, mousey);
     break;
   case 'n': /* make a new window 80x24 characters */
-  case 'N': /* make a new window, sweept out by the mouse */
+  case 'N': /* make a new window, swept out by the mouse */
     MOUSE_OFF(screen, mousex, mousey);
     if (active) {
       cursor_off();

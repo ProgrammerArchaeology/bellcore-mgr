@@ -670,7 +670,7 @@ extern int m_flags;		/* setup flags */
 extern int m_envcount;		/* # of stacked environments */
 extern int m_saveenvcount;	/* ??? */
 extern char m_escchar;		/* \033, change only for debugging */
-extern char m_menuchar;		/* menu field seperator char (\005) */
+extern char m_menuchar;		/* menu field separator char (\005) */
 extern char m_linebuf[MAXLINE];
 
 /* get_param deprecated, use m_gethostname, m_getscreensize, m_getbordersize */

@@ -34,7 +34,7 @@
 #include "update.h"
 /*}}}  */
 
-/*{{{  shape -- reshape a window to specified dimentions*/
+/*{{{  shape -- reshape a window to specified dimensions*/
 int shape(int x, int y, int dx, int dy)
 {
   int sx, sy, w, h;

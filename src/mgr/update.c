@@ -15,7 +15,7 @@
  *	1) find all window edges that intersect with the current window 
  *	2) sort all tops+bottoms then left+rights into increasing order
  *	3) for each rectangular patch, see if it is visible on target window
- *	4) if visible, coellesce patch and keep on a list
+ *	4) if visible, coalesce patch and keep on a list
  *    update window against clip list
  * 5) run through list, and update each rext that intersects with
  *    the clip region
@@ -63,7 +63,7 @@ static int gen_list(WINDOW *window)
   int i, j;
   int count = 0;
   int skip; /* covered by another window - skip patch */
-  int hold; /* hold for coellessing */
+  int hold; /* hold for coalescing */
 
   /* build arrays of window coordinates: intersecting win's above win */
 
@@ -123,7 +123,7 @@ static int gen_list(WINDOW *window)
       /* visible, add patch to list, or append to previous patch */
 
       if (!skip) {
-        if (i == hold) { /* coel. across */
+        if (i == hold) { /* coalescing across */
           list->rect.wide += x[i + 1] - x[i];
           hold++;
         } else {   /* flush held rect */
@@ -139,7 +139,7 @@ static int gen_list(WINDOW *window)
           if (!W(clip_list)) /* set initial rectangle */
             W(clip_list) = (char *)list;
           prev = list;
-          hold = i + 1; /* next 'i' to check for coell. */
+          hold = i + 1; /* next 'i' to check for coalescing */
         }
       }
     }

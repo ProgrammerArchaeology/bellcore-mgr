@@ -237,7 +237,7 @@ int main(int argc, char **argv)
       fputs(version, stdout);
       exit(1);
     /*}}}  */
-    /*{{{  c -- dont touch the colormap on startup, wait for orders */
+    /*{{{  c -- don't touch the colormap on startup, wait for orders */
     case 'c':
       touch_colormap = 0;
       break;
@@ -400,7 +400,7 @@ int main(int argc, char **argv)
     case SIGCHLD:
       signal(SIGCHLD, sig_child);
       break;
-    case SIGILL: /* <= 3.0 abort gererates this one */
+    case SIGILL: /* <= 3.0 abort generates this one */
     case SIGCONT:
     case SIGIOT: /* 3.2 abort generates this (gee thanks, SUN!) */
     case SIGQUIT:

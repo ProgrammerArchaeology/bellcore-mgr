@@ -35,7 +35,7 @@ bit_open(
   return (result);
 }
 
-/* destroy a bitmap, free up space (might nedd special code for the display) */
+/* destroy a bitmap, free up space (might need special code for the display) */
 
 int bit_destroy(BITMAP *bitmap)
 {

@@ -34,7 +34,7 @@
 #include "update.h"
 /*}}}  */
 
-/*{{{  win_make -- manipulte an alternate (client) window - called by put_window()*/
+/*{{{  win_make -- manipulate an alternate (client) window - called by put_window()*/
 void win_make(WINDOW *win, int indx)
 /* window issuing make-call */
 /* current index into char string (yuk!) */

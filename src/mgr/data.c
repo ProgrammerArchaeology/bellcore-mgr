@@ -67,7 +67,7 @@ const char *quit_menu[] = { /* to verify quit */
   NULL
 };
 
-/* menu functions - these have a 1-1 correspondance with the menu items */
+/* menu functions - these have a 1-1 correspondence with the menu items */
 
 function main_functions[] = {
   new_window,

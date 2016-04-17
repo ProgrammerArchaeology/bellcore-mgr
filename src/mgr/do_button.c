@@ -199,7 +199,7 @@ void do_button(int button)
 		send the event stating the formerly down button is now up.
 	If some button is down, the same or some other,
 		do nothing.
-	Note that this creates a fundmental property of MGR:  namely that
+	Note that this creates a fundamental property of MGR:  namely that
 	once a button is pressed, no other button pressings have any effect
 	until all buttons are released.
    */

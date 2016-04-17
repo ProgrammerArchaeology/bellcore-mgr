@@ -100,7 +100,7 @@ int get_eachwin(struct window_data *windatap)
  * Get window parameters for the current window set, one window at a time.
  * Returns 1 if window_data structure has been filled, 0 otherwise.
  * It is important to call get_eachcleintwin() in a tight loop that
- * doesn' tever exit, so that all the data is picked up.
+ * doesn't ever exit, so that all the data is picked up.
  */
 
 int get_eachclientwin(struct window_data *windatap)

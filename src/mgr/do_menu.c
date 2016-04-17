@@ -68,7 +68,7 @@ add_result(
 static int
 get_fields(
     char *line,    /* line to break into fields */
-    int delim,     /* field delimeter */
+    int delim,     /* field delimiter */
     const char **fields, /* resultant fields */
     int max        /* max # fields */
     )
@@ -89,7 +89,7 @@ get_fields(
 }
 /*}}}  */
 
-/*{{{  set_slide -- set slideing defaults*/
+/*{{{  set_slide -- set sliding defaults*/
 int set_slide(int x, int y)
 {
   if (x || y) {
