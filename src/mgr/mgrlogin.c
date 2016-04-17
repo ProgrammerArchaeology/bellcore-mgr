@@ -153,7 +153,7 @@ void cutebox(int bx, int by, int bw, int bh)
 }
 /*}}}  */
 /*{{{  quit*/
-void quit(int sig)
+__attribute__((noreturn)) void quit(int sig)
 {
   bit_destroy(screen);
   reset_tty(0);

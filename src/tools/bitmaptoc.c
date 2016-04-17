@@ -24,7 +24,7 @@ static char *cmd;
 /*}}}  */
 
 /*{{{  usage*/
-static void
+__attribute__((noreturn)) static void
 usage(void)
 {
   fprintf(stderr, "Usage: %s <icon_file> ...  > <icon>.c\n", cmd);

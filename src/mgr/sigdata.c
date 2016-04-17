@@ -105,7 +105,7 @@ static struct signame {
 /*}}}  */
 
 /*{{{  catch -- unexpected signals go here, print message, restore state, then die!*/
-void catch (int sig)
+__attribute__((noreturn)) void catch (int sig)
 {
   _quit();
   fprintf(stderr, "got a %s:%s\r\n", signames[sig].symbol, signames[sig].desc);
