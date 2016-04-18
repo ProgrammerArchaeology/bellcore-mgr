@@ -23,7 +23,7 @@ bit_open(
   if ((result = (BITMAP *)malloc(sizeof(BITMAP))) == (BITMAP *)0)
     return (BIT_NULL);
 
-  /* do what you need to do here yo initialize the display */
+  /* do what you need to do here to initialize the display */
 
   result->primary = result;
   result->data = 0;
