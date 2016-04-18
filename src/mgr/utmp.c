@@ -19,7 +19,7 @@
 /*}}}  */
 
 /*{{{  utmp_entry*/
-static void utmp_entry(char *line, char *name, char *host, time_t logtime, int type, pid_t pid)
+static void utmp_entry(const char *line, const char *name, const char *host, time_t logtime, int type, pid_t pid)
 {
 /*{{{  variables*/
 #ifdef linux
@@ -36,14 +36,14 @@ static void utmp_entry(char *line, char *name, char *host, time_t logtime, int t
 /*{{{  linux code*/
 #ifdef linux
   setutent();
-  memset((char *)&entry, 0, sizeof(entry));
+  memset(&entry, 0, sizeof(entry));
   strncpy(entry.ut_line, line + sizeof("/dev/"), sizeof(entry.ut_line));
   strncpy(entry.ut_id, line + sizeof("/dev/tty"), sizeof(entry.ut_id));
-  if ((utmp_ptr = getutline(&entry)) != (struct utmp *)0)
+  if ((utmp_ptr = getutline(&entry)) != NULL)
     entry = *utmp_ptr;
-  if (name != (char *)0)
+  if (name != NULL)
     strncpy(entry.ut_name, name, sizeof(entry.ut_name));
-  if (host != (char *)0)
+  if (host != NULL)
     strncpy(entry.ut_host, host, sizeof(entry.ut_host));
   entry.ut_time = logtime;
   if (type != 0)
@@ -104,19 +104,19 @@ static void utmp_entry(char *line, char *name, char *host, time_t logtime, int t
 /*}}}  */
 
 /*{{{  rm_utmp*/
-void rm_utmp(char *line)
+void rm_utmp(const char *line)
 {
   utmp_entry(line, "", "", (time_t)0, DEAD_PROCESS, 0);
 }
 /*}}}  */
 /*{{{  add_utmp*/
-void add_utmp(char *line)
+void add_utmp(const char *line)
 {
   time_t t;
   struct passwd *entry = getpwuid(getuid());
 
   time(&t);
-  utmp_entry(line, entry == (struct passwd *)0 ? "unknown" : entry->pw_name, (char *)0, t, USER_PROCESS, getpid());
+  utmp_entry(line, entry == NULL ? "unknown" : entry->pw_name, NULL, t, USER_PROCESS, getpid());
 }
 /*}}}  */
 #endif

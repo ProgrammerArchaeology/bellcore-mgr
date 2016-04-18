@@ -1,3 +1,3 @@
-void rm_utmp(char *line);
-void add_utmp(char *line);
+void rm_utmp(const char *line);
+void add_utmp(const char *line);
 /*{{{}}}*/
