@@ -228,6 +228,7 @@ SET(mgrlogin_SOURCES
 )
 
 SET(mgrlogin_HEADERS
+    default_font.h
     font_subs.h
     set_mode.h
 )
