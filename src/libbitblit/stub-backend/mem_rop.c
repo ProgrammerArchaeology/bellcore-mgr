@@ -8,7 +8,7 @@
 
 /*  stub bitblit code */
 
-#include "bitmap.h"
+#include "screen.h"
 
 /*
  *  General memory-to-memory rasterop

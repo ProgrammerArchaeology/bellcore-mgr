@@ -1,4 +1,4 @@
-/*                        Copyright (c) 1988 Bellcore
+/*                        Copyright (c) 1987 Bellcore
  *                            All Rights Reserved
  *       Permission is granted to copy or use this program, EXCEPT that it
  *       may not be sold for profit, the copyright notice must be reproduced
@@ -6,11 +6,14 @@
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
 
-/*  Draw a line stub */
+#include "screen.h"
 
-#include "bitmap.h"
-
-int bit_line(BITMAP *dest, int x0, int y0, int x1, int y1, int func)
+DATA *
+bit_initscreen(char *name, int *width, int *height, unsigned char *depth, void **device)
 {
-  return -1;
+  return NULL;
+}
+
+void display_close(BITMAP *bitmap)
+{
 }

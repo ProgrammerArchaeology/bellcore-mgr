@@ -8,7 +8,7 @@
 
 /* draw a point  stub */
 
-#include "bitmap.h"
+#include "screen.h"
 
 int bit_point(BITMAP *map, int dx, int dy, int func)
 {

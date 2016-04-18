@@ -28,16 +28,16 @@ IF(MGR_BITBLIT_BACKEND MATCHES "stub-backend")
   INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/stub-backend)
   LIST(APPEND bitblit_SOURCES
        stub-backend/bit_blit.c
+       stub-backend/bit_destroy.c
+       stub-backend/bit_initscreen.c
+       stub-backend/bit_line.c
        stub-backend/bit_on.c
+       stub-backend/bit_point.c
        stub-backend/bit_size.c
-       stub-backend/bitmap.c
-       stub-backend/blit.c
-       stub-backend/line.c
+       stub-backend/mem_rop.c
        stub-backend/palette.c
-       stub-backend/pixel.c
        stub-backend/screen.c)
   LIST(APPEND bitblit_HEADERS
-       stub-backend/bitmap.h
        stub-backend/screen.h)
 ENDIF()
 

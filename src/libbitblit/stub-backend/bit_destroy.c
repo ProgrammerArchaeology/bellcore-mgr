@@ -6,43 +6,34 @@
  *       BELLCORE MAKES NO WARRANTY AND ACCEPTS NO LIABILITY FOR THIS PROGRAM.
  */
 
-/*  generic bitblit code routines*/
-
 #include <stdlib.h>
-#include "bitmap.h"
+#include "screen.h"
 
-/* open the display */
-
-BITMAP *
-bit_open(
-    char *name /* name of frame buffer */
-    )
-{
-  BITMAP *result;
-
-  if ((result = (BITMAP *)malloc(sizeof(BITMAP))) == (BITMAP *)0)
-    return (BIT_NULL);
-
-  /* do what you need to do here to initialize the display */
-
-  result->primary = result;
-  result->data = 0;
-  result->x0 = 0,
-  result->y0 = 0,
-  result->wide = 1000;
-  result->high = 900;
-  result->type = _SCREEN;
-  return (result);
-}
+void display_close(BITMAP *bitmap);
 
 /* destroy a bitmap, free up space (might need special code for the display) */
 
-int bit_destroy(BITMAP *bitmap)
+void bit_destroy(BITMAP *bitmap)
 {
-  if (bitmap == (BITMAP *)0)
-    return (-1);
+  if (bitmap == NULL)
+    return;
+
   if (IS_MEMORY(bitmap) && IS_PRIMARY(bitmap))
+  {
+#ifdef MOVIE
+    log_destroy(bitmap);
+#endif
     free(bitmap->data);
+    bitmap->data = NULL;
+  }
+  else if (IS_SCREEN(bitmap) && IS_PRIMARY(bitmap))
+  {
+#ifdef MOVIE
+    log_destroy(bitmap);
+#endif
+    display_close(bitmap);
+  }
+
   free(bitmap);
-  return (0);
+  return;
 }
