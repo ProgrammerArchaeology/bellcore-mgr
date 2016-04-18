@@ -8,14 +8,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
-
-#ifndef USER_PROCESS
-#define USER_PROCESS 1
-#endif
-#ifndef DEAD_PROCESS
-#define DEAD_PROCESS 1
-#endif
-
 /*}}}  */
 
 /*{{{  utmp_entry*/
