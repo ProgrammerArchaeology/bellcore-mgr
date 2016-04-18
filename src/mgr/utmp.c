@@ -21,20 +21,10 @@
 /*{{{  utmp_entry*/
 static void utmp_entry(const char *line, const char *name, const char *host, time_t logtime, int type, pid_t pid)
 {
-/*{{{  variables*/
 #ifdef linux
   struct utmp entry;
   struct utmp *utmp_ptr;
-#endif
-#ifdef sun
-  struct utmp entry;
-  int fd;
-  off_t offset;
-#endif
-/*}}}  */
 
-/*{{{  linux code*/
-#ifdef linux
   setutent();
   memset(&entry, 0, sizeof(entry));
   strncpy(entry.ut_line, line + sizeof("/dev/"), sizeof(entry.ut_line));
@@ -53,53 +43,6 @@ static void utmp_entry(const char *line, const char *name, const char *host, tim
   pututline(&entry);
   endutent();
 #endif
-/*}}}  */
-/*{{{  sun code*/
-#ifdef sun
-  if ((fd = open("/etc/utmp", O_RDWR)) < 0)
-    return;
-  offset = -1L;
-  /*{{{  try to find and read user record*/
-  while (read(fd, &entry, sizeof(entry)) == sizeof(entry))
-    if (entry.ut_name[0] && !strncmp(line + sizeof("/dev"), entry.ut_line, sizeof(entry.ut_line))) {
-      offset = tell(fd) - sizeof(entry);
-      break;
-    }
-  /*}}}  */
-  if (offset != -1L)
-    /*{{{  seek to its position*/
-    lseek(fd, offset, SEEK_SET);
-  /*}}}  */
-  else
-  /*{{{  seek to free one*/
-  {
-    lseek(fd, (off_t)0, SEEK_SET);
-    while (read(fd, &entry, sizeof(entry)) == sizeof(entry))
-      if (entry.ut_name[0] == '\0') {
-        offset = tell(fd) - sizeof(entry);
-        break;
-      }
-    if (offset != -1L)
-      lseek(fd, (off_t)offset, SEEK_SET);
-    memset((char *)&entry, 0, sizeof(entry));
-  }
-  /*}}}  */
-  /*{{{  set entry fields*/
-  strncpy(entry.ut_line, line + sizeof("/dev"), sizeof(entry.ut_line));
-  if (name != (char *)0 && *name && type == USER_PROCESS)
-    strncpy(entry.ut_name, name, sizeof(entry.ut_name));
-  else
-    entry.ut_name[0] = '\0';
-  if (host != (char *)0 && *host)
-    strncpy(entry.ut_host, host, sizeof(entry.ut_host));
-  else
-    entry.ut_host[0] = '\0';
-  entry.ut_time = logtime;
-  /*}}}  */
-  write(fd, &entry, sizeof(entry));
-  close(fd);
-#endif
-  /*}}}  */
 }
 /*}}}  */
 
