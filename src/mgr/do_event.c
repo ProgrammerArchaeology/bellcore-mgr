@@ -312,7 +312,7 @@ void do_event(
           free(message);
           message = (char *)0;
         }
-        id_message = ACTIVE(pid);
+        id_message = active->pid;
         write_event(win, buff, E_LIST_ACCEPT);
       }
       break;

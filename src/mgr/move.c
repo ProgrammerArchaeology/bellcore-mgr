@@ -28,21 +28,21 @@
 void move_window(void)
 {
   int button;
-  int dx = BIT_WIDE(ACTIVE(border));
-  int dy = BIT_HIGH(ACTIVE(border));
-  int sx = ACTIVE(x0);
-  int sy = ACTIVE(y0);
+  int dx = BIT_WIDE(active->border);
+  int dy = BIT_HIGH(active->border);
+  int sx = active->x0;
+  int sy = active->y0;
 
   move_box(screen, mouse, &sx, &sy, dx, dy, 0);
 
   /* adjust window state */
 
-  mousex += sx - ACTIVE(x0);
-  mousey += sy - ACTIVE(y0);
+  mousex += sx - active->x0;
+  mousey += sy - active->y0;
 
   shape(sx, sy, dx, dy);
 #ifdef MGR_ALIGN
-  if (dx != BIT_WIDE(ACTIVE(border)) || dy != BIT_HIGH(ACTIVE(border)))
+  if (dx != BIT_WIDE(active->border) || dy != BIT_HIGH(active->border))
     do_event(EVENT_SHAPE, active, E_MAIN);
   else
 #endif

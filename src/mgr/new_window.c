@@ -48,8 +48,8 @@ insert_win(WINDOW *win)
   }
 
   if (active) {
-    W(prev) = ACTIVE(prev);
-    ACTIVE(prev) = win;
+    W(prev) = active->prev;
+    active->prev = win;
     W(next) = active;
   } else {
     W(prev) = win;

@@ -117,13 +117,13 @@ dowindow(int x, int y, int dx, int dy, int font, char *shell[], int flags, char 
     MOUSE_ON(screen, mousex, mousey);
 
   if (flags)
-    ACTIVE(flags) |= flags;
+    active->flags |= flags;
   if (*init)
     put_window(active, init, strlen(init));
   if (*start) {
-    i = Write(ACTIVE(to_fd), start, strlen(start));
+    i = Write(active->to_fd, start, strlen(start));
     dbgprintf('S', (stderr, "%s: start string %d/%d %s\r\n",
-                       ACTIVE(tty), i, strlen(start), start));
+                       active->tty, i, strlen(start), start));
   }
 }
 /*}}}  */
@@ -213,12 +213,12 @@ void startup(char *name)
         dowindow(x, y, dx, dy, curr_font, shell, flags, init, start);
 
         if (windowsetid) {
-          ACTIVE(setid) = windowsetid;
+          active->setid = windowsetid;
           windowsetid = 0;
         }
 
         if (setactive && activesetid == 0)
-          activesetid = ACTIVE(setid);
+          activesetid = active->setid;
 
         if (setactive)
           topwin(activesetid, -1);

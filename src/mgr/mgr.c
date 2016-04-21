@@ -504,16 +504,16 @@ int main(int argc, char **argv)
     }
     /* process keyboard input */
 
-    if (FD_ISSET(0, &reads) && active && !(ACTIVE(flags) & W_NOINPUT)) {
+    if (FD_ISSET(0, &reads) && active && !(active->flags & W_NOINPUT)) {
       read(0, &c, 1);
 #ifdef BUCKEY
-      if ((ACTIVE(flags) & W_NOBUCKEY) || !do_buckey(c))
-        write(ACTIVE(to_fd), &c, 1);
+      if ((active->flags & W_NOBUCKEY) || !do_buckey(c))
+        write(active->to_fd, &c, 1);
 #else
-      write(ACTIVE(to_fd), &c, 1);
+      write(active->to_fd, &c, 1);
 #endif
-      if (ACTIVE(flags) & W_DUPKEY && c == ACTIVE(dup))
-        write(ACTIVE(to_fd), &c, 1);
+      if (active->flags & W_DUPKEY && c == active->dup)
+        write(active->to_fd, &c, 1);
       continue;
     } else if (FD_ISSET(0, &reads) && !active) { /* toss the input */
       read(0, &c, 1);

@@ -86,11 +86,11 @@ void win_make(WINDOW *win, int indx)
   case 4: /* new window + specify window number */
     dbgprintf('N', (stderr, "%s: making alternate window\n", W(tty)));
     if (check_window(p[0], p[1], p[2], p[3], -1) == 0) {
-      if (ACTIVE(flags) & W_DUPKEY)
-        sprintf(buff, "%c \n", ACTIVE(dup));
+      if (active->flags & W_DUPKEY)
+        sprintf(buff, "%c \n", active->dup);
       else
         sprintf(buff, "\n");
-      write(ACTIVE(to_fd), buff, strlen(buff));
+      write(active->to_fd, buff, strlen(buff));
       break;
     }
 
@@ -108,7 +108,7 @@ void win_make(WINDOW *win, int indx)
 
     set_covered(active);
     border(active, BORDER_THIN);
-    CLEAR(ACTIVE(window), BIT_CLR);
+    CLEAR(active->window, BIT_CLR);
     SETMOUSEICON(DEFAULT_MOUSE_CURSOR); /* because active win chg */
     ACTIVE_ON();
     cursor_on();
@@ -116,29 +116,29 @@ void win_make(WINDOW *win, int indx)
     dbgprintf('N', (stderr, "%s: window created\n", W(tty)));
     /* fix pointer chain */
 
-    ACTIVE(to_fd) = W(to_fd);
-    ACTIVE(main) = W(main);
-    ACTIVE(pid) = W(pid);
-    ACTIVE(setid) = W(setid);
-    strcpy(ACTIVE(tty), ACTIVE(main)->tty);
-    ACTIVE(from_fd) = 0;
-    ACTIVE(alt) = W(main)->alt;
-    ACTIVE(main)
+    active->to_fd = W(to_fd);
+    active->main = W(main);
+    active->pid = W(pid);
+    active->setid = W(setid);
+    strcpy(active->tty, active->main->tty);
+    active->from_fd = 0;
+    active->alt = W(main)->alt;
+    active->main
         ->alt
         = active;
     if (p[4] > 0)
-      ACTIVE(num) = p[4];
-    else if (ACTIVE(alt))
-      ACTIVE(num) = ACTIVE(alt)->num + 1;
+      active->num = p[4];
+    else if (active->alt)
+      active->num = active->alt->num + 1;
     else
-      ACTIVE(num) = 1;
+      active->num = 1;
 
-    dbgprintf('N', (stderr, "%s: created num %d\r\n", ACTIVE(tty), ACTIVE(num)));
+    dbgprintf('N', (stderr, "%s: created num %d\r\n", active->tty, active->num));
     if (W(flags) & W_DUPKEY)
-      sprintf(buff, "%c %d\n", W(dup), ACTIVE(num));
+      sprintf(buff, "%c %d\n", W(dup), active->num);
     else
-      sprintf(buff, "%d\n", ACTIVE(num));
-    write(ACTIVE(to_fd), buff, strlen(buff));
+      sprintf(buff, "%d\n", active->num);
+    write(active->to_fd, buff, strlen(buff));
     clip_bad(active); /* invalidate clip lists */
     break;
   case 5: /* nothing */

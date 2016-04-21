@@ -187,10 +187,10 @@ void paste(void)
 {
   if (snarf) {
     do_event(EVENT_PASTE, active, E_MAIN);
-    Write(ACTIVE(to_fd), snarf, strlen(snarf));
-    dbgprintf('y', (stderr, "%s: Pasting [%s]\n", ACTIVE(tty), snarf ? snarf : "EMPTY"));
+    Write(active->to_fd, snarf, strlen(snarf));
+    dbgprintf('y', (stderr, "%s: Pasting [%s]\n", active->tty, snarf ? snarf : "EMPTY"));
   } else {
-    dbgprintf('y', (stderr, "%s: Nothing to paste\n", ACTIVE(tty)));
+    dbgprintf('y', (stderr, "%s: Nothing to paste\n", active->tty));
   }
 }
 /*}}}  */
@@ -342,8 +342,8 @@ int cut(int mode)
       if (c) {
         *pntr = 0;
         /* Paste it in */
-        write(ACTIVE(to_fd), startpntr, pntr - startpntr);
-        write(ACTIVE(to_fd), " ", 1);
+        write(active->to_fd, startpntr, pntr - startpntr);
+        write(active->to_fd, " ", 1);
         free(line);
         /*      snarf = (char *)0; */
       }

@@ -44,7 +44,7 @@ do_it(WINDOW *win)
   cursor_off();
   ACTIVE_OFF();
   expose(win);
-  ACTIVE(flags) &= ~W_NOINPUT;
+  active->flags &= ~W_NOINPUT;
   ACTIVE_ON();
   cursor_on();
   MOUSE_ON(screen, mousex, mousey);
@@ -62,12 +62,12 @@ void topwin(int winsetid, int winnum)
 {
   WINDOW *win;
 
-  if (!active || !ACTIVE(next))
+  if (!active || !active->next)
     return;
   /*	We look from the back of the list toward the front so that
 		we can cycle through a set.
 	*/
-  for (win = ACTIVE(prev); win != active; win = win->prev) {
+  for (win = active->prev; win != active; win = win->prev) {
     if (winsetid == W(setid) && (winnum == -1 || winnum == W(num))) {
       do_it(win);
       return;
@@ -195,7 +195,7 @@ int do_buckey(int c)
     topwin(windowsetid, -1);
     break;
   case 'h': /* hide top window on bottom */
-    if (active && ACTIVE(next)) {
+    if (active && active->next) {
       MOUSE_OFF(screen, mousex, mousey);
       cursor_off();
       ACTIVE_OFF();
@@ -206,12 +206,12 @@ int do_buckey(int c)
     }
     break;
   case ' ': /* go to next window */
-    if (active && ACTIVE(next))
-      do_it(ACTIVE(next));
+    if (active && active->next)
+      do_it(active->next);
     break;
   case '\b': /* move bottom window to top */
-    if (active && ACTIVE(next))
-      do_it(ACTIVE(prev));
+    if (active && active->next)
+      do_it(active->prev);
     break;
 #ifdef MOVIE
   case 'S': /* start logging */
@@ -248,7 +248,7 @@ int do_buckey(int c)
     MOUSE_OFF(screen, mousex, mousey);
     cursor_off();
     ACTIVE_OFF();
-    CLEAR(ACTIVE(window), PUTOP(BIT_CLR, ACTIVE(style)));
+    CLEAR(active->window, PUTOP(BIT_CLR, active->style));
     ACTIVE_ON();
     cursor_on();
     MOUSE_ON(screen, mousex, mousey);

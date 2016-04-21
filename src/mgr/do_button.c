@@ -102,7 +102,7 @@ void redraw(void)
 
   erase_win(screen);
   if (active) {
-    for (win = ACTIVE(prev); win != active; win = W(prev))
+    for (win = active->prev; win != active; win = W(prev))
       restore_win(win);
     restore_win(active);
   }
@@ -124,7 +124,7 @@ static void lock_screen(void)
 
   erase_win(screen);
   if (active) {
-    for (win = ACTIVE(prev); win != active; win = W(prev))
+    for (win = active->prev; win != active; win = W(prev))
       restore_win(win);
     restore_win(active);
   }
@@ -226,25 +226,25 @@ void do_button(int button)
   switch (button) {
   case BUTTON_1: /* temporary vi hack */
 #ifdef VI
-    if (active && ACTIVE(flags) & W_VI) {
+    if (active && active->flags & W_VI) {
 
-      int x = mousex - (ACTIVE(x0) + ACTIVE(text).x);
-      int y = mousey - (ACTIVE(y0) + ACTIVE(text).y);
-      int dx = ACTIVE(text).wide ? ACTIVE(text).wide : BIT_WIDE(ACTIVE(window));
-      int dy = ACTIVE(text).wide ? ACTIVE(text).high : BIT_HIGH(ACTIVE(window));
+      int x = mousex - (active->x0 + active->text.x);
+      int y = mousey - (active->y0 + active->text.y);
+      int dx = active->text.wide ? active->text.wide : BIT_WIDE(active->window);
+      int dy = active->text.wide ? active->text.high : BIT_HIGH(active->window);
 
       if (x < 0 || x > dx)
         break;
       if (y >= 0 && y <= dy) {
         char buff[10];
         sprintf(buff, "%dH%d|",
-            y / ACTIVE(font)->head.high + 1,
-            x / ACTIVE(font)->head.wide + 1);
-        write(ACTIVE(to_fd), buff, strlen(buff));
+            y / active->font->head.high + 1,
+            x / active->font->head.wide + 1);
+        write(active->to_fd, buff, strlen(buff));
       } else if (y < 0)
-        write(ACTIVE(to_fd), "\025", 1); /* ASCII Control-U */
+        write(active->to_fd, "\025", 1); /* ASCII Control-U */
       else
-        write(ACTIVE(to_fd), "\004", 1); /* ASCII Control-D */
+        write(active->to_fd, "\004", 1); /* ASCII Control-D */
     }
 #endif
     if (active) {
@@ -302,7 +302,7 @@ void do_button(int button)
         }
       }
       if (active) {
-        ACTIVE(flags) &= ~W_NOINPUT;
+        active->flags &= ~W_NOINPUT;
         ACTIVE_ON();
         cursor_on();
       }
@@ -316,7 +316,7 @@ void do_button(int button)
       }
       expose(win);
       if (active) {
-        ACTIVE(flags) &= ~W_NOINPUT;
+        active->flags &= ~W_NOINPUT;
         ACTIVE_ON();
         cursor_on();
       }

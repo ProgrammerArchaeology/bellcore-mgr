@@ -64,67 +64,67 @@ int shape(int x, int y, int dx, int dy)
   if (sy + h >= BIT_HIGH(screen))
     h = BIT_HIGH(screen) - sy;
 
-  if (w < 2 * ACTIVE(borderwid) + ACTIVE(font)->head.wide * MIN_X || h < 2 * ACTIVE(borderwid) + ACTIVE(font)->head.high * MIN_Y)
+  if (w < 2 * active->borderwid + active->font->head.wide * MIN_X || h < 2 * active->borderwid + active->font->head.high * MIN_Y)
     return (-1);
 
 #ifdef MGR_ALIGN
-  alignwin(screen, &sx, &w, ACTIVE(borderwid));
+  alignwin(screen, &sx, &w, active->borderwid);
 #endif
 
   /* remove current window position */
   save_win(active);
-  erase_win(ACTIVE(border));
+  erase_win(active->border);
   clip_bad(active); /* invalidate clip lists */
 
   /* redraw remaining windows */
   repair(active);
 
   /* adjust window state */
-  ACTIVE(x0) = sx;
-  ACTIVE(y0) = sy;
-  bit_destroy(ACTIVE(window));
-  bit_destroy(ACTIVE(border));
-  ACTIVE(border) = bit_create(screen, sx, sy, w, h);
-  ACTIVE(window) = bit_create(ACTIVE(border),
-      ACTIVE(borderwid),
-      ACTIVE(borderwid),
-      w - ACTIVE(borderwid) * 2,
-      h - ACTIVE(borderwid) * 2);
+  active->x0 = sx;
+  active->y0 = sy;
+  bit_destroy(active->window);
+  bit_destroy(active->border);
+  active->border = bit_create(screen, sx, sy, w, h);
+  active->window = bit_create(active->border,
+      active->borderwid,
+      active->borderwid,
+      w - active->borderwid * 2,
+      h - active->borderwid * 2);
 
-  for (win = ACTIVE(next); win != (WINDOW *)0; win = W(next)) {
+  for (win = active->next; win != (WINDOW *)0; win = W(next)) {
     if (W(flags) & W_ACTIVE && intersect(active, win))
       save_win(win);
   }
 
-  CLEAR(ACTIVE(window), PUTOP(BIT_CLR, ACTIVE(style)));
+  CLEAR(active->window, PUTOP(BIT_CLR, active->style));
 
   border(active, BORDER_THIN);
-  bit_blit(ACTIVE(border), 0, 0,
-      BIT_WIDE(ACTIVE(save)) - ACTIVE(borderwid),
-      BIT_HIGH(ACTIVE(save)) - ACTIVE(borderwid),
-      BIT_SRC, ACTIVE(save), 0, 0);
+  bit_blit(active->border, 0, 0,
+      BIT_WIDE(active->save) - active->borderwid,
+      BIT_HIGH(active->save) - active->borderwid,
+      BIT_SRC, active->save, 0, 0);
 
   /* make sure character cursor is in a good spot */
-  if (ACTIVE(x) > BIT_WIDE(ACTIVE(window))) {
-    ACTIVE(x) = 0;
-    ACTIVE(y) += ((int)(ACTIVE(font)->head.high));
+  if (active->x > BIT_WIDE(active->window)) {
+    active->x = 0;
+    active->y += ((int)(active->font->head.high));
   }
-  if (ACTIVE(y) > BIT_HIGH(ACTIVE(window))) {
+  if (active->y > BIT_HIGH(active->window)) {
 #ifdef WIERD
-    ACTIVE(y) = BIT_HIGH(ACTIVE(window));
-    scroll(ACTIVE(window), 0, BIT_HIGH(ACTIVE(window)),
-        ((int)(ACTIVE(font)->head.high)), SWAPCOLOR(ACTIVE(style)));
-    bit_blit(ACTIVE(window), 0, BIT_HIGH(ACTIVE(window)) - ((int)(ACTIVE(font)->head.high)),
-        BIT_WIDE(ACTIVE(save)), ((int)(ACTIVE(font)->head.high)),
-        BIT_SRC, ACTIVE(save),
-        ACTIVE(borderwid), BIT_HIGH(ACTIVE(save)) - ((int)(ACTIVE(font)->head.high)) - ACTIVE(borderwid));
+    active->y = BIT_HIGH(active->window);
+    scroll(active->window, 0, BIT_HIGH(active->window),
+        ((int)(active->font->head.high)), SWAPCOLOR(active->style));
+    bit_blit(active->window, 0, BIT_HIGH(active->window) - ((int)(active->font->head.high)),
+        BIT_WIDE(active->save), ((int)(active->font->head.high)),
+        BIT_SRC, active->save,
+        active->borderwid, BIT_HIGH(active->save) - ((int)(active->font->head.high)) - active->borderwid);
 #else
-    ACTIVE(y) = BIT_HIGH(ACTIVE(window)) - ((int)(ACTIVE(font)->head.high));
+    active->y = BIT_HIGH(active->window) - ((int)(active->font->head.high));
 #endif
   }
 
-  bit_destroy(ACTIVE(save));
-  ACTIVE(save) = (BITMAP *)0;
+  bit_destroy(active->save);
+  active->save = (BITMAP *)0;
 
   /* invalidate clip lists */
   clip_bad(active);
@@ -161,10 +161,10 @@ void stretch_window(void)
   move_mouse(screen, mouse, &mousex, &mousey, 0);
   SETMOUSEICON(DEFAULT_MOUSE_CURSOR);
 
-  x0 = ACTIVE(x0);
-  y0 = ACTIVE(y0);
-  x1 = x0 + BIT_WIDE(ACTIVE(border));
-  y1 = y0 + BIT_HIGH(ACTIVE(border));
+  x0 = active->x0;
+  y0 = active->y0;
+  x1 = x0 + BIT_WIDE(active->border);
+  y1 = y0 + BIT_HIGH(active->border);
   if (2 * (mousex - x0) < x1 - x0)
     x0 = x1;
   dx = mousex - x0;

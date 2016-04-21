@@ -146,7 +146,6 @@ extern char debug_level[];
 #define Max(x, y) ((x) > (y) ? (x) : (y))
 #define W(x) (win->x)
 #define BETWEEN(a, x, b) ((x) < (a) ? a : ((x) > (b) ? b : x))
-#define ACTIVE(x) (active->x)
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 #define LIMIT(x, max) ((x) > (max) ? 1 : (-(x) > (max) ? -1 : 0))
 

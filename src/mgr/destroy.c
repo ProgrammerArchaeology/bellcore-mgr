@@ -137,7 +137,7 @@ int destroy(WINDOW *win)
   /* deallocate window slot */
 
   if (active)
-    ACTIVE(prev) = W(prev);
+    active->prev = W(prev);
 
   /* remove window from screen */
 
@@ -230,7 +230,7 @@ int destroy(WINDOW *win)
   unlink_win(win, ALL);
 
   dbgprintf('d', (stderr, "Active: %s-%d\r\n",
-                     active ? ACTIVE(tty) : "NONE", active ? ACTIVE(num) : 0));
+                     active ? active->tty : "NONE", active ? active->num : 0));
 
   MOUSE_ON(screen, mousex, mousey);
 
@@ -240,6 +240,6 @@ int destroy(WINDOW *win)
 /*{{{  destroy_window -- mark active window for destruction*/
 void destroy_window(void)
 {
-  ACTIVE(flags) |= W_DIED;
+  active->flags |= W_DIED;
 }
 /*}}}  */

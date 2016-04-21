@@ -255,7 +255,7 @@ void go_menu(
   struct menu_result *result = NULL; /* result of menu selection */
   struct menu_result *current;       /* current action */
   int exit = EXIT_RIGHT;             /* enable sliding and paging */
-  int menu = ACTIVE(menu[n]);
+  int menu = active->menu[n];
 
   dbgprintf('m', (stderr, "Starting menu %d, button %d\n", menu, n));
 
@@ -263,13 +263,13 @@ void go_menu(
 
   if (menu >= 0 /* && mousein(mousex,mousey,active,0) */) {
     result = do_menus(screen, mouse, mousex, mousey,
-        font, ACTIVE(menus), menu, exit);
+        font, active->menus, menu, exit);
 
     /* send list of actions, and free action space */
 
     for (current = result; current;) {
       if (current->value)
-        Write(ACTIVE(to_fd), current->value, strlen(current->value));
+        Write(active->to_fd, current->value, strlen(current->value));
       result = current;
       current = current->next;
       free(result);

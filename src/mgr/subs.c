@@ -125,12 +125,12 @@ void expose(
         ->prev
         = W(prev);
   else
-    ACTIVE(prev) = W(prev);
+    active->prev = W(prev);
 
-  W(prev) = ACTIVE(prev);
+  W(prev) = active->prev;
   W(next) = active;
 
-  ACTIVE(prev) = win;
+  active->prev = win;
   active = win;
 
   if (!(W(flags) & W_ACTIVE)) {
@@ -144,7 +144,7 @@ void expose(
     un_covered();
   } else {
     dbgprintf('o', (stderr, "expose: %s already active (0%o)\r\n",
-                       ACTIVE(tty), (unsigned)ACTIVE(flags)));
+                       active->tty, (unsigned)active->flags));
   }
   {
     int mouse_was_on = mouse_on;
@@ -175,12 +175,12 @@ int bury(
       ->prev
       = W(prev);
 
-  W(prev) = ACTIVE(prev);
-  ACTIVE(prev)
+  W(prev) = active->prev;
+  active->prev
       ->next
       = win;
 
-  ACTIVE(prev) = win;
+  active->prev = win;
   W(next) = (WINDOW *)0;
   return (1);
 }
@@ -204,7 +204,7 @@ void repair(WINDOW *clip)
 {
   WINDOW *win;
 #ifdef NOCLIP
-  for (win = ACTIVE(prev)->prev; win != active; win = W(prev))
+  for (win = active->prev->prev; win != active; win = W(prev))
     if (!alone(win))
       restore_win(win);
   restore_win(win);
@@ -492,12 +492,12 @@ void suspend(void)
 
   erase_win(screen);
   if (active) {
-    for (win = ACTIVE(prev); win != active; win = W(prev)) {
+    for (win = active->prev; win != active; win = W(prev)) {
       restore_win(win);
       killpg(W(pid), SIGCONT);
     }
     restore_win(active);
-    killpg(ACTIVE(pid), SIGCONT);
+    killpg(active->pid, SIGCONT);
   }
 #endif
   MOUSE_ON(screen, mousex, mousey);
