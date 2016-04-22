@@ -115,7 +115,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
           = win->snarf;
       win->snarf = NULL;
       EVENT_SET_MASK(win, cnt);
-      dbgprintf('e', (stderr, "%s: setting event %d (%d)[%s]\r\n",
+      dbgprintf('e', (stderr, "%s: setting event %d (%zu)[%s]\r\n",
                          win->tty, GET_EVENT(cnt), strlen(win->snarf), win->snarf));
       /* if button is down, then do the associated event */
 
@@ -142,7 +142,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
       win->bitmaps
           [*win->esc - 1]
           = bit_alloc(x + strlen(win->snarf) * FSIZE(wide), y, NULL, 1); /* text is always 1 bit deep */
-      dbgprintf('y', (stderr, "%s: STRING creating %d (%dx%d)\n",
+      dbgprintf('y', (stderr, "%s: STRING creating %d (%zux%d)\n",
                          win->tty, *win->esc, x + strlen(win->snarf) * FSIZE(wide), y));
     }
     if (*win->esc > 0)

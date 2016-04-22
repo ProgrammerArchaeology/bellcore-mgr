@@ -226,6 +226,6 @@ void get_info(
     Write(win->to_fd, coords, strlen(coords));
   else
     Write(win->to_fd, "\n", 1);
-  dbgprintf('i', (stderr, "  sending (%d) [%s]\r\n", strlen(coords), coords));
+  dbgprintf('i', (stderr, "  sending (%zu) [%s]\r\n", strlen(coords), coords));
 }
 /*}}}  */
