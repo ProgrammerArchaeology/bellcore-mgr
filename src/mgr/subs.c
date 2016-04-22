@@ -626,7 +626,7 @@ int systemcmd(const char *command)
     close(0);
     open("/dev/null", O_RDONLY);
 
-    execl("/bin/sh", "sh", "-c", command, 0);
+    execl("/bin/sh", "sh", "-c", command, (char *)0);
     _exit(127);
   }
   istat = signal(SIGINT, SIG_IGN);
