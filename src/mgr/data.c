@@ -29,7 +29,7 @@ static void nothing(void) {}
 
 /* menus */
 
-const char *active_menu[] = { /* active-window menu */
+const char *const active_menu[] = { /* active-window menu */
 #ifdef STRETCH                /* first menu item: something you can safely click by accident */
   "move",
   "stretch",
@@ -45,20 +45,20 @@ const char *active_menu[] = { /* active-window menu */
   NULL
 };
 
-const char *main_menu[] = { /* primary menu */
+const char *const main_menu[] = { /* primary menu */
   "new window",
   "redraw",
   "quit",
   NULL
 };
 
-const char *full_menu[] = { /* primary menu  - no more windows allowed */
+const char *const full_menu[] = { /* primary menu  - no more windows allowed */
   "redraw",
   "quit",
   NULL
 };
 
-const char *quit_menu[] = { /* to verify quit */
+const char *const quit_menu[] = { /* to verify quit */
   "cancel",
   "lock screen",
   "suspend",
@@ -69,20 +69,20 @@ const char *quit_menu[] = { /* to verify quit */
 
 /* menu functions - these have a 1-1 correspondence with the menu items */
 
-function main_functions[] = {
+const function main_functions[] = {
   new_window,
   redraw,
   quit,
   (function)0
 };
 
-function full_functions[] = {
+const function full_functions[] = {
   redraw,
   quit,
   (function)0
 };
 
-function active_functions[] = {
+const function active_functions[] = {
 #ifdef STRETCH
   move_window,
   stretch_window,

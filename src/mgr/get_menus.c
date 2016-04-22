@@ -67,8 +67,8 @@ const char *str;
 struct menu_state *
 menu_define(
     struct font *font,    /* which font to use for menu */
-    const char *list[],   /* list of menu items */
-    const char *values[], /* list of return values */
+    const char *const list[],   /* list of menu items */
+    const char *const values[], /* list of return values */
     int max,              /* max number of menu items */
     int color             /* raster op function containing the colors to use for the menus */
     )

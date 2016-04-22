@@ -279,14 +279,14 @@ void new_window(), move_window();
 #include <sys/time.h>
 #include <sys/types.h>
 
-extern const char *full_menu[];
-extern const char *main_menu[];
-extern const char *active_menu[];
-extern const char *test_menu[];
-extern const char *quit_menu[];
-extern function full_functions[];
-extern function main_functions[];
-extern function active_functions[];
+extern const char *const full_menu[];
+extern const char *const main_menu[];
+extern const char *const active_menu[];
+extern const char *const test_menu[];
+extern const char *const quit_menu[];
+const extern function full_functions[];
+const extern function main_functions[];
+const extern function active_functions[];
 
 extern BITMAP *m_rop;
 extern int next_window;
@@ -300,7 +300,7 @@ extern WINDOW *last_active;
 extern int button_state;
 extern int mouse, mousex, mousey, mouse_on;
 extern int debug;
-extern char *fontlist[];
+extern char * fontlist[];
 extern const char *font_dir, *icon_dir;
 extern char *snarf;
 extern char *message;
