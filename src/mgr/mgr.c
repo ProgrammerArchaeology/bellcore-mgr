@@ -97,7 +97,7 @@ sig_child(int sig)
 #endif
   if (someonedied) {
     win = active;
-    for (win = active; win != (WINDOW *)0; win = W(next)) {
+    for (win = active; win != NULL; win = W(next)) {
       if (W(pid) == pid && !(W(flags) & W_NOKILL) && kill(W(pid), 0) != 0) {
         W(flags) |= W_DIED;
         dbgprintf('d', (stderr, "window %d, tty %s, pid %d\r\n",
@@ -193,10 +193,10 @@ int main(int argc, char **argv)
   fd_set reads;            /* masks, result of select */
   struct timeval *poll_time;
   int flag;
-  unsigned char c;                /* reads from kbd go here */
-  char start_file[MAX_PATH];      /* name of startup file */
-  char *screen_dev = SCREEN_DEV;  /* name of frame buffer */
-  char *default_font = (char *)0; /* default font */
+  unsigned char c;               /* reads from kbd go here */
+  char start_file[MAX_PATH];     /* name of startup file */
+  char *screen_dev = SCREEN_DEV; /* name of frame buffer */
+  char *default_font = NULL;     /* default font */
   int touch_colormap = 1;
 
   timestamp(); /* initialize the timestamp */
@@ -219,8 +219,8 @@ int main(int argc, char **argv)
     case 'p': {
       FILE *fp;
 
-      if ((fp = fopen(optarg, "rb")) != (FILE *)0) {
-        if ((pattern = bitmapread(fp)) == (BITMAP *)0) {
+      if ((fp = fopen(optarg, "rb")) != NULL) {
+        if ((pattern = bitmapread(fp)) == NULL) {
           fprintf(stderr, "mgr: Invalid background pattern bitmap %s.\n", optarg);
           exit(1);
         }
@@ -358,7 +358,7 @@ int main(int argc, char **argv)
   if (default_font || (default_font = getenv(DEFAULT_FONT)))
     font = open_font(default_font);
 
-  if (font == (struct font *)0)
+  if (font == NULL)
     font = open_font("");
   font->ident = 0;
   /*}}}  */
@@ -370,7 +370,7 @@ int main(int argc, char **argv)
   mfd = mouse;
   /*}}}  */
   /*{{{  find screen*/
-  if ((screen = bit_open(screen_dev)) == (BITMAP *)0) {
+  if ((screen = bit_open(screen_dev)) == NULL) {
     perror("mgr: Can't open the screen.");
     exit(2);
   }
@@ -384,7 +384,7 @@ int main(int argc, char **argv)
     sscanf(getenv("MGRSIZE"), "%d %d %d %d", &x, &y, &w, &h);
     screen = bit_create(prime, x, y, w, h);
   } else
-    prime = (BITMAP *)0;
+    prime = NULL;
   init_colors(screen);
   if (touch_colormap)
     fill_colormap(screen);
@@ -442,7 +442,7 @@ int main(int argc, char **argv)
 #endif
   /*{{{  process startup file*/
   startup(start_file);
-  if (active != (WINDOW *)0)
+  if (active != NULL)
     ACTIVE_ON();
   else {
     MOUSE_OFF(screen, mousex, mousey);
@@ -461,7 +461,7 @@ int main(int argc, char **argv)
 
     /* see if any window died */
 
-    for (win = active; win != (WINDOW *)0;)
+    for (win = active; win != NULL;)
       if (W(flags) & W_DIED) {
         dbgprintf('d', (stderr, "Destroying %s-%d\r\n", W(tty), W(num)));
         destroy(win);
@@ -524,7 +524,7 @@ int main(int argc, char **argv)
 
     /* process shell output */
 
-    for (win = active; win != (WINDOW *)0; win = W(next)) {
+    for (win = active; win != NULL; win = W(next)) {
       /* read data into buffer */
 
       if (W(from_fd) && FD_ISSET(W(from_fd), &reads)

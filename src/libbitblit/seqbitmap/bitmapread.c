@@ -79,8 +79,8 @@ BITMAP *bitmapread(FILE *fp)
       size1diff = sizefile1 - sizemem1;
       sizefile1 = sizemem1;
     }
-    if ((bp = bit_alloc(w, h, (DATA *)0, d)) == (BITMAP *)0)
-      return (BITMAP *)0;
+    if ((bp = bit_alloc(w, h, NULL, d)) == NULL)
+      return NULL;
 #ifdef MOVIE
     SET_DIRTY(bp);
 #endif
@@ -97,7 +97,7 @@ BITMAP *bitmapread(FILE *fp)
       while (h-- > 0) {
         if (b_compget(datap, sizefile1, 1, fp) != 1) {
           bit_destroy(bp);
-          return (BITMAP *)0;
+          return NULL;
         }
         if (size1diff)
           b_compget(datap, size1diff, 1, fp);
@@ -107,7 +107,7 @@ BITMAP *bitmapread(FILE *fp)
       while (h-- > 0) {
         if (fread(datap, sizefile1, 1, fp) != 1) {
           bit_destroy(bp);
-          return (BITMAP *)0;
+          return NULL;
         }
         if (size1diff)
           fseek(fp, size1diff, 1);

@@ -52,7 +52,7 @@ int m_getevent(int timeout, int *keypress, char *eventstr, size_t eventstrsize)
   timeoutval.tv_sec = timeout / 1000;
   timeoutval.tv_usec = (timeout % 1000) * 1000;
   /*}}}  */
-  if ((n = select(32, &readfds, (fd_set *)0, (fd_set *)0, &timeoutval)) >= 0) {
+  if ((n = select(32, &readfds, NULL, NULL, &timeoutval)) >= 0) {
     if (FD_ISSET(fileno(m_termin), &readfds))
     /*{{{  we have something to read, whatever it is*/
     {

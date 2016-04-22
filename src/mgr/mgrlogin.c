@@ -65,7 +65,7 @@ char *debug_level = "";
 /*{{{  printcursor*/
 void printcursor(int x, int y, int on)
 {
-  bit_blit(screen, x, y - font->head.high, font->head.wide, font->head.high, on ? BIT_SET : BIT_CLR, (BITMAP *)0, 0, 0);
+  bit_blit(screen, x, y - font->head.high, font->head.wide, font->head.high, on ? BIT_SET : BIT_CLR, NULL, 0, 0);
 }
 /*}}}  */
 /*{{{  printchar*/
@@ -134,7 +134,7 @@ unsigned char edit(int x, int y, char *s, int visible)
 /*{{{  cutebox*/
 void cutebox(int bx, int by, int bw, int bh)
 {
-  bit_blit(screen, bx, by, bw, bh, BIT_CLR, (BITMAP *)0, 0, 0);
+  bit_blit(screen, bx, by, bw, bh, BIT_CLR, NULL, 0, 0);
 
   bit_line(screen, bx, by, bx + bw, by, BIT_SRC);
   bit_line(screen, bx + bw, by, bx + bw, by + bh, BIT_SRC);
@@ -168,8 +168,8 @@ int main(int argc, char *argv[])
   int x, login_y, password_y;
   char loginstr[9], passwordstr[9], ret;
   char ttystr[_POSIX_PATH_MAX];
-  char *background = (char *)0;
-  char *fontname = (char *)0;
+  char *background = NULL;
+  char *fontname = NULL;
   /*}}}  */
 
   /*{{{  parse arguments*/
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
   signal(SIGTERM, quit);
   signal(SIGHUP, quit);
   set_tty(0);
-  if ((screen = bit_open(SCREEN_DEV)) == (BITMAP *)0) {
+  if ((screen = bit_open(SCREEN_DEV)) == NULL) {
     reset_tty(0);
     exit(EX_NOPERM);
   }
@@ -234,13 +234,13 @@ int main(int argc, char *argv[])
       strcat(fontpath, fontname);
     }
 
-    if ((font = open_font(fontname)) == (struct font *)0)
-      font = open_font((char *)0);
+    if ((font = open_font(fontname)) == NULL)
+      font = open_font(NULL);
   } else
-    font = open_font((char *)0);
+    font = open_font(NULL);
   /*}}}  */
   /*{{{  draw background*/
-  bit_blit(screen, 0, 0, screen->wide, screen->high, BIT_CLR, (BITMAP *)0, 0, 0);
+  bit_blit(screen, 0, 0, screen->wide, screen->high, BIT_CLR, NULL, 0, 0);
   if (background) {
     BITMAP *bp;
     FILE *fp;
@@ -254,7 +254,7 @@ int main(int argc, char *argv[])
       strcat(backgroundpath, background);
     }
 
-    if ((fp = fopen(backgroundpath, "r")) != (FILE *)0 && (bp = bitmapread(fp)) != (BITMAP *)0) {
+    if ((fp = fopen(backgroundpath, "r")) != NULL && (bp = bitmapread(fp)) != NULL) {
       int x, y;
 
       for (x = 0; x < screen->wide; x += bp->wide)
@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
     struct hostent *h;
 
     gethostname(hostname, sizeof(hostname));
-    if ((h = gethostbyname(hostname)) != (struct hostent *)0)
+    if ((h = gethostbyname(hostname)) != NULL)
       strcpy(hostname, h->h_name);
     bw = font->head.wide * (strlen(hostname) + 2);
     bh = 2 * font->head.high;
@@ -338,21 +338,21 @@ int main(int argc, char *argv[])
     {
       struct passwd *pw;
 
-      if ((pw = getpwnam(loginstr)) != (struct passwd *)0 && strcmp(crypt(passwordstr, pw->pw_passwd), pw->pw_passwd) == 0)
+      if ((pw = getpwnam(loginstr)) != NULL && strcmp(crypt(passwordstr, pw->pw_passwd), pw->pw_passwd) == 0)
       /*{{{  start window manager*/
       {
         char mgrlogin[_POSIX_PATH_MAX];
         char env_user[_POSIX_PATH_MAX], env_logname[_POSIX_PATH_MAX];
         char env_home[_POSIX_PATH_MAX], env_shell[_POSIX_PATH_MAX];
         char env_path[_POSIX_PATH_MAX], env_mail[_POSIX_PATH_MAX];
-        char *login_env[7] = { env_user, env_logname, env_home, env_shell, env_path, env_mail, (char *)0 };
-        char *login_argv[2] = { "mgr", (char *)0 };
+        char *login_env[7] = { env_user, env_logname, env_home, env_shell, env_path, env_mail, NULL };
+        char *login_argv[2] = { "mgr", NULL };
         int i;
 
         sprintf(env_user, "USER=%s", pw->pw_name);
         sprintf(env_logname, "LOGNAME=%s", pw->pw_name);
         sprintf(env_home, "HOME=%s", pw->pw_dir);
-        sprintf(env_shell, "SHELL=%s", pw->pw_shell == (char *)0 || pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell);
+        sprintf(env_shell, "SHELL=%s", pw->pw_shell == NULL || pw->pw_shell[0] == '\0' ? "/bin/sh" : pw->pw_shell);
         sprintf(env_path, "PATH=%s", PATH);
         sprintf(env_mail, "MAIL=%s/%s", MAILDIR, pw->pw_name);
         if (chdir(pw->pw_dir) != 0)

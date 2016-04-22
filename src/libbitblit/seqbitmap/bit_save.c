@@ -16,8 +16,8 @@ void *bit_save(BITMAP *bp)
   char *r, *map;
   char *s = (char *)BIT_DATA(bp);
 
-  if ((r = map = malloc(BIT_HIGH(bp) * portable_size)) == (void *)0)
-    return (void *)0;
+  if ((r = map = malloc(BIT_HIGH(bp) * portable_size)) == NULL)
+    return NULL;
   for (i = 0; i < BIT_HIGH(bp); i++, r += portable_size, s += bitmap_size)
     memcpy(r, s, portable_size);
   return (void *)map;

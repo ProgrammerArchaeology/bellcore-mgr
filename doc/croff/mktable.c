@@ -96,7 +96,7 @@ int main(int argc, char **argv)
   printf("struct table_entry %s_data[] = {\n", name);
 
   for (count = 0, i = 0; i < size; i++) {
-    for (code = 0, list = table[i]; list != (TABLE *)0; list = next, count++) {
+    for (code = 0, list = table[i]; list != NULL; list = next, count++) {
       next = list->next;
       printf("   {\"%s\", \"%s\", %d, 0x%x, %s},",
           list->name, list->value, list->count, HASH_STATIC,
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
   printf("struct table_entry *%s[] = {\n  ", name);
 
   for (len = 2, code = count = i = 0; i < size; i++) {
-    for (list = table[i]; list != (TABLE *)0; list = list->next) {
+    for (list = table[i]; list != NULL; list = list->next) {
       count++;
       code++;
     }

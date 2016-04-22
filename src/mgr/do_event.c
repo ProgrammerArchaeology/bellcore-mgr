@@ -168,7 +168,7 @@ sub_event(
       *str = '\0';
     break;
   case E_NOTIFY: /* get other windows notify text */
-    for (win = active; win != (WINDOW *)0; win = W(next)) {
+    for (win = active; win != NULL; win = W(next)) {
       if (mousein(mousex, mousey, win, 1))
         break;
     }
@@ -178,7 +178,7 @@ sub_event(
       *str = '\0';
     break;
   case E_WHO: /* send other windows id */
-    for (win = active; win != (WINDOW *)0; win = W(next)) {
+    for (win = active; win != NULL; win = W(next)) {
       if (mousein(mousex, mousey, win, 1))
         break;
     }
@@ -192,7 +192,7 @@ sub_event(
         W(x0), W(y0), BIT_WIDE(W(border)), BIT_HIGH(W(border)));
     break;
   case E_WHOSIZE: /* send other windows size */
-    for (win = active; win != (WINDOW *)0; win = W(next)) {
+    for (win = active; win != NULL; win = W(next)) {
       if (mousein(mousex, mousey, win, 1))
         break;
     }
@@ -303,14 +303,14 @@ void do_event(
 
       /* notify clicked window */
 
-      for (win = active; win != (WINDOW *)0; win = W(next))
+      for (win = active; win != NULL; win = W(next))
         if (mousein(mousex, mousey, win, 1))
           break;
       if (win && IS_EVENT(win, EVENT_TELLME)
           && (buff = W(events[GET_EVENT(EVENT_TELLME)]))) {
         if (message) {
           free(message);
-          message = (char *)0;
+          message = NULL;
         }
         id_message = active->pid;
         write_event(win, buff, E_LIST_ACCEPT);

@@ -47,7 +47,7 @@ void win_rop(WINDOW *win, BITMAP *window)
   /*}}}  */
   /*{{{  3 -- ras_write*/
   case 3:
-    bit_blit(window, Scalex(p[0]), Scaley(p[1]), Scalex(p[2]), Scaley(p[3]), op, (DATA *)0, 0, 0);
+    bit_blit(window, Scalex(p[0]), Scaley(p[1]), Scalex(p[2]), Scaley(p[3]), op, NULL, 0, 0);
     if (Do_clip())
       Set_clip(Scalex(p[0]), Scaley(p[1]), Scalex(p[0]) + Scalex(p[2]), Scaley(p[1]) + Scaley(p[3])) break;
   /*}}}  */
@@ -55,11 +55,11 @@ void win_rop(WINDOW *win, BITMAP *window)
   case 4:
     if (p[4] > MAXBITMAPS)
       break;
-    if (p[4] > 0 && W(bitmaps)[p[4] - 1] == (BITMAP *)0)
+    if (p[4] > 0 && W(bitmaps)[p[4] - 1] == NULL)
       W(bitmaps)
       [p[4] - 1] = bit_alloc(
           Scalex(p[0]) + Scalex(p[2]), Scaley(p[1]) + Scaley(p[3]),
-          (DATA *)0,
+          NULL,
           BIT_DEPTH(W(window)));
     bit_blit(
         p[4] ? W(bitmaps)[p[4] - 1] : window,
@@ -93,7 +93,7 @@ void win_rop(WINDOW *win, BITMAP *window)
     if (p[6] > MAXBITMAPS || p[7] > MAXBITMAPS)
       break;
 
-    if (p[6] > 0 && W(bitmaps)[p[6] - 1] == (BITMAP *)0) {
+    if (p[6] > 0 && W(bitmaps)[p[6] - 1] == NULL) {
       int depth;
 
       /* figure out depth of dest if we need to create it */
@@ -161,10 +161,10 @@ void win_map(WINDOW *win, BITMAP *window)
   case 3:
     if (p[2] > MAXBITMAPS)
       break;
-    if (p[2] > 0 && W(bitmaps)[p[2] - 1] == (BITMAP *)0) {
+    if (p[2] > 0 && W(bitmaps)[p[2] - 1] == NULL) {
       W(bitmaps)
       [p[2] - 1] = W(bitmap);
-      W(bitmap) = (BITMAP *)0;
+      W(bitmap) = NULL;
     } else
       bit_blit(p[2] ? W(bitmaps)[p[2] - 1] : window, Scalex(W(gx)), Scaley(W(gy)), p[0], p[1], op, W(bitmap), 0, 0);
     break;
@@ -181,10 +181,10 @@ void win_map(WINDOW *win, BITMAP *window)
   case 5:
     if (p[4] > MAXBITMAPS)
       break;
-    if (p[4] > 0 && W(bitmaps)[p[4] - 1] == (BITMAP *)0) {
+    if (p[4] > 0 && W(bitmaps)[p[4] - 1] == NULL) {
       W(bitmaps)
       [p[4] - 1] = W(bitmap);
-      W(bitmap) = (BITMAP *)0;
+      W(bitmap) = NULL;
     } else
       bit_blit(p[4] ? W(bitmaps)[p[4] - 1] : window, p[2], p[3], p[0], p[1], op, W(bitmap), 0, 0);
     break;
@@ -192,7 +192,7 @@ void win_map(WINDOW *win, BITMAP *window)
   }
   if (W(bitmap)) {
     bit_destroy(W(bitmap));
-    W(bitmap) = (BITMAP *)0;
+    W(bitmap) = NULL;
   }
   if (W(snarf)) {
     free(W(snarf));

@@ -46,7 +46,7 @@ add_result(
 
   /* set up list */
 
-  if (list == (struct menu_result *)0) {
+  if (list == NULL) {
     list = (struct menu_result *)malloc(sizeof(struct menu_result));
     list->next = NULL;
     list->value = NULL;
@@ -67,10 +67,10 @@ add_result(
 /*{{{  get_fields -- break a line into its component fields*/
 static int
 get_fields(
-    char *line,    /* line to break into fields */
-    int delim,     /* field delimiter */
+    char *line,          /* line to break into fields */
+    int delim,           /* field delimiter */
     const char **fields, /* resultant fields */
-    int max        /* max # fields */
+    int max              /* max # fields */
     )
 {
   char c, *start;
@@ -84,7 +84,7 @@ get_fields(
     }
   if (start < line)
     fields[count++] = start;
-  fields[count] = (char *)0;
+  fields[count] = NULL;
   return (count);
 }
 /*}}}  */
@@ -124,7 +124,7 @@ do_menu(
 
   dbgprintf('m', (stderr, "Setting up a menu, %d items\n", count));
   if (count < 1)
-    return ((struct menu_state *)0);
+    return (NULL);
 
   return (menu_define(font, fields, fields + count, count, color));
 }
@@ -151,10 +151,10 @@ int exit_code;                  /* valid exit codes */
   /* set up menu, get menu 'cookie' */
 
   state = menu_list[menu]; /* fetch the menu state */
-  result = (struct menu_result *)0;
+  result = NULL;
   state = menu_setup(state, screen, x, y, menu_choice(state));
 
-  if (state == (struct menu_state *)0) {
+  if (state == NULL) {
     perror("Error setting up menu");
     return (NULL);
   }
@@ -203,20 +203,20 @@ int exit_code;                  /* valid exit codes */
       result = add_result(state, result);
       done++;
       break;
-    case EXIT_RIGHT:                              /* slid off top the right */
-      if ((next = menu_next(state)) >= 0 &&       /* link exists */
-          menu_list[next] &&                      /* menu exists */
-          menu_list[next]->save == (BITMAP *)0 && /* not used */
-          (result = do_menus(screen, mouse,       /* choice */
+    case EXIT_RIGHT:                        /* slid off top the right */
+      if ((next = menu_next(state)) >= 0 && /* link exists */
+          menu_list[next] &&                /* menu exists */
+          menu_list[next]->save == NULL &&  /* not used */
+          (result = do_menus(screen, mouse, /* choice */
                x + x_slide, y - y_slide, font, menu_list,
                next, exit_code | EXIT_LEFT))) {
         done++;
       }
       break;
     case EXIT_BOTTOM:
-      if ((next = menu_next(state)) >= 0 &&       /* menu exists */
-          menu_list[next]->save == (BITMAP *)0 && /* not used */
-          (result = do_menus(screen, mouse,       /* choice */
+      if ((next = menu_next(state)) >= 0 && /* menu exists */
+          menu_list[next]->save == NULL &&  /* not used */
+          (result = do_menus(screen, mouse, /* choice */
                x + x_page, y + y_page, font, menu_list,
                next, exit_code | EXIT_TOP))) {
         done++;

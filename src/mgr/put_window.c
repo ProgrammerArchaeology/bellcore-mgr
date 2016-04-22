@@ -133,7 +133,7 @@ static void standend(WINDOW *win)
 /*{{{  set_size -- set the kernel's idea of the screen size*/
 void set_size(WINDOW *win)
 {
-  if (win == (WINDOW *)0)
+  if (win == NULL)
     return;
 
   if (W(flags) & W_NOREPORT)
@@ -149,17 +149,17 @@ void set_size(WINDOW *win)
 int put_window(WINDOW *win, const char *buff, int buff_count)
 {
   /*{{{  variables*/
-  BITMAP *window;             /* bitmap to update */
-  BITMAP *text = (BITMAP *)0; /* current text region */
-  int indx;                   /* index into buff */
-  int cnt;                    /* # of esc. numbers */
-  char c;                     /* current char */
-  int done = 0;               /* set to 1 to exit */
-  int bell = 0;               /* 1 if screen flashed once */
-  int sub_window = 0;         /* sub window created */
-  int fsizehigh, fsizewide;   /* variables to save deref. */
-  int offset = 0;             /* font glyph offset */
-  char tbuff[40];             /* tmp space for replies */
+  BITMAP *window;           /* bitmap to update */
+  BITMAP *text = NULL;      /* current text region */
+  int indx;                 /* index into buff */
+  int cnt;                  /* # of esc. numbers */
+  char c;                   /* current char */
+  int done = 0;             /* set to 1 to exit */
+  int bell = 0;             /* 1 if screen flashed once */
+  int sub_window = 0;       /* sub window created */
+  int fsizehigh, fsizewide; /* variables to save deref. */
+  int offset = 0;           /* font glyph offset */
+  char tbuff[40];           /* tmp space for replies */
   /*}}}  */
 
   /*{{{  set up environment*/
@@ -170,7 +170,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
     sub_window++;
   }
 
-  if (window == (BITMAP *)0) {
+  if (window == NULL) {
     perror("Bit_create failed for window");
     return (0);
   }
@@ -194,7 +194,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
 
   if (W(text.wide))
     text = bit_create(window, W(text.x), W(text.y), W(text.wide), W(text.high));
-  if (text == (BITMAP *)0)
+  if (text == NULL)
     text = window;
 
   if (W(flags) & W_ACTIVE && mousein(mousex, mousey, win, 0)) {
@@ -588,7 +588,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       case E_GIMME:
         W(esc)
         [TEXT_COUNT] = 0;
-        if (W(esc)[cnt] > 0 && W(esc)[cnt] < MAXSHELL && (W(snarf) = malloc(W(esc)[cnt] + 1)) != (char *)0)
+        if (W(esc)[cnt] > 0 && W(esc)[cnt] < MAXSHELL && (W(snarf) = malloc(W(esc)[cnt] + 1)) != NULL)
           W(flags) |= W_TEXT;
         W(code) = T_GIMME;
         break;
@@ -690,7 +690,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           int item = W(esc[1]);  /* item # of parent */
           int flags = W(esc[3]); /* menu flags */
 
-          if (parent < 0 || parent >= MAXMENU || child >= MAXMENU || W(menus[parent]) == (struct menu_state *)0)
+          if (parent < 0 || parent >= MAXMENU || child >= MAXMENU || W(menus[parent]) == NULL)
             break;
 
           dbgprintf('M', (stderr, "Linking menu %d to parent %d at item %d\n",
@@ -721,7 +721,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           if (W(menus)[n]) {
             menu_destroy(W(menus)[n]);
             W(menus)
-            [n] = (struct menu_state *)0;
+            [n] = NULL;
             if (W(menu[0]) == n)
               W(menu[0]) = -1;
             if (W(menu[1]) == n)
@@ -832,7 +832,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
             cnt > 1
             && which > 0
             && which <= MAXBITMAPS
-            && (m = W(bitmaps)[which - 1]) != (BITMAP *)0
+            && (m = W(bitmaps)[which - 1]) != NULL
             && size + offset <= B_SIZE8(BIT_WIDE(m), BIT_HIGH(m), BIT_DEPTH(m))) {
           data = bit_save(m);
           write(W(to_fd), data + offset, size);
@@ -875,7 +875,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           if (bmnbr > 0 && bmnbr <= MAXBITMAPS && W(bitmaps)[bmnbr - 1]) {
             bit_destroy(W(bitmaps)[bmnbr - 1]);
             W(bitmaps)
-            [bmnbr - 1] = (BITMAP *)0;
+            [bmnbr - 1] = NULL;
           }
           break;
         case 2: /* create new bitmap - same depth as window */
@@ -1259,7 +1259,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       case E_HALFWIN: /* make a 1/2 window */
       {
         int *p = W(esc);
-        char *tty = (char *)0;
+        char *tty = NULL;
 
         if (cnt < 3 || cnt > 4)
           break;

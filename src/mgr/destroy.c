@@ -48,7 +48,7 @@
 #ifdef WEXITSTATUS /* POSIX */
 #define wait_nohang(statusp) waitpid(-1, statusp, WNOHANG)
 #else /* BSD */
-#define wait_nohang(statusp) wait3(statusp, WNOHANG, (void *)0)
+#define wait_nohang(statusp) wait3(statusp, WNOHANG, NULL)
 #endif
 /*}}}  */
 
@@ -69,9 +69,9 @@ detach(WINDOW *win2)
 static void
 set_dead(WINDOW *win)
 {
-  for (win = W(alt); win != (WINDOW *)0; win = W(alt)) {
+  for (win = W(alt); win != NULL; win = W(alt)) {
     dbgprintf('d', (stderr, "%s: telling %d\r\n", W(tty), W(num)));
-    W(main) = (WINDOW *)0;
+    W(main) = NULL;
   }
 }
 /*}}}  */
@@ -121,7 +121,7 @@ int destroy(WINDOW *win)
 {
   int status;
 
-  if (win == (WINDOW *)0)
+  if (win == NULL)
     return (-1);
 
   MOUSE_OFF(screen, mousex, mousey);
@@ -207,7 +207,7 @@ int destroy(WINDOW *win)
   } else if (W(main)) { /* tell main alts know they are dead */
     W(main)
         ->alt
-        = (WINDOW *)0;
+        = NULL;
     dbgprintf('d', (stderr, "%s: destroy alt, (tell main)\r\n", W(tty)));
   } else {
     dbgprintf('d', (stderr, "%s: destroy alt, (dead main)\r\n", W(tty)));

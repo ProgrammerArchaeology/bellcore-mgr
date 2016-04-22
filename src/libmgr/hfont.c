@@ -92,9 +92,9 @@ hfont_raw *hfont_open(const char *name)
   char fullname[_POSIX_PATH_MAX];
   /*}}}  */
 
-  if (f == (hfont_raw *)0) {
+  if (f == NULL) {
     errno = ENOMEM;
-    return (hfont_raw *)0;
+    return NULL;
   }
   if (*name != '/') {
     strcpy(fullname, HFONTDIR);
@@ -103,8 +103,8 @@ hfont_raw *hfont_open(const char *name)
     fp = fopen(fullname, "r");
   } else
     fp = fopen(name, "r");
-  if (fp == (FILE *)0)
-    return ((hfont_raw *)0);
+  if (fp == NULL)
+    return (NULL);
   font = &(f->vectors[0]);
   ofs = f->offset;
   for (i = 0; i < HFONT_MAXCHARS; i++) {
@@ -154,7 +154,7 @@ hfont_raw *hfont_open(const char *name)
     /*{{{  read newline*/
     if (fgetc(fp) != '\n') {
       fclose(fp);
-      return ((hfont_raw *)0);
+      return (NULL);
     }
     /*}}}  */
   }
@@ -174,7 +174,7 @@ hfont_scaled *hfont_scale(hfont_raw *f, int xres_u, int yres_u, int point_p)
   hfont_scaled *g = malloc(sizeof(hfont_scaled));
   /*}}}  */
 
-  if (g == (hfont_scaled *)0) {
+  if (g == NULL) {
     errno = ENOMEM;
     return g;
   }

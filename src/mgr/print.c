@@ -19,7 +19,7 @@
 #include "defs.h"
 #include "proto.h"
 
-static const char * const flags[] = {
+static const char *const flags[] = {
   "active",
   "escape",
   "snarfable",
@@ -39,10 +39,10 @@ static const char * const flags[] = {
   "snarf-lines",
   "snarf-tabs",
   "snarf-hard",
-  (char *)0
+  NULL
 };
 
-static const char * const events[] = {
+static const char *const events[] = {
   "1_up",
   "no-event",
   "2_up",
@@ -67,10 +67,10 @@ static const char * const events[] = {
   "paste",
   "stack",
   "stack_flag",
-  (char *)0
+  NULL
 };
 
-static const char * const stack[] = {
+static const char *const stack[] = {
   "menu",
   "event",
   "font",
@@ -82,10 +82,10 @@ static const char * const stack[] = {
   "mouse",
   "text",
   "CLEAR",
-  (char *)0
+  NULL
 };
 
-static const char * const menu_states[] = {
+static const char *const menu_states[] = {
   "choice",
   "bottom",
   "top",

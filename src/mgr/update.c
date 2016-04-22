@@ -58,7 +58,7 @@ static int gen_list(WINDOW *window)
 {
 
   WINDOW *win = window;
-  struct rect_list *list = NULL, *prev = (struct rect_list *)0;
+  struct rect_list *list = NULL, *prev = NULL;
   int x_cnt = 2, y_cnt = 2;
   int i, j;
   int count = 0;
@@ -203,7 +203,7 @@ static rectangle *got_int(rectangle *r1, /* rect 1 */
   if (result.wide > 0 && result.high > 0)
     return (&result);
   else
-    return ((rectangle *)0);
+    return (NULL);
 }
 /*}}}  */
 /*{{{  in_mouseoff -- see if mouse in rectangle, if so turn the mouse off*/
@@ -273,7 +273,7 @@ void clip_bad(
   /* invalidate all intersecting window clip lists below this one */
 
   window->flags &= ~W_CLIPDONE; /* invalidate clip list */
-  for (win = window->next; win != (WINDOW *)0; win = W(next))
+  for (win = window->next; win != NULL; win = W(next))
     if (intersect(win, window))
       W(flags) &= ~W_CLIPDONE; /* invalidate clip list */
 }

@@ -41,7 +41,7 @@
 WINDOW *
 insert_win(WINDOW *win)
 {
-  if (win == (WINDOW *)0 && (win = (WINDOW *)malloc(sizeof(WINDOW))) == (WINDOW *)0) {
+  if (win == NULL && (win = (WINDOW *)malloc(sizeof(WINDOW))) == NULL) {
     if (debug)
       fprintf(stderr, "Can't malloc window space\n");
     return (win);
@@ -53,7 +53,7 @@ insert_win(WINDOW *win)
     W(next) = active;
   } else {
     W(prev) = win;
-    W(next) = (WINDOW *)0;
+    W(next) = NULL;
   }
   return (win);
 }
@@ -94,7 +94,7 @@ int next_windowset_id(void)
   for (cp = list; cp < &list[MAXWIN + 2]; cp++)
     *cp = 0;
 
-  for (win = active; win != (WINDOW *)0; win = W(next))
+  for (win = active; win != NULL; win = W(next))
     list[W(setid)] = 1;
 
   /*	There is no window set ID zero.
@@ -138,31 +138,31 @@ int setup_window(WINDOW *win, struct font *curr_font, int x, int y, int dx, int 
   W(text.wide) = 0;
   W(text.high) = 0;
 
-  W(bitmap) = (BITMAP *)0;
+  W(bitmap) = NULL;
   for (i = 0; i < MAXBITMAPS; i++)
     W(bitmaps)
-    [i] = (BITMAP *)0;
+    [i] = NULL;
 
   W(cursor) = &mouse_arrow;
-  W(save) = (BITMAP *)0;
-  W(stack) = (WINDOW *)0;
+  W(save) = NULL;
+  W(stack) = NULL;
   W(main) = win;
-  W(alt) = (WINDOW *)0;
+  W(alt) = NULL;
   W(esc_cnt) = 0;
   W(esc[0]) = 0;
-  W(clip_list) = (char *)0;
+  W(clip_list) = NULL;
 
   for (i = 0; i < MAXMENU; i++)
-    W(menus[i]) = (struct menu_state *)0;
+    W(menus[i]) = NULL;
 
   W(menu[0]) = W(menu[1]) = -1;
   W(event_mask) = 0;
 
   for (i = 0; i < MAXEVENTS; i++)
     W(events)
-    [i] = (char *)0;
+    [i] = NULL;
 
-  W(snarf) = (char *)0;
+  W(snarf) = NULL;
   W(gx) = 0;
   W(gy) = 0;
   W(op) = BIT_OR;
@@ -258,7 +258,7 @@ int create_window(int x, int y, int dx, int dy, int font_num, char **argv)
 
   /* alloc window space */
 
-  if ((win = (WINDOW *)malloc(sizeof(WINDOW))) == (WINDOW *)0) {
+  if ((win = (WINDOW *)malloc(sizeof(WINDOW))) == NULL) {
     fprintf(stderr, "Can't malloc window space\n");
     return (-1);
   }
@@ -291,7 +291,7 @@ half_window(int x, int y, int dx, int dy, int font_num)
 
   /* alloc window space */
 
-  if ((win = (WINDOW *)malloc(sizeof(WINDOW))) == (WINDOW *)0) {
+  if ((win = (WINDOW *)malloc(sizeof(WINDOW))) == NULL) {
     fprintf(stderr, "Can't malloc window space\n");
     return (NULL);
   }

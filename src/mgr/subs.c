@@ -57,7 +57,7 @@ void set_covered(
 {
   WINDOW *win;
 
-  for (win = active; win != (WINDOW *)0; win = win->next)
+  for (win = active; win != NULL; win = win->next)
     if (win != check && intersect(win, check) && W(flags) & W_ACTIVE) {
       save_win(win);
       do_event(EVENT_COVERED, win, E_MAIN);
@@ -74,7 +74,7 @@ void un_covered(void)
   WINDOW *win, *check;
   int cover;
 
-  for (win = active; win != (WINDOW *)0; win = W(next)) {
+  for (win = active; win != NULL; win = W(next)) {
     dbgprintf('U', (stderr, "	invalidate cliplist: %s)\r\n", W(tty)));
     dbgprintf('o', (stderr, "	un_cover: %s)\n", W(tty)));
     for (cover = 0, check = active; check != win && cover == 0; check = check->next)
@@ -134,7 +134,7 @@ void expose(
   active = win;
 
   if (!(W(flags) & W_ACTIVE)) {
-    for (win = active->next; win != (WINDOW *)0; win = W(next))
+    for (win = active->next; win != NULL; win = W(next))
       if (W(flags) & W_ACTIVE && intersect(active, win))
         save_win(win);
 
@@ -181,7 +181,7 @@ int bury(
       = win;
 
   active->prev = win;
-  W(next) = (WINDOW *)0;
+  W(next) = NULL;
   return (1);
 }
 /*}}}  */
@@ -222,14 +222,14 @@ void repair(WINDOW *clip)
 void save_win(WINDOW *win)
 {
   dbgprintf('o', (stderr, "\t\t  saving %s\r\n", W(tty)));
-  if (W(save) == (BITMAP *)0) {
+  if (W(save) == NULL) {
     W(save) = bit_alloc(BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-        (DATA *)0, BIT_DEPTH(W(window)));
+        NULL, BIT_DEPTH(W(window)));
   } else if (BIT_WIDE(W(save)) != BIT_WIDE(W(border)) || BIT_HIGH(W(save)) != BIT_HIGH(W(border))) {
     dbgprintf('o', (stderr, "Saved window %s mismatch\r\n", W(tty)));
     bit_destroy(W(save));
     W(save) = bit_alloc(BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-        (DATA *)0, BIT_DEPTH(W(window)));
+        NULL, BIT_DEPTH(W(window)));
   }
 
   bit_blit(W(save), 0, 0, BIT_WIDE(W(border)), BIT_HIGH(W(border)),
@@ -249,7 +249,7 @@ void clip_win(
   int x1 = Min(W(x0) + BIT_WIDE(W(border)), C(x0) + BIT_WIDE(C(border))) - W(x0);
   int y1 = Min(W(y0) + BIT_HIGH(W(border)), C(y0) + BIT_HIGH(C(border))) - W(y0);
 
-  if (W(save) != (BITMAP *)0) {
+  if (W(save) != NULL) {
 
     /*	******* look at clipping region **********
       bit_blit(W(border),x0,y0,x1-x0,y1-y0 ,
@@ -272,7 +272,7 @@ void restore_win(
     WINDOW *win /* window to restore to screen */
     )
 {
-  if (W(save) != (BITMAP *)0)
+  if (W(save) != NULL)
     bit_blit(W(border), 0, 0, BIT_WIDE(W(border)), BIT_HIGH(W(border)),
         BIT_SRC, W(save), 0, 0);
   dbgprintf('o', (stderr, "\t\t  restoring %s\r\n", W(tty)));
@@ -338,7 +338,7 @@ int parse(char *line, char **fields)
     if (c == '\n')
       *line = '\0';
   }
-  *fields = (char *)0;
+  *fields = NULL;
   return (count);
 }
 /*}}}  */
@@ -434,7 +434,7 @@ void set_console(WINDOW *win, int on)
 #endif
   /*}}}  */
   if (on) {
-    for (run = active; run != (WINDOW *)0; run = run->next)
+    for (run = active; run != NULL; run = run->next)
       run->flags &= ~W_CONSOLE;
     win->flags |= W_CONSOLE;
 /*{{{  TIOCCONS*/
@@ -458,7 +458,7 @@ void suspend(void)
   sleep(1);   /* give the key time to go up */
   set_kbd(0); /* fix up keyboard modes */
 
-  for (win = active; win != (WINDOW *)0; win = win->next) {
+  for (win = active; win != NULL; win = win->next) {
     killpg(W(pid), SIGSTOP);
     if (W(flags) & W_ACTIVE)
       save_win(win);
@@ -626,7 +626,7 @@ int systemcmd(const char *command)
     close(0);
     open("/dev/null", O_RDONLY);
 
-    execl("/bin/sh", "sh", "-c", command, (char *)0);
+    execl("/bin/sh", "sh", "-c", command, (char *)NULL);
     _exit(127);
   }
   istat = signal(SIGINT, SIG_IGN);

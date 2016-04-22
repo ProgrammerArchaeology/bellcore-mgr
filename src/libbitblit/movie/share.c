@@ -136,7 +136,7 @@ static void write_short(unsigned short int *buff, int cnt)
         fprintf(stderr, "Error: Closing MGR log.\n");
         fclose(share_file);
         do_save = 0;
-        share_file = (FILE *)0;
+        share_file = NULL;
       }
       buff++;
     }
@@ -151,7 +151,7 @@ write_char(char *buff, int cnt)
     fprintf(stderr, "Error: Closing MGR log.\n");
     fclose(share_file);
     do_save = 0;
-    share_file = (FILE *)0;
+    share_file = NULL;
   }
 }
 /*}}}  */

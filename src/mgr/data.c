@@ -30,7 +30,7 @@ static void nothing(void) {}
 /* menus */
 
 const char *active_menu[] = { /* active-window menu */
-#ifdef STRETCH          /* first menu item: something you can safely click by accident */
+#ifdef STRETCH                /* first menu item: something you can safely click by accident */
   "move",
   "stretch",
 #else
@@ -124,8 +124,8 @@ BITMAP *mouse_save;                   /* where to keep what cursor's on */
 int next_window = 0;                  /* next available window count */
 struct font *font;                    /* default font */
 BITMAP *screen, *prime;               /* default screen */
-WINDOW *active = (WINDOW *)0;         /* window connected to keyboard */
-WINDOW *last_active = (WINDOW *)0;    /* previous window connected to keyboard */
+WINDOW *active = NULL;                /* window connected to keyboard */
+WINDOW *last_active = NULL;           /* previous window connected to keyboard */
 int button_state = 0;                 /* state of the mouse buttons */
 int mouse, mousex, mousey;            /* mouse fd, x-coord, y-coord */
 int debug = 0;                        /* ==1 for debug prints */

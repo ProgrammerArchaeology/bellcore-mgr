@@ -91,7 +91,7 @@ int shape(int x, int y, int dx, int dy)
       w - active->borderwid * 2,
       h - active->borderwid * 2);
 
-  for (win = active->next; win != (WINDOW *)0; win = W(next)) {
+  for (win = active->next; win != NULL; win = W(next)) {
     if (W(flags) & W_ACTIVE && intersect(active, win))
       save_win(win);
   }
@@ -124,7 +124,7 @@ int shape(int x, int y, int dx, int dy)
   }
 
   bit_destroy(active->save);
-  active->save = (BITMAP *)0;
+  active->save = NULL;
 
   /* invalidate clip lists */
   clip_bad(active);

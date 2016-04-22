@@ -32,7 +32,7 @@ struct list {
 };
 /*}}}  */
 /*{{{  variables*/
-struct list *list_top = (struct list *)0;
+struct list *list_top = NULL;
 /*}}}  */
 
 /*{{{  insert_font -- insert an element at the top of the list */
@@ -40,8 +40,8 @@ static void
 insert_font(struct list *ptr)
 {
   ptr->next = list_top;
-  ptr->prev = (struct list *)0;
-  if (ptr->next != (struct list *)0)
+  ptr->prev = NULL;
+  if (ptr->next != NULL)
     ptr->next->prev = ptr;
   list_top = ptr;
 }
@@ -50,9 +50,9 @@ insert_font(struct list *ptr)
 static void
 unlink_font(struct list *ptr)
 {
-  if (ptr->next != (struct list *)0)
+  if (ptr->next != NULL)
     ptr->next->prev = ptr->prev;
-  if (ptr->prev != (struct list *)0)
+  if (ptr->prev != NULL)
     ptr->prev->next = ptr->next;
 }
 /*}}}  */
@@ -64,7 +64,7 @@ create_font(char *name, struct list *ptr)
 
   if (ptr->name != NULL)
     free(ptr->name);
-  if (ptr->font != (struct font *)0)
+  if (ptr->font != NULL)
     free_font(ptr->font);
   ptr->name = strcpy(malloc(strlen(name) + 1), name);
   ptr->font = open_font(name);
@@ -79,8 +79,8 @@ get_font(char *name)
   struct list *ptr;
   int found = 0;
 
-  if (name == (char *)0 || *name == '\0')
-    return ((struct font *)0);
+  if (name == NULL || *name == '\0')
+    return (NULL);
 
   if (count > 0 && strcmp(name, list_top->name) == 0) {
     return (list_top->font);
@@ -92,7 +92,7 @@ get_font(char *name)
       insert_font(ptr);
       break;
     }
-    if (ptr->next == (struct list *)0)
+    if (ptr->next == NULL)
       break;
   }
   if (!found && count < MAXFONT) {
@@ -121,7 +121,7 @@ Get_font(
   char buff[MAX_PATH];
   char *name;
 
-  if (fnt <= 0 || fnt > MAXFONT || fontlist[fnt - 1] == (char *)0)
+  if (fnt <= 0 || fnt > MAXFONT || fontlist[fnt - 1] == NULL)
     return (font);
 
   if (*fontlist[fnt - 1] == '/')
@@ -130,7 +130,7 @@ Get_font(
     sprintf(buff, "%s/%s", font_dir, fontlist[fnt - 1]);
     name = buff;
   }
-  if ((new = get_font(name)) == (struct font *)0)
+  if ((new = get_font(name)) == NULL)
     new = font;
   else
     new->ident = fnt;

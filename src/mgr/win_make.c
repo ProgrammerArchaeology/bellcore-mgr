@@ -46,30 +46,30 @@ void win_make(WINDOW *win, int indx)
   switch (W(esc_cnt)) {
   case 1: /*  destroy the window */
     dbgprintf('N', (stderr, "%s: destroying %d\n", W(tty), p[0]));
-    if (p[0] <= 0 || W(main)->alt == (WINDOW *)0) {
+    if (p[0] <= 0 || W(main)->alt == NULL) {
       break;
     }
-    for (win = W(main)->alt; win != (WINDOW *)0; win = W(alt)) {
+    for (win = W(main)->alt; win != NULL; win = W(alt)) {
       if (W(num) == p[0])
         break;
     }
-    if (win != (WINDOW *)0)
+    if (win != NULL)
       W(flags) |= W_DIED;
 
     break;
 
   case 0: /* goto a new window */
-    if (W(num) == p[0] || W(main)->alt == (WINDOW *)0) {
+    if (W(num) == p[0] || W(main)->alt == NULL) {
       break;
     }
-    for (win = W(main); win != (WINDOW *)0; win = W(alt)) {
+    for (win = W(main); win != NULL; win = W(alt)) {
       if (W(num) == p[0])
         break;
     }
 
     /* move contents of shell buffer to new window */
 
-    if (win != (WINDOW *)0) {
+    if (win != NULL) {
       W(from_fd) = W(to_fd);
       win2->from_fd = 0;
       W(max) = win2->max - win2->current - indx - 1;
@@ -97,7 +97,7 @@ void win_make(WINDOW *win, int indx)
     if (win != active)
       cursor_off();
     ACTIVE_OFF();
-    if ((active = insert_win((WINDOW *)0)) == (WINDOW *)0 || !setup_window(active, font, p[0], p[1], p[2], p[3])) {
+    if ((active = insert_win(NULL)) == NULL || !setup_window(active, font, p[0], p[1], p[2], p[3])) {
       fprintf(stderr, "Out of memory for window creation -- bye!\n");
       quit();
     }

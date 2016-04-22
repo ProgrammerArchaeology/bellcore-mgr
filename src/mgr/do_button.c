@@ -63,7 +63,7 @@ void _quit(void)
 
   /* fix pttys */
   if (geteuid() < 2)
-    for (win = active; win != (WINDOW *)0; win = W(next)) {
+    for (win = active; win != NULL; win = W(next)) {
       if (W(pid) > 1)
         killpg(W(pid), SIGHUP);
       chmod(W(tty), 0666);
@@ -74,7 +74,7 @@ void _quit(void)
 
 #ifdef WHO
   close(getdtablesize() - 1); /* make sure there are enough fd's left */
-  for (win = active; win != (WINDOW *)0; win = W(next))
+  for (win = active; win != NULL; win = W(next))
     if (W(tty))
       rm_utmp(W(tty));
 #endif
@@ -93,7 +93,7 @@ void redraw(void)
   WINDOW *win;
 
   dbgprintf('b', (stderr, "\r\n\tREDRAW\r\n"));
-  for (win = active; win != (WINDOW *)0; win = W(next)) {
+  for (win = active; win != NULL; win = W(next)) {
     if (W(flags) & W_ACTIVE) {
       save_win(win);
       do_event(EVENT_REDRAW, win, E_MAIN);
@@ -259,14 +259,14 @@ void do_button(int button)
   case BUTTON_SYS: /* for system operation */
     /* see if mouse is in a window */
     if (mousex < STRIPE)
-      win = (WINDOW *)0;
+      win = NULL;
     else
-      for (win = active; win != (WINDOW *)0; win = W(next))
+      for (win = active; win != NULL; win = W(next))
         if (mousein(mousex, mousey, win, 1))
           break;
 
     /* do a menu for no window, or active window */
-    if (win == active || win == (WINDOW *)0) {
+    if (win == active || win == NULL) {
       if (active && win == active) {
         state = menu_define(font, active_menu, 0, 0, MENU_COLOR);
         which_menu = 1;

@@ -19,8 +19,8 @@ BITMAP *bit_load(int w, int h, unsigned char d, int size, unsigned char *src)
   int y;
   /*}}}  */
 
-  if ((bp = bit_alloc(w, h, 0, d)) == (BITMAP *)0)
-    return (BITMAP *)0;
+  if ((bp = bit_alloc(w, h, 0, d)) == NULL)
+    return NULL;
 #ifdef MOVIE
   SET_DIRTY(bp);
 #endif

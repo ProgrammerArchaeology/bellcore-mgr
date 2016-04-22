@@ -70,8 +70,8 @@ open_sfont(struct font_header head, BITMAP *data)
 {
   struct font *font;
 
-  if ((font = malloc(sizeof(struct font))) == (struct font *)0)
-    return ((struct font *)0);
+  if ((font = malloc(sizeof(struct font))) == NULL)
+    return (NULL);
 
   font->head = head;
   font->data = data;
@@ -99,7 +99,7 @@ font_purge(
 
   /* re-reference current window font */
 
-  for (win = active; win != (WINDOW *)0; win = win->next) {
+  for (win = active; win != NULL; win = win->next) {
     if (W(font) == gone) {
       W(font) = font;
       count++;
@@ -107,7 +107,7 @@ font_purge(
 
     /* now re-reference any stacked fonts */
 
-    for (win2 = W(stack); win2 != (WINDOW *)0; win2 = win2->stack)
+    for (win2 = W(stack); win2 != NULL; win2 = win2->stack)
       if (win2->font == gone) {
         win2->font = font;
         count++;
@@ -126,30 +126,30 @@ open_font(char *file)
   int size;
   struct font *font;
 
-  if (file == (char *)0 || *file == '\0') {
+  if (file == NULL || *file == '\0') {
     return (open_sfont(default_font_head, &default_font));
   }
 
   dbgprintf('f', (stderr, "Opening font file [%s]\n", file));
 
   if ((fp = fopen(file, "rb")) == NULL)
-    return ((struct font *)0);
+    return (NULL);
 
-  if ((font = (struct font *)malloc(sizeof(struct font))) == (struct font *)0) {
+  if ((font = (struct font *)malloc(sizeof(struct font))) == NULL) {
     fclose(fp);
-    return ((struct font *)0);
+    return (NULL);
   }
 
   if (fread(&(font->head), sizeof(font->head), 1, fp) != 1) {
     free((char *)font);
     fclose(fp);
-    return ((struct font *)0);
+    return (NULL);
   }
 
   if (font->head.type != FONT_A) {
     free((char *)font);
     fclose(fp);
-    return ((struct font *)0);
+    return (NULL);
   }
 
   /* fonts are always 32 bit aligned */

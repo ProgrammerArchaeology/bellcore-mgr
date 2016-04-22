@@ -35,7 +35,7 @@
   ((state)->menu_start.y + (state)->current * (state)->bar_size.y)
 #define menu_value(state)                                                      \
   (menu_ischoice(state) && state->action ? state->action[state->current].value \
-                                         : (char *)0)
+                                         : NULL)
 #define menu_next(state)                                                        \
   (menu_exit(state) == EXIT_BOTTOM && (state)->next >= 0                        \
           ? (state)->next                                                       \

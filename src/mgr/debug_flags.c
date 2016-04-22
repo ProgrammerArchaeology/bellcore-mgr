@@ -8,6 +8,8 @@
 
 /* Debug flags	(the duplicates are unfortunate) */
 
+#include <stdlib.h>
+
 char *debug_flags[] = {
   /*	"*	fetching and saving bitmaps", */
   "A	Window alignment",
@@ -41,5 +43,5 @@ char *debug_flags[] = {
   "w	calls to put_window",
   "y	yank/put buffer operation",
   "y	saving bitmaps to files",
-  (char *)0
+  NULL
 };

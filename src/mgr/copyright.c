@@ -138,7 +138,7 @@ xplot(BITMAP *where, int x, int y, int col, int state)
     return (0);
 
   bit_blit(where, x, y, SSIZE, SSIZE, state ? BUILDOP(BIT_SET, col, color_map[LOGO_COLOR_BG]) : BUILDOP(BIT_CLR, col, color_map[LOGO_COLOR_BG]),
-      (BITMAP *)0, 0, 0);
+      NULL, 0, 0);
   return (0);
 }
 /*}}}  */
@@ -255,7 +255,7 @@ void copyright(BITMAP *where, char *password)
 
   bit_blit(where, 0, 0, BIT_WIDE(where), BIT_HIGH(where),
       BUILDOP(BIT_CLR, color_map[LOGO_COLOR], color_map[LOGO_COLOR_BG]),
-      (BITMAP *)0, 0, 0);
+      NULL, 0, 0);
 
   if (at_startup) {
     /* get the cr notice hole */
@@ -305,7 +305,7 @@ void copyright(BITMAP *where, char *password)
     struct timeval tmpdelay = delay;
 
     FD_SET(STDIN_FILENO, &mask);
-    sel = select(FD_SETSIZE, &mask, (fd_set *)0, (fd_set *)0, &tmpdelay);
+    sel = select(FD_SETSIZE, &mask, NULL, NULL, &tmpdelay);
     if (sel > 0) {
       read(STDIN_FILENO, readp, 1);
       if (at_startup)

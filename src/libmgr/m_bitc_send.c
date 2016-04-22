@@ -133,7 +133,7 @@ int m_bitc_sendh(/* send bitmap from client to server */
  * Return 0 for success, -1 for failure.
  */
 int m_bitc_sendb(const char *data, /* start of portion of bitmap data */
-    size_t len               /* length in bytes of portion */
+    size_t len                     /* length in bytes of portion */
     )
 {
   int towr = (len <= bytesleft) ? len : bytesleft;

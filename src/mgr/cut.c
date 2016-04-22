@@ -74,18 +74,18 @@ enter(int item, int value, int type)
 {
   struct entry *entry;
 
-  if (table[item] == (struct entry *)0) {
+  if (table[item] == NULL) {
     table[item] = malloc(sizeof(struct entry));
     table[item]->value = value;
     table[item]->type = type;
-    table[item]->next = (struct entry *)0;
+    table[item]->next = NULL;
   } else {
     for (entry = table[item]; entry->next; entry = entry->next)
       ;
     entry->next = malloc(sizeof(struct entry));
     entry->next->value = value;
     entry->next->type = type;
-    entry->next->next = (struct entry *)0;
+    entry->next->next = NULL;
   }
 }
 /*}}}  */
@@ -224,7 +224,7 @@ int cut(int mode)
 
   /* return immediately if window is not snarffable */
 
-  for (win = active; win != (WINDOW *)0; win = W(next))
+  for (win = active; win != NULL; win = W(next))
     if (mousein(mousex, mousey, win, 1))
       break;
   if (!win || ((W(flags) & W_SNARFABLE) == 0))
@@ -345,7 +345,7 @@ int cut(int mode)
         write(active->to_fd, startpntr, pntr - startpntr);
         write(active->to_fd, " ", 1);
         free(line);
-        /*      snarf = (char *)0; */
+        /*      snarf = NULL; */
       }
     }
   } else
@@ -439,7 +439,7 @@ int cut(int mode)
 
       /* send snarf events (if any) */
       id_message = W(pid);
-      for (win = active; win != (WINDOW *)0; win = W(next))
+      for (win = active; win != NULL; win = W(next))
         do_event(EVENT_SNARFED, win, E_MAIN);
     }
   }

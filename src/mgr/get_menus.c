@@ -31,7 +31,7 @@
 #define MAX_LIST 100 /* max number of choices */
 #define HOT 6        /* distance to icon hot spot */
 
-#define Pr_ropall(S, f) bit_blit(S, 0, 0, BIT_WIDE(S), BIT_HIGH(S), f, (DATA *)0, 0, 0)
+#define Pr_ropall(S, f) bit_blit(S, 0, 0, BIT_WIDE(S), BIT_HIGH(S), f, NULL, 0, 0)
 
 #define BAR(s, z) bit_blit(s, 0, (z + 1) * state->bar_sizey, \
     state->bar_sizex, state->bar_sizey,                      \
@@ -66,11 +66,11 @@ const char *str;
 /*{{{  menu_define -- allocate space for and initialize menu*/
 struct menu_state *
 menu_define(
-    struct font *font, /* which font to use for menu */
-    const char *list[],      /* list of menu items */
-    const char *values[],    /* list of return values */
-    int max,           /* max number of menu items */
-    int color          /* raster op function containing the colors to use for the menus */
+    struct font *font,    /* which font to use for menu */
+    const char *list[],   /* list of menu items */
+    const char *values[], /* list of return values */
+    int max,              /* max number of menu items */
+    int color             /* raster op function containing the colors to use for the menus */
     )
 {
   int i, incr, count; /* counters */
@@ -82,7 +82,7 @@ menu_define(
 
   /* find size of box */
 
-  for (count = 0; list[count] != (char *)0 && count < (max > 0 ? max : MAX_LIST); count++) {
+  for (count = 0; list[count] != NULL && count < (max > 0 ? max : MAX_LIST); count++) {
     size_x = Max(size_x, strlen(list[count]));
   }
 
@@ -114,7 +114,7 @@ menu_define(
 
   /* save the menu state */
 
-  if ((state = malloc(sizeof(struct menu_state))) == (struct menu_state *)0) {
+  if ((state = malloc(sizeof(struct menu_state))) == NULL) {
     bit_destroy(inside);
     bit_destroy(menu);
     return (state);
@@ -131,7 +131,7 @@ menu_define(
       }
 
   } else
-    state->action = (struct menu_action *)0;
+    state->action = NULL;
 
   state->menu = menu;
   state->bar_sizex = size_x;
@@ -140,8 +140,8 @@ menu_define(
   state->current = 0;
   state->next = -1;
   state->flags = 0;
-  state->screen = (BITMAP *)0;
-  state->save = (BITMAP *)0;
+  state->screen = NULL;
+  state->save = NULL;
 
   bit_destroy(inside);
   return (state);
@@ -157,7 +157,7 @@ int start;                                                           /* preselec
   /* position the box on the screen */
 
   if (BIT_WIDE(state->menu) > BIT_WIDE(screen) || BIT_WIDE(state->menu) > BIT_WIDE(screen) || state->save)
-    return ((struct menu_state *)0);
+    return (NULL);
 
   x = Min(x, BIT_WIDE(screen) - BIT_WIDE(state->menu));
   y = Min(y, BIT_HIGH(screen) - BIT_HIGH(state->menu) - state->bar_sizey);
@@ -208,7 +208,7 @@ int menu_get(
   int count;   /* number of items */
   int old;
 
-  if (state == (struct menu_state *)0)
+  if (state == NULL)
     return (-1);
 
   SETMOUSEICON(&mouse_bull);
@@ -293,13 +293,13 @@ int menu_get(
 struct menu_state *
 menu_remove(struct menu_state *state)
 {
-  if (state == (struct menu_state *)0)
+  if (state == NULL)
     return (state);
-  if (state->save != (BITMAP *)0) {
+  if (state->save != NULL) {
     bit_blit(state->screen, state->menu_startx, state->menu_starty,
         BIT_WIDE(state->save), BIT_HIGH(state->save), BIT_SRC, state->save, 0, 0);
     bit_destroy(state->save);
-    state->save = (BITMAP *)0;
+    state->save = NULL;
   }
   return (state);
 }
@@ -311,10 +311,10 @@ int menu_destroy(struct menu_state *state)
 
   menu_remove(state);
 
-  if (state->menu != (BITMAP *)0)
+  if (state->menu != NULL)
     bit_destroy(state->menu);
 
-  if (state->action != (struct menu_action *)0) {
+  if (state->action != NULL) {
     for (i = 0; i < state->count; i++)
       if (state->action[i].value)
         free(state->action[i].value);
@@ -332,12 +332,12 @@ menu_copy(struct menu_state *menu)
   struct menu_state *tmp;
   int i;
 
-  if (menu == (struct menu_state *)0)
+  if (menu == NULL)
     return (menu);
 
   if ((tmp = (struct menu_state *)malloc(sizeof(struct menu_state)))
-      == (struct menu_state *)0)
-    return ((struct menu_state *)0);
+      == NULL)
+    return (NULL);
 
   (void)memcpy(tmp, menu, sizeof(struct menu_state));
 
@@ -352,7 +352,7 @@ menu_copy(struct menu_state *menu)
 
   /* copy menu values */
 
-  if (menu->action != (struct menu_action *)0) {
+  if (menu->action != NULL) {
     tmp->action = (struct menu_action *)
         malloc(sizeof(struct menu_action) * menu->count);
     if (tmp->action)

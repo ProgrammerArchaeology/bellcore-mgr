@@ -41,7 +41,7 @@ dofile(char *filename)
   BITMAP *map;
   char *name;
 
-  if ((filep = fopen(filename, "r")) == (FILE *)0) {
+  if ((filep = fopen(filename, "r")) == NULL) {
     fprintf(stderr, "%s: Can\'t open %s\n", cmd, filename);
     exit(2);
   }

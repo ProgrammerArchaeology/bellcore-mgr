@@ -16,10 +16,10 @@ bit_create(BITMAP *map, int x, int y, int wide, int high)
   if (y + high > map->high)
     high = map->high - y;
   if (wide < 1 || high < 1)
-    return (BITMAP *)0;
+    return NULL;
 
-  if ((result = (BITMAP *)malloc(sizeof(BITMAP))) == (BITMAP *)0)
-    return (BITMAP *)0;
+  if ((result = (BITMAP *)malloc(sizeof(BITMAP))) == NULL)
+    return NULL;
 
   result->data = map->data;
   result->x0 = map->x0 + x;

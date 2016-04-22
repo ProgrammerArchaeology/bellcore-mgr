@@ -19,7 +19,7 @@ BITMAP *bit_alloc(int wide, int high, DATA *data, unsigned char depth)
     return (NULL);
   }
 #endif
-  if ((result = (BITMAP *)malloc(sizeof(BITMAP))) == (BITMAP *)0)
+  if ((result = (BITMAP *)malloc(sizeof(BITMAP))) == NULL)
     return (result);
 
   result->x0 = 0;
@@ -32,16 +32,16 @@ BITMAP *bit_alloc(int wide, int high, DATA *data, unsigned char depth)
 
   size = bit_size(wide, high, depth);
 
-  if (data != (DATA *)0) {
+  if (data != NULL) {
     result->data = data;
 /* convert from external to internal format (if required) */
 #ifdef MOVIE
     log_alloc(result);
 #endif
   } else {
-    if ((result->data = (DATA *)malloc(size)) == (DATA *)0) {
+    if ((result->data = (DATA *)malloc(size)) == NULL) {
       free(result);
-      return ((BITMAP *)0);
+      return (NULL);
     }
 #ifdef MOVIE
     log_alloc(result);

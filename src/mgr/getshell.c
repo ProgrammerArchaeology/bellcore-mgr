@@ -123,11 +123,11 @@ int get_command(char **argv, int *file)
   if (argv == (char **)0) {
     argv = arg;
     *argv = shell ? shell : SHELL;
-    *(argv + 1) = (char *)0;
+    *(argv + 1) = NULL;
   }
   name = get_path(argv[0]);
 
-  if (name == (char *)0 || *name == '\0')
+  if (name == NULL || *name == '\0')
     return (-2);
 
   if ((*file = getapty()) < 0)

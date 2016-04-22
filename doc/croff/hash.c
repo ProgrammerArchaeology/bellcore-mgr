@@ -70,7 +70,7 @@ int add_entry(
   TABLE *list;
 
   index = HASH(name, size);
-  for (list = table[index]; list != (TABLE *)0; list = list->next)
+  for (list = table[index]; list != NULL; list = list->next)
     if (Same(list->name, name)) {
       list->count += 1;
       return (list->count);
@@ -78,7 +78,7 @@ int add_entry(
   list = (TABLE *)alloc(sizeof(TABLE));
   list->name = save_line(name);
   list->next = table[index];
-  list->value = (char *)0;
+  list->value = NULL;
   list->count = 1;
   table[index] = list;
   return (1);
@@ -97,7 +97,7 @@ int dlt_entry(
   int index;
   struct table_entry *list, *temp = (struct table_entry *)0;
   index = HASH(name, size);
-  for (list = table[index]; list != (TABLE *)0; temp = list, list = list->next)
+  for (list = table[index]; list != NULL; temp = list, list = list->next)
     if (Same(list->name, name)) {
       if (list->count > 0)
         list->count -= 1;
@@ -134,11 +134,11 @@ get_entry(
   struct table_entry *list;
 
   index = HASH(name, size);
-  for (list = table[index]; list != (TABLE *)0; list = list->next)
+  for (list = table[index]; list != NULL; list = list->next)
     if (Same(list->name, name)) {
-      return (list->count > 0 ? list->value : (char *)0);
+      return (list->count > 0 ? list->value : NULL);
     }
-  return ((char *)0);
+  return (NULL);
 }
 
 /*******************************************************************************
@@ -155,7 +155,7 @@ int is_entry(
   struct table_entry *list;
 
   index = HASH(name, size);
-  for (list = table[index]; list != (TABLE *)0; list = list->next)
+  for (list = table[index]; list != NULL; list = list->next)
     if (Same(list->name, name)) {
       return (list->count);
     }
@@ -177,14 +177,14 @@ int put_entry(
   struct table_entry *list;
 
   index = HASH(name, size);
-  for (list = table[index]; list != (TABLE *)0; list = list->next)
+  for (list = table[index]; list != NULL; list = list->next)
     if (Same(list->name, name) && !(list->flags & HASH_STATIC)) {
-      if (list->value != (char *)0)
+      if (list->value != NULL)
         free(list->value);
-      if (value != (char *)0)
+      if (value != NULL)
         list->value = save_line(value);
       else
-        list->value == (char *)0;
+        list->value == NULL;
       return (1);
     }
   return (0);
@@ -200,7 +200,7 @@ save_line(char *string)
 {
   char *where;
 
-  if (string == (char *)0)
+  if (string == NULL)
     string = "";
   where = alloc(strlen(string) + 1);
   strcpy(where, string);

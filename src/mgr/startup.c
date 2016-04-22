@@ -56,7 +56,7 @@ save_fields(char **cpp, char *fields[])
   if (*cpp)
     free(*cpp);
   *savestr = '\0';
-  for (i = 1; fields[i] != (char *)0; i++) {
+  for (i = 1; fields[i] != NULL; i++) {
     if (i > 1)
       strcat(savestr, " ");
     strcat(savestr, fields[i]);
@@ -160,7 +160,7 @@ void startup(char *name)
     dbgprintf('S', (stderr, "*** got: %s \r\n", line));
     count = parse(line, fields);
 
-    if (*fields == (char *)0)
+    if (*fields == NULL)
       continue;
 
     else if (strcmp(*fields, "window") == 0 || strcmp(*fields, "done") == 0) {
@@ -178,10 +178,10 @@ void startup(char *name)
           if (newshell[i])
             free(newshell[i]);
           newshell[i] = shell[i];
-          shell[i] = (char *)0;
+          shell[i] = NULL;
         }
         gotwindow = 0;
-        newshell[i] = (char *)0;
+        newshell[i] = NULL;
         gotwindow = 0;
         (void)memset(start, 0, MAXLINE);
         (void)memset(init, 0, MAXLINE);
@@ -310,10 +310,10 @@ void startup(char *name)
       }
       if (shell[count - 1]) {
         free(shell[count - 1]);
-        shell[count - 1] = (char *)0;
+        shell[count - 1] = NULL;
       }
     } else if (strcmp(*fields, "init") == 0) {
-      for (i = 1; fields[i] != (char *)0; i++) {
+      for (i = 1; fields[i] != NULL; i++) {
         if (i > 1)
           strcat(init, " ");
         strcat(init, fields[i]);
@@ -322,7 +322,7 @@ void startup(char *name)
     }
 
     else if (strcmp(*fields, "start") == 0) {
-      for (i = 1; fields[i] != (char *)0; i++) {
+      for (i = 1; fields[i] != NULL; i++) {
         if (i > 1)
           strcat(start, " ");
         strcat(start, fields[i]);

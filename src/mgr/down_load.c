@@ -44,16 +44,16 @@ get_map(
   WINDOW *win;
   BITMAP *map;
 
-  for (win = active; win != (WINDOW *)0; win = W(next))
+  for (win = active; win != NULL; win = W(next))
     if (W(pid) == id && W(num) == sub) {
-      map = bit_alloc(BIT_WIDE(W(window)), BIT_HIGH(W(window)), (DATA *)0, BIT_DEPTH(W(window)));
+      map = bit_alloc(BIT_WIDE(W(window)), BIT_HIGH(W(window)), NULL, BIT_DEPTH(W(window)));
       if (map && W(flags) & W_ACTIVE)
         bit_blit(map, 0, 0, BIT_WIDE(map), BIT_HIGH(map), BIT_SRC, W(window), 0, 0);
       else if (map)
         bit_blit(map, 0, 0, BIT_WIDE(map), BIT_HIGH(map), BIT_SRC, W(save), W(borderwid), W(borderwid));
       return (map);
     }
-  return ((BITMAP *)0);
+  return (NULL);
 }
 /*}}}  */
 
@@ -92,7 +92,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
       }
     } else
       W(menus)
-      [*W(esc)] = (struct menu_state *)0;
+      [*W(esc)] = NULL;
   } break;
   /*}}}  */
   /*{{{  T_EVENT   -- down load an event*/
@@ -104,7 +104,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     if (W(events)[GET_EVENT(cnt)]) {
       free(W(events)[GET_EVENT(cnt)]);
       W(events)
-      [GET_EVENT(cnt)] = (char *)0;
+      [GET_EVENT(cnt)] = NULL;
     }
     if (*W(snarf)) {
       W(events)
@@ -134,9 +134,9 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
       x = 0;
     dbgprintf('y', (stderr, "%s: drawing [%s] to %d\r\n",
                        W(tty), W(snarf), *W(esc)));
-    if (*W(esc) > 0 && W(bitmaps)[*W(esc) - 1] == (BITMAP *)0) {
+    if (*W(esc) > 0 && W(bitmaps)[*W(esc) - 1] == NULL) {
       W(bitmaps)
-      [*W(esc) - 1] = bit_alloc(x + strlen(W(snarf)) * FSIZE(wide), y, (DATA *)0, 1); /* text is always 1 bit deep */
+      [*W(esc) - 1] = bit_alloc(x + strlen(W(snarf)) * FSIZE(wide), y, NULL, 1); /* text is always 1 bit deep */
       dbgprintf('y', (stderr, "%s: STRING creating %d (%dx%d)\n",
                          W(tty), *W(esc), x + strlen(W(snarf)) * FSIZE(wide), y));
     }
@@ -153,8 +153,8 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     snarf = W(snarf);
     dbgprintf('y', (stderr, "%s: yanking [%s]\r\n", W(tty), snarf));
     id_message = W(pid);
-    W(snarf) = (char *)0;
-    for (win2 = active; win2 != (WINDOW *)0; win2 = win2->next)
+    W(snarf) = NULL;
+    for (win2 = active; win2 != NULL; win2 = win2->next)
       do_event(EVENT_SNARFED, win2, E_MAIN);
     break;
 
@@ -164,14 +164,14 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     id = *W(esc);
     if (message) {
       free(message);
-      message = (char *)0;
+      message = NULL;
     }
     message = W(snarf);
     id_message = W(pid);
     W(snarf) = NULL;
     dbgprintf('e', (stderr, "%s: sending [%s]\r\n", W(tty), W(snarf)));
     dbgprintf('c', (stderr, "sending %d->%d: %s\r\n", W(pid), cnt == 0 ? 0 : id, message));
-    for (win2 = active; win2 != (WINDOW *)0; win2 = win2->next)
+    for (win2 = active; win2 != NULL; win2 = win2->next)
       if (cnt == 0 || win2->pid == id) {
         do_event(EVENT_ACCEPT, win2, E_MAIN);
         if (cnt)
@@ -182,7 +182,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
   /*{{{  T_GMAP    -- load bitmap from a file*/
   case T_GMAP: {
     BITMAP *b;
-    FILE *fp = (FILE *)0;
+    FILE *fp = NULL;
     char filename[MAX_PATH];
     char buff[20];
     char c = *W(snarf);
@@ -202,7 +202,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
 
     if (bmi >= 0 && bmi < MAXBITMAPS
         && read_ok(filename)
-        && (fp = fopen(filename, "r")) != (FILE *)0
+        && (fp = fopen(filename, "r")) != NULL
         && (b = bitmapread(fp))) {
       if (W(bitmaps[bmi]))
         bit_destroy(W(bitmaps[bmi]));
@@ -213,7 +213,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     }
     write(W(to_fd), buff, strlen(buff));
 
-    if (fp != (FILE *)0)
+    if (fp != NULL)
       fclose(fp);
   } break;
   /*}}}  */
@@ -234,7 +234,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
       break;
     case 0: /* my window */
       free_b++;
-      b = bit_alloc(BIT_WIDE(window), BIT_HIGH(window), (DATA *)0, BIT_DEPTH(window));
+      b = bit_alloc(BIT_WIDE(window), BIT_HIGH(window), NULL, BIT_DEPTH(window));
       if (b)
         bit_blit(b, 0, 0, BIT_WIDE(b), BIT_HIGH(b), BIT_SRC, window, 0, 0);
       break;
@@ -247,7 +247,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     dbgprintf('y', (stderr, "saving...\n"));
     if (b && W(snarf) && ((exists = access(W(snarf), 0)),
                              write_ok(W(snarf)))
-        && (fp = fopen(W(snarf), "w")) != (FILE *)0) {
+        && (fp = fopen(W(snarf), "w")) != NULL) {
       dbgprintf('y', (stderr, "saving bitmap %d x %d on %s (%d)\n",
                          BIT_WIDE(b), BIT_HIGH(b), W(snarf), fileno(fp)));
       if (exists < 0) /* file just created */

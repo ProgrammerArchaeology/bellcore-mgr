@@ -356,7 +356,7 @@ int do_buckey(int c)
   case 'i': /* temporary (status info) */
     if (!debug)
       break;
-    for (win = active; win != (WINDOW *)0; win = win->next) {
+    for (win = active; win != NULL; win = win->next) {
       fprintf(stderr, "%s: %d,%d  %d,%d num(%d) {%s}\r\n",
           W(tty), W(x0), W(y0),
           BIT_WIDE(W(window)), BIT_HIGH(W(window)), W(num),

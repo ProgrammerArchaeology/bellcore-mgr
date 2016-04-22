@@ -56,10 +56,10 @@ void get_info(
     *coords = '\0';
 
   if (cnt == 1) { /* info about spot */
-    for (win2 = active; win2 != (WINDOW *)0; win2 = win2->next)
+    for (win2 = active; win2 != NULL; win2 = win2->next)
       if (mousein(W(esc)[0], W(esc)[1], win2, 1))
         break;
-    if (win2 != (WINDOW *)0)
+    if (win2 != NULL)
       sprintf(start, "%s %s %d %d\n",
           win->tty + strlen(win->tty) - 2,
           win2->tty + strlen(win2->tty) - 2, win2->num, win2->pid);
@@ -138,7 +138,7 @@ void get_info(
   case G_ALL:     /* complete window status */
   {
     char status;
-    for (win2 = active; win2 != (WINDOW *)0; win2 = win2->next) {
+    for (win2 = active; win2 != NULL; win2 = win2->next) {
       if (*W(esc) == G_ALLMINE && win2->main != W(main))
         continue;
       status = win2->flags & W_ACTIVE ? C_EXPOSED : C_OBSCURED;
@@ -162,7 +162,7 @@ void get_info(
   case G_NOTIFY: /* list windows with notify set  */
   {
     char *str;
-    for (win2 = active; win2 != (WINDOW *)0; win2 = win2->next) {
+    for (win2 = active; win2 != NULL; win2 = win2->next) {
       dbgprintf('i', (stderr, "  checking %s\r\n", win2->tty));
       if (IS_EVENT(win2, EVENT_NOTIFY) && (str = win2->events[GET_EVENT(EVENT_NOTIFY)])) {
 

@@ -8,10 +8,10 @@
 /*{{{  bit_open.c*/
 BITMAP *bit_open(char *name)
 {
-  BITMAP *result = (BITMAP *)0;
+  BITMAP *result = NULL;
 
-  if ((result = malloc(sizeof(BITMAP))) == (BITMAP *)0)
-    return (BITMAP *)0;
+  if ((result = malloc(sizeof(BITMAP))) == NULL)
+    return NULL;
   result->primary = result;
   result->data = bit_initscreen(name, &(result->wide), &(result->high),
       &(result->depth), &(result->deviceinfo));

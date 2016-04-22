@@ -31,7 +31,7 @@ int alone(WINDOW *check)
 {
   WINDOW *win;
 
-  for (win = active; win != (WINDOW *)0; win = win->next)
+  for (win = active; win != NULL; win = win->next)
     if (check != win && intersect(check, win))
       return (0);
   return (1);
