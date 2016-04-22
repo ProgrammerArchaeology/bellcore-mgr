@@ -58,13 +58,13 @@ void set_covered(
   WINDOW *win;
 
   for (win = active; win != NULL; win = win->next)
-    if (win != check && intersect(win, check) && W(flags) & W_ACTIVE) {
+    if (win != check && intersect(win, check) && win->flags & W_ACTIVE) {
       save_win(win);
       do_event(EVENT_COVERED, win, E_MAIN);
-      W(flags) &= ~W_ACTIVE;
-      if (!(W(flags) & W_LOOK))
-        FD_CLR(W(to_fd), &mask);
-      dbgprintf('o', (stderr, "\t%s covers %s\r\n", check->tty, W(tty)));
+      win->flags &= ~W_ACTIVE;
+      if (!(win->flags & W_LOOK))
+        FD_CLR(win->to_fd, &mask);
+      dbgprintf('o', (stderr, "\t%s covers %s\r\n", check->tty, win->tty));
     }
 }
 /*}}}  */
@@ -74,33 +74,33 @@ void un_covered(void)
   WINDOW *win, *check;
   int cover;
 
-  for (win = active; win != NULL; win = W(next)) {
-    dbgprintf('U', (stderr, "	invalidate cliplist: %s)\r\n", W(tty)));
-    dbgprintf('o', (stderr, "	un_cover: %s)\n", W(tty)));
+  for (win = active; win != NULL; win = win->next) {
+    dbgprintf('U', (stderr, "	invalidate cliplist: %s)\r\n", win->tty));
+    dbgprintf('o', (stderr, "	un_cover: %s)\n", win->tty));
     for (cover = 0, check = active; check != win && cover == 0; check = check->next)
       if (intersect(win, check))
         cover = 1;
 
-    if (cover && W(flags) & W_ACTIVE) {
+    if (cover && win->flags & W_ACTIVE) {
       do_event(EVENT_COVERED, win, E_MAIN);
-      W(flags) &= ~W_ACTIVE;
-      if (!(W(flags) & W_LOOK))
-        FD_CLR(W(to_fd), &mask);
+      win->flags &= ~W_ACTIVE;
+      if (!(win->flags & W_LOOK))
+        FD_CLR(win->to_fd, &mask);
       dbgprintf('o', (stderr, "becoming inactive (covered by %s)\r\n",
                          check->tty));
-    } else if (!cover && !(W(flags) & W_ACTIVE)) {
+    } else if (!cover && !(win->flags & W_ACTIVE)) {
       do_event(EVENT_UNCOVERED, win, E_MAIN);
-      W(flags) |= W_ACTIVE;
-      if (!(W(flags) & W_DIED))
-        FD_SET(W(to_fd), &mask);
+      win->flags |= W_ACTIVE;
+      if (!(win->flags & W_DIED))
+        FD_SET(win->to_fd, &mask);
       dbgprintf('o', (stderr, "becoming active\r\n"));
-    } else if (cover && !(W(flags) & W_ACTIVE)) {
+    } else if (cover && !(win->flags & W_ACTIVE)) {
       dbgprintf('o', (stderr, "remains inactive (covered by %s)\r\n",
                          check->tty));
-    } else if (!cover && W(flags) & W_ACTIVE) {
+    } else if (!cover && win->flags & W_ACTIVE) {
       dbgprintf('o', (stderr, "remains active\r\n"));
     } else {
-      dbgprintf('o', (stderr, "%s: unknown covering state\r\n", W(tty)));
+      dbgprintf('o', (stderr, "%s: unknown covering state\r\n", win->tty));
     }
   }
 }
@@ -110,32 +110,32 @@ void expose(
     WINDOW *win /* window to expose */
     )
 {
-  dbgprintf('o', (stderr, "exposing %s\r\n", W(tty)));
+  dbgprintf('o', (stderr, "exposing %s\r\n", win->tty));
 
   /* reorder windows */
 
   if (win == active)
     return;
 
-  W(prev)
+  win->prev
       ->next
-      = W(next);
-  if (W(next))
-    W(next)
+      = win->next;
+  if (win->next)
+    win->next
         ->prev
-        = W(prev);
+        = win->prev;
   else
-    active->prev = W(prev);
+    active->prev = win->prev;
 
-  W(prev) = active->prev;
-  W(next) = active;
+  win->prev = active->prev;
+  win->next = active;
 
   active->prev = win;
   active = win;
 
-  if (!(W(flags) & W_ACTIVE)) {
-    for (win = active->next; win != NULL; win = W(next))
-      if (W(flags) & W_ACTIVE && intersect(active, win))
+  if (!(win->flags & W_ACTIVE)) {
+    for (win = active->next; win != NULL; win = win->next)
+      if (win->flags & W_ACTIVE && intersect(active, win))
         save_win(win);
 
     restore_win(active);
@@ -161,27 +161,27 @@ int bury(
     WINDOW *win /* window to bury */
     )
 {
-  dbgprintf('o', (stderr, "burying %s\r\n", W(tty)));
-  if (!win || !W(next))
+  dbgprintf('o', (stderr, "burying %s\r\n", win->tty));
+  if (!win || !win->next)
     return (0);
 
   if (win == active)
-    active = W(next);
+    active = win->next;
 
-  W(prev)
+  win->prev
       ->next
-      = W(next);
-  W(next)
+      = win->next;
+  win->next
       ->prev
-      = W(prev);
+      = win->prev;
 
-  W(prev) = active->prev;
+  win->prev = active->prev;
   active->prev
       ->next
       = win;
 
   active->prev = win;
-  W(next) = NULL;
+  win->next = NULL;
   return (1);
 }
 /*}}}  */
@@ -190,7 +190,7 @@ void hide(
     WINDOW *win /* window to hide */
     )
 {
-  dbgprintf('o', (stderr, "hiding %s\r\n", W(tty)));
+  dbgprintf('o', (stderr, "hiding %s\r\n", win->tty));
   if (bury(win) == 0)
     return;
   save_win(win);
@@ -204,12 +204,12 @@ void repair(WINDOW *clip)
 {
   WINDOW *win;
 #ifdef NOCLIP
-  for (win = active->prev->prev; win != active; win = W(prev))
+  for (win = active->prev->prev; win != active; win = win->prev)
     if (!alone(win))
       restore_win(win);
   restore_win(win);
 #else
-  for (win = clip->prev; win != active; win = W(prev))
+  for (win = clip->prev; win != active; win = win->prev)
     if (intersect(clip, win))
       clip_win(win, clip);
   if (clip != active && intersect(clip, active))
@@ -221,19 +221,19 @@ void repair(WINDOW *clip)
 /*{{{  save_win -- save a pixel image of the window*/
 void save_win(WINDOW *win)
 {
-  dbgprintf('o', (stderr, "\t\t  saving %s\r\n", W(tty)));
-  if (W(save) == NULL) {
-    W(save) = bit_alloc(BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-        NULL, BIT_DEPTH(W(window)));
-  } else if (BIT_WIDE(W(save)) != BIT_WIDE(W(border)) || BIT_HIGH(W(save)) != BIT_HIGH(W(border))) {
-    dbgprintf('o', (stderr, "Saved window %s mismatch\r\n", W(tty)));
-    bit_destroy(W(save));
-    W(save) = bit_alloc(BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-        NULL, BIT_DEPTH(W(window)));
+  dbgprintf('o', (stderr, "\t\t  saving %s\r\n", win->tty));
+  if (win->save == NULL) {
+    win->save = bit_alloc(BIT_WIDE(win->border), BIT_HIGH(win->border),
+        NULL, BIT_DEPTH(win->window));
+  } else if (BIT_WIDE(win->save) != BIT_WIDE(win->border) || BIT_HIGH(win->save) != BIT_HIGH(win->border)) {
+    dbgprintf('o', (stderr, "Saved window %s mismatch\r\n", win->tty));
+    bit_destroy(win->save);
+    win->save = bit_alloc(BIT_WIDE(win->border), BIT_HIGH(win->border),
+        NULL, BIT_DEPTH(win->window));
   }
 
-  bit_blit(W(save), 0, 0, BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-      BIT_SRC, W(border), 0, 0);
+  bit_blit(win->save, 0, 0, BIT_WIDE(win->border), BIT_HIGH(win->border),
+      BIT_SRC, win->border, 0, 0);
 }
 /*}}}  */
 /*{{{  clip_win -- partially restore a previously saved pixel image of the window*/
@@ -244,26 +244,26 @@ void clip_win(
     WINDOW *clip /* clip window */
     )
 {
-  int x0 = Max(W(x0), C(x0)) - W(x0);
-  int y0 = Max(W(y0), C(y0)) - W(y0);
-  int x1 = Min(W(x0) + BIT_WIDE(W(border)), C(x0) + BIT_WIDE(C(border))) - W(x0);
-  int y1 = Min(W(y0) + BIT_HIGH(W(border)), C(y0) + BIT_HIGH(C(border))) - W(y0);
+  int x0 = Max(win->x0, C(x0)) - win->x0;
+  int y0 = Max(win->y0, C(y0)) - win->y0;
+  int x1 = Min(win->x0 + BIT_WIDE(win->border), C(x0) + BIT_WIDE(C(border))) - win->x0;
+  int y1 = Min(win->y0 + BIT_HIGH(win->border), C(y0) + BIT_HIGH(C(border))) - win->y0;
 
-  if (W(save) != NULL) {
+  if (win->save != NULL) {
 
     /*	******* look at clipping region **********
-      bit_blit(W(border),x0,y0,x1-x0,y1-y0 ,
-               BIT_NOT(BIT_DST),W(save),x0,y0);
+      bit_blit(win->border,x0,y0,x1-x0,y1-y0 ,
+               BIT_NOT(BIT_DST),win->save,x0,y0);
       getchar();
 end of debug */
 
-    bit_blit(W(border), x0, y0, x1 - x0, y1 - y0,
-        BIT_SRC, W(save), x0, y0);
+    bit_blit(win->border, x0, y0, x1 - x0, y1 - y0,
+        BIT_SRC, win->save, x0, y0);
   }
 #ifdef DEBUG
   else if (debug)
-    fprintf(stderr, "clip: can't restore %s\r\n", W(tty));
-  dbgprintf('o', (stderr, "\t\t  restore %s (clip to %s)\r\n", W(tty), C(tty)));
+    fprintf(stderr, "clip: can't restore %s\r\n", win->tty);
+  dbgprintf('o', (stderr, "\t\t  restore %s (clip to %s)\r\n", win->tty, C(tty)));
 #endif
 }
 /*}}}  */
@@ -272,10 +272,10 @@ void restore_win(
     WINDOW *win /* window to restore to screen */
     )
 {
-  if (W(save) != NULL)
-    bit_blit(W(border), 0, 0, BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-        BIT_SRC, W(save), 0, 0);
-  dbgprintf('o', (stderr, "\t\t  restoring %s\r\n", W(tty)));
+  if (win->save != NULL)
+    bit_blit(win->border, 0, 0, BIT_WIDE(win->border), BIT_HIGH(win->border),
+        BIT_SRC, win->save, 0, 0);
+  dbgprintf('o', (stderr, "\t\t  restoring %s\r\n", win->tty));
 }
 /*}}}  */
 /*{{{  move_mouse*/
@@ -459,8 +459,8 @@ void suspend(void)
   set_kbd(0); /* fix up keyboard modes */
 
   for (win = active; win != NULL; win = win->next) {
-    killpg(W(pid), SIGSTOP);
-    if (W(flags) & W_ACTIVE)
+    killpg(win->pid, SIGSTOP);
+    if (win->flags & W_ACTIVE)
       save_win(win);
   }
 
@@ -492,9 +492,9 @@ void suspend(void)
 
   erase_win(screen);
   if (active) {
-    for (win = active->prev; win != active; win = W(prev)) {
+    for (win = active->prev; win != active; win = win->prev) {
       restore_win(win);
-      killpg(W(pid), SIGCONT);
+      killpg(win->pid, SIGCONT);
     }
     restore_win(active);
     killpg(active->pid, SIGCONT);
@@ -539,40 +539,40 @@ int cursor_ok(
 static void
 do_cursor(WINDOW *win)
 {
-  switch (W(curs_type)) {
+  switch (win->curs_type) {
   case CS_BLOCK:
-    bit_blit(W(window), W(x) + W(text.x),
-        W(y) + W(text.y) - W(font->head.high),
-        W(font->head.wide), W(font->head.high),
-        PUTOP(BIT_NOT(BIT_DST), W(style)), 0, 0, 0);
+    bit_blit(win->window, win->x + win->text.x,
+        win->y + win->text.y - win->font->head.high,
+        win->font->head.wide, win->font->head.high,
+        PUTOP(BIT_NOT(BIT_DST), win->style), 0, 0, 0);
     break;
   case CS_BOX:
-    bit_blit(W(window), W(x) + W(text.x),
-        W(y) + W(text.y) - W(font->head.high) + 1,
-        W(font->head.wide), W(font->head.high) - 2,
-        PUTOP(BIT_NOT(BIT_DST), W(style)), 0, 0, 0);
-    bit_blit(W(window), W(x) + W(text.x) - 2,
-        W(y) + W(text.y) - W(font->head.high) - 1,
-        W(font->head.wide) + 4, W(font->head.high) + 2,
-        PUTOP(BIT_NOT(BIT_DST), W(style)), 0, 0, 0);
+    bit_blit(win->window, win->x + win->text.x,
+        win->y + win->text.y - win->font->head.high + 1,
+        win->font->head.wide, win->font->head.high - 2,
+        PUTOP(BIT_NOT(BIT_DST), win->style), 0, 0, 0);
+    bit_blit(win->window, win->x + win->text.x - 2,
+        win->y + win->text.y - win->font->head.high - 1,
+        win->font->head.wide + 4, win->font->head.high + 2,
+        PUTOP(BIT_NOT(BIT_DST), win->style), 0, 0, 0);
     break;
   case CS_LEFT:
-    bit_blit(W(window), W(x) + W(text.x) - 1,
-        W(y) + W(text.y) - W(font->head.high),
-        2, W(font->head.high),
-        PUTOP(BIT_NOT(BIT_DST), W(style)), 0, 0, 0);
+    bit_blit(win->window, win->x + win->text.x - 1,
+        win->y + win->text.y - win->font->head.high,
+        2, win->font->head.high,
+        PUTOP(BIT_NOT(BIT_DST), win->style), 0, 0, 0);
     break;
   case CS_RIGHT:
-    bit_blit(W(window), W(x) + W(text.x) + W(font->head.wide) - 1,
-        W(y) + W(text.y) - W(font->head.high),
-        2, W(font->head.high),
-        PUTOP(BIT_NOT(BIT_DST), W(style)), 0, 0, 0);
+    bit_blit(win->window, win->x + win->text.x + win->font->head.wide - 1,
+        win->y + win->text.y - win->font->head.high,
+        2, win->font->head.high,
+        PUTOP(BIT_NOT(BIT_DST), win->style), 0, 0, 0);
     break;
   case CS_UNDER:
-    bit_blit(W(window), W(x) + W(text.x),
-        W(y) + W(text.y) - 1,
-        W(font->head.wide), 2,
-        PUTOP(BIT_NOT(BIT_DST), W(style)), 0, 0, 0);
+    bit_blit(win->window, win->x + win->text.x,
+        win->y + win->text.y - 1,
+        win->font->head.wide, 2,
+        PUTOP(BIT_NOT(BIT_DST), win->style), 0, 0, 0);
     break;
   }
 }

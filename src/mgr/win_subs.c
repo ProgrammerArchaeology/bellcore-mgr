@@ -18,31 +18,31 @@
 /*{{{  win_rop -- Do raster ops*/
 void win_rop(WINDOW *win, BITMAP *window)
 {
-  int *p = W(esc);
+  int *p = win->esc;
   int op;
 
-  op = W(op);
-  dbgprintf('B', (stderr, "%s: blit\t", W(tty)));
-  switch (W(esc_cnt)) {
+  op = win->op;
+  dbgprintf('B', (stderr, "%s: blit\t", win->tty));
+  switch (win->esc_cnt) {
   /*{{{  0 -- set raster op function*/
   case 0:
-    W(op) = PUTOP(*p, op); /* change op, leave colors alone */
-    if (W(flags) & W_OVER) {
-      W(style) = PUTOP(*p, W(op));
+    win->op = PUTOP(*p, op); /* change op, leave colors alone */
+    if (win->flags & W_OVER) {
+      win->style = PUTOP(*p, win->op);
     }
     dbgprintf('B', (stderr, "setting function %d\r\n", p[0]));
-    dbgprintf('B', (stderr, "  new W(op): op=%d, fg=%d, bg=%d\n",
-                       OPCODE(W(op)), GETFCOLOR(W(op)), GETBCOLOR(W(op))));
+    dbgprintf('B', (stderr, "  new win->op: op=%d, fg=%d, bg=%d\n",
+                       OPCODE(win->op), GETFCOLOR(win->op), GETBCOLOR(win->op)));
     break;
   /*}}}  */
   /*{{{  1 -- set raster op fg and bg colors*/
   case 1:
-    W(op) = BUILDOP(op,
+    win->op = BUILDOP(op,
         p[0] >= 0 ? p[0] : GETFCOLOR(op),
         p[1] >= 0 ? p[1] : GETBCOLOR(op));
     dbgprintf('B', (stderr, "setting colors %d, %d\r\n", p[0], p[1]));
-    dbgprintf('B', (stderr, "  new W(op): op=%d, fg=%d, bg=%d\n",
-                       OPCODE(W(op)), GETFCOLOR(W(op)), GETBCOLOR(W(op))));
+    dbgprintf('B', (stderr, "  new win->op: op=%d, fg=%d, bg=%d\n",
+                       OPCODE(win->op), GETFCOLOR(win->op), GETBCOLOR(win->op)));
     break;
   /*}}}  */
   /*{{{  3 -- ras_write*/
@@ -55,14 +55,15 @@ void win_rop(WINDOW *win, BITMAP *window)
   case 4:
     if (p[4] > MAXBITMAPS)
       break;
-    if (p[4] > 0 && W(bitmaps)[p[4] - 1] == NULL)
-      W(bitmaps)
-      [p[4] - 1] = bit_alloc(
-          Scalex(p[0]) + Scalex(p[2]), Scaley(p[1]) + Scaley(p[3]),
-          NULL,
-          BIT_DEPTH(W(window)));
+    if (p[4] > 0 && win->bitmaps[p[4] - 1] == NULL)
+      win->bitmaps
+          [p[4] - 1]
+          = bit_alloc(
+              Scalex(p[0]) + Scalex(p[2]), Scaley(p[1]) + Scaley(p[3]),
+              NULL,
+              BIT_DEPTH(win->window));
     bit_blit(
-        p[4] ? W(bitmaps)[p[4] - 1] : window,
+        p[4] ? win->bitmaps[p[4] - 1] : window,
         Scalex(p[0]), Scaley(p[1]),
         Scalex(p[2]), Scaley(p[3]),
         op, 0, 0, 0);
@@ -93,30 +94,31 @@ void win_rop(WINDOW *win, BITMAP *window)
     if (p[6] > MAXBITMAPS || p[7] > MAXBITMAPS)
       break;
 
-    if (p[6] > 0 && W(bitmaps)[p[6] - 1] == NULL) {
+    if (p[6] > 0 && win->bitmaps[p[6] - 1] == NULL) {
       int depth;
 
       /* figure out depth of dest if we need to create it */
 
-      if (p[7] && W(bitmaps)[p[7] - 1])
-        depth = BIT_DEPTH(W(bitmaps)[p[7] - 1]);
+      if (p[7] && win->bitmaps[p[7] - 1])
+        depth = BIT_DEPTH(win->bitmaps[p[7] - 1]);
       else
-        depth = BIT_DEPTH(W(window));
+        depth = BIT_DEPTH(win->window);
 
-      W(bitmaps)
-      [p[6] - 1] = bit_alloc(
-          Scalex(p[0]) + Scalex(p[2]),
-          Scaley(p[1]) + Scaley(p[3]),
-          NULL_DATA,
-          depth);
+      win->bitmaps
+          [p[6] - 1]
+          = bit_alloc(
+              Scalex(p[0]) + Scalex(p[2]),
+              Scaley(p[1]) + Scaley(p[3]),
+              NULL_DATA,
+              depth);
     }
     dbgprintf('B', (stderr, "blitting %d to %d (%d x %d)\r\n", p[7], p[6], p[2], p[3]));
     bit_blit(
-        p[6] ? W(bitmaps)[p[6] - 1] : window,
+        p[6] ? win->bitmaps[p[6] - 1] : window,
         Scalex(p[0]), Scaley(p[1]),
         Scalex(p[2]), Scaley(p[3]),
         op,
-        p[7] ? W(bitmaps)[p[7] - 1] : window,
+        p[7] ? win->bitmaps[p[7] - 1] : window,
         Scalex(p[4]), Scaley(p[5]));
     if (Do_clip() && p[6] == 0)
       Set_clip(
@@ -131,29 +133,29 @@ void win_rop(WINDOW *win, BITMAP *window)
 void win_map(WINDOW *win, BITMAP *window)
 {
   /*{{{  variables*/
-  int cnt = W(esc_cnt);
-  int *p = W(esc);
-  int op = W(op);
+  int cnt = win->esc_cnt;
+  int *p = win->esc;
+  int op = win->op;
   /*}}}  */
 
-  if (W(code) == T_BITMAP)
+  if (win->code == T_BITMAP)
   /*{{{  convert external bitmap data from snarf buffer to tmp bitmap*/
   {
-    W(bitmap) = bit_load(p[0], p[1], p[4], p[cnt], (unsigned char *)W(snarf));
+    win->bitmap = bit_load(p[0], p[1], p[4], p[cnt], (unsigned char *)win->snarf);
     p[4] = p[5];
     p[5] = p[6];
     cnt--;
   }
 /*}}}  */
 #ifdef MOVIE
-  SET_DIRTY(W(bitmap));
+  SET_DIRTY(win->bitmap);
 #endif
   switch (cnt) {
   /*{{{  2 -- bitmap to graphics point*/
   case 2:
-    bit_blit(window, Scalex(W(gx)), Scaley(W(gy)), p[0], p[1], op, W(bitmap), 0, 0);
+    bit_blit(window, Scalex(win->gx), Scaley(win->gy), p[0], p[1], op, win->bitmap, 0, 0);
     if (Do_clip()) {
-      Set_clip(Scalex(W(gx)), Scaley(W(gy)), Scalex(W(gx)) + p[0], Scaley(W(gy)) + p[1]);
+      Set_clip(Scalex(win->gx), Scaley(win->gy), Scalex(win->gx) + p[0], Scaley(win->gy) + p[1]);
     }
     break;
   /*}}}  */
@@ -161,17 +163,18 @@ void win_map(WINDOW *win, BITMAP *window)
   case 3:
     if (p[2] > MAXBITMAPS)
       break;
-    if (p[2] > 0 && W(bitmaps)[p[2] - 1] == NULL) {
-      W(bitmaps)
-      [p[2] - 1] = W(bitmap);
-      W(bitmap) = NULL;
+    if (p[2] > 0 && win->bitmaps[p[2] - 1] == NULL) {
+      win->bitmaps
+          [p[2] - 1]
+          = win->bitmap;
+      win->bitmap = NULL;
     } else
-      bit_blit(p[2] ? W(bitmaps)[p[2] - 1] : window, Scalex(W(gx)), Scaley(W(gy)), p[0], p[1], op, W(bitmap), 0, 0);
+      bit_blit(p[2] ? win->bitmaps[p[2] - 1] : window, Scalex(win->gx), Scaley(win->gy), p[0], p[1], op, win->bitmap, 0, 0);
     break;
   /*}}}  */
   /*{{{  4 -- bitmap to specified point*/
   case 4:
-    bit_blit(window, p[2], p[3], p[0], p[1], op, W(bitmap), 0, 0);
+    bit_blit(window, p[2], p[3], p[0], p[1], op, win->bitmap, 0, 0);
     if (Do_clip()) {
       Set_clip(p[2], p[3], p[2] + p[0], p[3] + p[1]);
     }
@@ -181,57 +184,58 @@ void win_map(WINDOW *win, BITMAP *window)
   case 5:
     if (p[4] > MAXBITMAPS)
       break;
-    if (p[4] > 0 && W(bitmaps)[p[4] - 1] == NULL) {
-      W(bitmaps)
-      [p[4] - 1] = W(bitmap);
-      W(bitmap) = NULL;
+    if (p[4] > 0 && win->bitmaps[p[4] - 1] == NULL) {
+      win->bitmaps
+          [p[4] - 1]
+          = win->bitmap;
+      win->bitmap = NULL;
     } else
-      bit_blit(p[4] ? W(bitmaps)[p[4] - 1] : window, p[2], p[3], p[0], p[1], op, W(bitmap), 0, 0);
+      bit_blit(p[4] ? win->bitmaps[p[4] - 1] : window, p[2], p[3], p[0], p[1], op, win->bitmap, 0, 0);
     break;
     /*}}}  */
   }
-  if (W(bitmap)) {
-    bit_destroy(W(bitmap));
-    W(bitmap) = NULL;
+  if (win->bitmap) {
+    bit_destroy(win->bitmap);
+    win->bitmap = NULL;
   }
-  if (W(snarf)) {
-    free(W(snarf));
-    W(snarf) = NULL;
+  if (win->snarf) {
+    free(win->snarf);
+    win->snarf = NULL;
   }
 }
 /*}}}  */
 /*{{{  win_plot -- plot a line*/
 void win_plot(WINDOW *win, BITMAP *window)
 {
-  int *p = W(esc);
+  int *p = win->esc;
   int op;
 
-  op = W(op);
-  switch (W(esc_cnt)) {
+  op = win->op;
+  switch (win->esc_cnt) {
   /*{{{  0 -- set cursor to graphics point*/
   case 0:
-    W(x) = Scalex(W(gx));
-    W(y) = Scaley(W(gy));
+    win->x = Scalex(win->gx);
+    win->y = Scaley(win->gy);
     break;
   /*}}}  */
   /*{{{  1 -- draw to graphics point*/
   case 1:
-    Bit_line(win, window, Scalex(W(gx)), Scaley(W(gy)), Scalex(p[0]), Scaley(p[1]), op);
-    W(gx) = p[0];
-    W(gy) = p[1];
+    Bit_line(win, window, Scalex(win->gx), Scaley(win->gy), Scalex(p[0]), Scaley(p[1]), op);
+    win->gx = p[0];
+    win->gy = p[1];
     break;
   /*}}}  */
   /*{{{  3*/
   case 3:
     Bit_line(win, window, Scalex(p[0]), Scaley(p[1]), Scalex(p[2]), Scaley(p[3]), op);
-    W(gx) = p[2];
-    W(gy) = p[3];
+    win->gx = p[2];
+    win->gy = p[3];
     break;
   /*}}}  */
   /*{{{  4*/
   case 4:
-    if (p[4] == 0 || (p[4] > 0 && p[4] <= MAXBITMAPS && W(bitmaps)[p[4] - 1]))
-      bit_line(p[4] ? W(bitmaps)[p[4] - 1] : window, Scalex(p[0]), Scaley(p[1]), Scalex(p[2]), Scaley(p[3]), op);
+    if (p[4] == 0 || (p[4] > 0 && p[4] <= MAXBITMAPS && win->bitmaps[p[4] - 1]))
+      bit_line(p[4] ? win->bitmaps[p[4] - 1] : window, Scalex(p[0]), Scaley(p[1]), Scalex(p[2]), Scaley(p[3]), op);
     break;
     /*}}}  */
   }
@@ -250,23 +254,23 @@ void Bit_line(WINDOW *win, BITMAP *dst, int x1, int y1, int x2, int y2, int op)
 /*{{{  grunch -- experimental graphics crunch mode*/
 void grunch(WINDOW *win, BITMAP *dst)
 {
-  char *buf = W(snarf);
-  int cnt = W(esc)[W(esc_cnt)];
+  char *buf = win->snarf;
+  int cnt = win->esc[win->esc_cnt];
   int op;
   int penup = 0;
-  int *p = W(esc);
+  int *p = win->esc;
   int x, y, x1, y1;
 
-  op = W(op);
+  op = win->op;
 
   /* set starting point */
 
-  if (W(esc_cnt) > 1) {
+  if (win->esc_cnt > 1) {
     x = p[0];
     y = p[1];
   } else {
-    x = W(gx);
-    y = W(gy);
+    x = win->gx;
+    y = win->gy;
   }
   while (cnt-- > 0) {
     x1 = (*buf >> 4 & 0xf) - 8;
@@ -275,7 +279,7 @@ void grunch(WINDOW *win, BITMAP *dst)
       penup = 1;
     else if (penup == 0) {
       bit_line(dst, Scalex(x), Scaley(y), Scalex(x + x1), Scaley(y + y1), op);
-      dbgprintf('y', (stderr, "%s: line [%d] %d,%d + %d,%d\n", W(tty), op, x, y, x1, y1));
+      dbgprintf('y', (stderr, "%s: line [%d] %d,%d + %d,%d\n", win->tty, op, x, y, x1, y1));
       x += x1;
       y += y1;
     } else {
@@ -285,27 +289,27 @@ void grunch(WINDOW *win, BITMAP *dst)
     }
     buf++;
   }
-  W(gx) = x;
-  W(gy) = y;
+  win->gx = x;
+  win->gy = y;
 }
 /*}}}  */
 /*{{{  circle_plot -- plot a circle*/
 void circle_plot(WINDOW *win, BITMAP *window)
 {
-  int *p = W(esc);
+  int *p = win->esc;
   int op;
 
-  op = W(op);
+  op = win->op;
 
-  switch (W(esc_cnt)) {
+  switch (win->esc_cnt) {
   /*{{{  0 -- draw a 'circle'  at graphics point*/
   case 0:
-    circle(window, Scalex(W(gx)), Scaley(W(gy)), Scalexy(p[0]), op);
+    circle(window, Scalex(win->gx), Scaley(win->gy), Scalexy(p[0]), op);
     break;
   /*}}}  */
   /*{{{  1 -- draw an 'ellipse' at graphics point*/
   case 1: /* draw an 'ellipse' at graphics point */
-    ellipse(window, Scalex(W(gx)), Scaley(W(gy)),
+    ellipse(window, Scalex(win->gx), Scaley(win->gy),
         Scalex(p[0]), Scaley(p[1]), op);
     break;
   /*}}}  */
@@ -322,8 +326,8 @@ void circle_plot(WINDOW *win, BITMAP *window)
   /*}}}  */
   /*{{{  4 -- draw an 'ellipse' to offscreen bitmap*/
   case 4:
-    if (p[4] > 0 && p[4] <= MAXBITMAPS && W(bitmaps)[p[4] - 1])
-      ellipse(W(bitmaps)[p[4] - 1], Scalex(p[0]), Scaley(p[1]),
+    if (p[4] > 0 && p[4] <= MAXBITMAPS && win->bitmaps[p[4] - 1])
+      ellipse(win->bitmaps[p[4] - 1], Scalex(p[0]), Scaley(p[1]),
           Scalex(p[2]), Scaley(p[3]), op);
     break;
   /*}}}  */
@@ -335,8 +339,8 @@ void circle_plot(WINDOW *win, BITMAP *window)
   /*}}}  */
   /*{{{  6 -- draw an arc  ccw centered at p0,p1  to offscreen bitmap*/
   case 6:
-    if (p[6] > 0 && p[6] <= MAXBITMAPS && W(bitmaps)[p[6] - 1])
-      arc(W(bitmaps)[p[6] - 1], Scalex(p[0]), Scaley(p[1]), Scalex(p[2]),
+    if (p[6] > 0 && p[6] <= MAXBITMAPS && win->bitmaps[p[6] - 1])
+      arc(win->bitmaps[p[6] - 1], Scalex(p[0]), Scaley(p[1]), Scalex(p[2]),
           Scaley(p[3]), Scalex(p[4]), Scaley(p[5]), op);
     break;
     /*}}}  */
@@ -348,20 +352,20 @@ void circle_plot(WINDOW *win, BITMAP *window)
 /*{{{  win_go -- move the graphics pointer*/
 void win_go(WINDOW *win)
 {
-  int *p = W(esc);
+  int *p = win->esc;
 
-  switch (W(esc_cnt)) {
+  switch (win->esc_cnt) {
   /*{{{  0 -- set the graphics point to cursor pos*/
   case 0:
-    W(gx) = W(x);
-    W(gy) = W(y);
+    win->gx = win->x;
+    win->gy = win->y;
     break;
   /*}}}  */
   /*{{{  1,2 -- set the graphics point*/
   case 1:
   case 2:
-    W(gx) = p[0];
-    W(gy) = p[1];
+    win->gx = p[0];
+    win->gy = p[1];
     break;
     /*}}}  */
   }

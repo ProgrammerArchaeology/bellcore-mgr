@@ -13,9 +13,9 @@ typedef struct { /* clipping rectangle */
 } rect;
 
 #ifdef DEBUG
-#define SHOW_CLIP()                                      \
-  bit_blit(screen, W(x0) + W(borderwid) + clip.x1,       \
-      W(y0) + W(borderwid) + clip.y1, clip.x2 - clip.x1, \
+#define SHOW_CLIP()                                          \
+  bit_blit(screen, win->x0 + win->borderwid + clip.x1,       \
+      win->y0 + win->borderwid + clip.y1, clip.x2 - clip.x1, \
       clip.y2 - clip.y1, BIT_NOT(BIT_DST), NULL, 0, 0);
 #define SHOW()                             \
   if (debug && strchr(debug_level, 'c')) { \
@@ -27,21 +27,21 @@ typedef struct { /* clipping rectangle */
 #define SHOW()
 #endif
 
-#define Do_clip() (W(flags) & W_BACKGROUND && !(W(flags) & W_ACTIVE))
+#define Do_clip() (win->flags & W_BACKGROUND && !(win->flags & W_ACTIVE))
 
-#define Set_all()                  \
-  {                                \
-    clip.x1 = 0, clip.y1 = 0;      \
-    clip.x2 = BIT_WIDE(W(border)); \
-    clip.y2 = BIT_HIGH(W(border)); \
-    SHOW();                        \
+#define Set_all()                    \
+  {                                  \
+    clip.x1 = 0, clip.y1 = 0;        \
+    clip.x2 = BIT_WIDE(win->border); \
+    clip.y2 = BIT_HIGH(win->border); \
+    SHOW();                          \
   }
 
-#define Set_clipall()              \
-  {                                \
-    clip.x2 = 0, clip.y2 = 0;      \
-    clip.x1 = BIT_WIDE(W(border)); \
-    clip.y1 = BIT_HIGH(W(border)); \
+#define Set_clipall()                \
+  {                                  \
+    clip.x2 = 0, clip.y2 = 0;        \
+    clip.x1 = BIT_WIDE(win->border); \
+    clip.y1 = BIT_HIGH(win->border); \
   }
 
 #define Set_clip(X1, Y1, X2, Y2) \

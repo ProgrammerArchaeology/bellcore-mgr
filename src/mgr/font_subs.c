@@ -100,14 +100,14 @@ font_purge(
   /* re-reference current window font */
 
   for (win = active; win != NULL; win = win->next) {
-    if (W(font) == gone) {
-      W(font) = font;
+    if (win->font == gone) {
+      win->font = font;
       count++;
     }
 
     /* now re-reference any stacked fonts */
 
-    for (win2 = W(stack); win2 != NULL; win2 = win2->stack)
+    for (win2 = win->stack; win2 != NULL; win2 = win2->stack)
       if (win2->font == gone) {
         win2->font = font;
         count++;

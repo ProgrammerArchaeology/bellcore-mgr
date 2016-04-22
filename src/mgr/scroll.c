@@ -36,11 +36,11 @@ void scroll(
     if (end - start > delta)
 #ifdef MGR_ALIGN
       if (win->window == map) {
-        dbgprintf('F', (stderr, "fast scroll %s\r\n", W(tty)));
+        dbgprintf('F', (stderr, "fast scroll %s\r\n", win->tty));
         /* special high-speed byte-aligned scroller */
 
         bit_bytescroll(map, BIT_X(map), BIT_Y(map) + start,
-            BIT_WIDE(map) + W(borderwid), end - start, delta);
+            BIT_WIDE(map) + win->borderwid, end - start, delta);
       } else
 #endif /* MGR_ALIGN */
         bit_blit(map, 0, start, BIT_WIDE(map), ems - delta, BIT_SRC, map, 0, start + delta);
@@ -55,9 +55,9 @@ void scroll(
   }
 
   if (Do_clip())
-    Set_clip(W(text).x,
-        W(text).y + start,
-        W(text).x + BIT_WIDE(map),
-        W(text).y + BIT_HIGH(map));
+    Set_clip(win->text.x,
+        win->text.y + start,
+        win->text.x + BIT_WIDE(map),
+        win->text.y + BIT_HIGH(map));
 }
 /*}}}  */

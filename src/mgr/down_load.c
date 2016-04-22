@@ -44,13 +44,13 @@ get_map(
   WINDOW *win;
   BITMAP *map;
 
-  for (win = active; win != NULL; win = W(next))
-    if (W(pid) == id && W(num) == sub) {
-      map = bit_alloc(BIT_WIDE(W(window)), BIT_HIGH(W(window)), NULL, BIT_DEPTH(W(window)));
-      if (map && W(flags) & W_ACTIVE)
-        bit_blit(map, 0, 0, BIT_WIDE(map), BIT_HIGH(map), BIT_SRC, W(window), 0, 0);
+  for (win = active; win != NULL; win = win->next)
+    if (win->pid == id && win->num == sub) {
+      map = bit_alloc(BIT_WIDE(win->window), BIT_HIGH(win->window), NULL, BIT_DEPTH(win->window));
+      if (map && win->flags & W_ACTIVE)
+        bit_blit(map, 0, 0, BIT_WIDE(map), BIT_HIGH(map), BIT_SRC, win->window, 0, 0);
       else if (map)
-        bit_blit(map, 0, 0, BIT_WIDE(map), BIT_HIGH(map), BIT_SRC, W(save), W(borderwid), W(borderwid));
+        bit_blit(map, 0, 0, BIT_WIDE(map), BIT_HIGH(map), BIT_SRC, win->save, win->borderwid, win->borderwid);
       return (map);
     }
   return (NULL);
@@ -64,8 +64,8 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
   int cnt;
   int id;
 
-  cnt = W(esc_cnt);
-  switch (W(code)) {
+  cnt = win->esc_cnt;
+  switch (win->code) {
   /*{{{  T_INVALID -- invalid text mode*/
   case T_INVALID:
     dbgprintf('w', (stderr, "mgr: invalid download code\n"));
@@ -74,86 +74,91 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
   /*{{{  T_MENU    -- down load menu*/
   case T_MENU: {
     struct font *f;
-    int fn = W(esc[1]);
+    int fn = win->esc[1];
 
-    if (*W(snarf) && cnt > 1)
+    if (*win->snarf && cnt > 1)
       f = Get_font(fn);
     else
-      f = W(font);
+      f = win->font;
 
-    if (*W(snarf)) {
-      W(menus)
-      [*W(esc)] = do_menu(W(snarf), f, W(style));
+    if (*win->snarf) {
+      win->menus
+          [*win->esc]
+          = do_menu(win->snarf, f, win->style);
       if (active == win) {
-        if (W(menu[0]) == *W(esc) && button_state == BUTTON_2)
+        if (win->menu[0] == *win->esc && button_state == BUTTON_2)
           go_menu(0);
-        else if (W(menu[1]) == *W(esc) && button_state == BUTTON_1)
+        else if (win->menu[1] == *win->esc && button_state == BUTTON_1)
           go_menu(1);
       }
     } else
-      W(menus)
-      [*W(esc)] = NULL;
+      win->menus
+          [*win->esc]
+          = NULL;
   } break;
   /*}}}  */
   /*{{{  T_EVENT   -- down load an event*/
   case T_EVENT:
-    cnt = W(esc)[0];
+    cnt = win->esc[0];
     if (!CHK_EVENT(cnt)) {
       break;
     }
-    if (W(events)[GET_EVENT(cnt)]) {
-      free(W(events)[GET_EVENT(cnt)]);
-      W(events)
-      [GET_EVENT(cnt)] = NULL;
+    if (win->events[GET_EVENT(cnt)]) {
+      free(win->events[GET_EVENT(cnt)]);
+      win->events
+          [GET_EVENT(cnt)]
+          = NULL;
     }
-    if (*W(snarf)) {
-      W(events)
-      [GET_EVENT(cnt)] = W(snarf);
-      W(snarf) = NULL;
+    if (*win->snarf) {
+      win->events
+          [GET_EVENT(cnt)]
+          = win->snarf;
+      win->snarf = NULL;
       EVENT_SET_MASK(win, cnt);
       dbgprintf('e', (stderr, "%s: setting event %d (%d)[%s]\r\n",
-                         W(tty), GET_EVENT(cnt), strlen(W(snarf)), W(snarf)));
+                         win->tty, GET_EVENT(cnt), strlen(win->snarf), win->snarf));
       /* if button is down, then do the associated event */
 
       if (win == active && ((cnt == EVENT_B1_DOWN && button_state == BUTTON_1) || (cnt == EVENT_B2_DOWN && button_state == BUTTON_2)))
         do_event(button_state, win, E_MAIN);
     } else {
       EVENT_CLEAR_MASK(win, cnt);
-      dbgprintf('e', (stderr, "%s: clearing event %d\r\n", W(tty), GET_EVENT(cnt)));
+      dbgprintf('e', (stderr, "%s: clearing event %d\r\n", win->tty, GET_EVENT(cnt)));
     }
     break;
   /*}}}  */
   /*{{{  T_STRING  -- draw text into offscreen bitmap*/
   case T_STRING: {
-    int x = cnt > 1 ? Scalex(W(esc[1])) : 0;
-    int y = cnt > 2 ? Scaley(W(esc[2])) : 0;
+    int x = cnt > 1 ? Scalex(win->esc[1]) : 0;
+    int y = cnt > 2 ? Scaley(win->esc[2]) : 0;
 
     if (y < FSIZE(high))
       y = FSIZE(high);
     if (x < 0)
       x = 0;
     dbgprintf('y', (stderr, "%s: drawing [%s] to %d\r\n",
-                       W(tty), W(snarf), *W(esc)));
-    if (*W(esc) > 0 && W(bitmaps)[*W(esc) - 1] == NULL) {
-      W(bitmaps)
-      [*W(esc) - 1] = bit_alloc(x + strlen(W(snarf)) * FSIZE(wide), y, NULL, 1); /* text is always 1 bit deep */
+                       win->tty, win->snarf, *win->esc));
+    if (*win->esc > 0 && win->bitmaps[*win->esc - 1] == NULL) {
+      win->bitmaps
+          [*win->esc - 1]
+          = bit_alloc(x + strlen(win->snarf) * FSIZE(wide), y, NULL, 1); /* text is always 1 bit deep */
       dbgprintf('y', (stderr, "%s: STRING creating %d (%dx%d)\n",
-                         W(tty), *W(esc), x + strlen(W(snarf)) * FSIZE(wide), y));
+                         win->tty, *win->esc, x + strlen(win->snarf) * FSIZE(wide), y));
     }
-    if (*W(esc) > 0)
-      put_str(W(bitmaps)[*W(esc) - 1], x, y, W(font), W(op), W(snarf));
+    if (*win->esc > 0)
+      put_str(win->bitmaps[*win->esc - 1], x, y, win->font, win->op, win->snarf);
     else
-      put_str(window, x, y, W(font), W(op), W(snarf));
+      put_str(window, x, y, win->font, win->op, win->snarf);
   } break;
   /*}}}  */
   /*{{{  T_YANK    -- fill yank buffer*/
   case T_YANK:
     if (snarf)
       free(snarf);
-    snarf = W(snarf);
-    dbgprintf('y', (stderr, "%s: yanking [%s]\r\n", W(tty), snarf));
-    id_message = W(pid);
-    W(snarf) = NULL;
+    snarf = win->snarf;
+    dbgprintf('y', (stderr, "%s: yanking [%s]\r\n", win->tty, snarf));
+    id_message = win->pid;
+    win->snarf = NULL;
     for (win2 = active; win2 != NULL; win2 = win2->next)
       do_event(EVENT_SNARFED, win2, E_MAIN);
     break;
@@ -161,16 +166,16 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
   /*}}}  */
   /*{{{  T_SEND    -- send a message*/
   case T_SEND:
-    id = *W(esc);
+    id = *win->esc;
     if (message) {
       free(message);
       message = NULL;
     }
-    message = W(snarf);
-    id_message = W(pid);
-    W(snarf) = NULL;
-    dbgprintf('e', (stderr, "%s: sending [%s]\r\n", W(tty), W(snarf)));
-    dbgprintf('c', (stderr, "sending %d->%d: %s\r\n", W(pid), cnt == 0 ? 0 : id, message));
+    message = win->snarf;
+    id_message = win->pid;
+    win->snarf = NULL;
+    dbgprintf('e', (stderr, "%s: sending [%s]\r\n", win->tty, win->snarf));
+    dbgprintf('c', (stderr, "sending %d->%d: %s\r\n", win->pid, cnt == 0 ? 0 : id, message));
     for (win2 = active; win2 != NULL; win2 = win2->next)
       if (cnt == 0 || win2->pid == id) {
         do_event(EVENT_ACCEPT, win2, E_MAIN);
@@ -185,18 +190,18 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     FILE *fp = NULL;
     char filename[MAX_PATH];
     char buff[20];
-    char c = *W(snarf);
-    int bmi = W(esc)[0] - 1;
+    char c = *win->snarf;
+    int bmi = win->esc[0] - 1;
 
     /* make relative to icon directory */
 
-    if (c == '/' || (c == '.' && W(snarf)[1] == '/'))
-      strcpy(filename, W(snarf));
+    if (c == '/' || (c == '.' && win->snarf[1] == '/'))
+      strcpy(filename, win->snarf);
     else
-      sprintf(filename, "%s/%s", icon_dir, W(snarf));
+      sprintf(filename, "%s/%s", icon_dir, win->snarf);
 
-    if (W(flags) & W_DUPKEY)
-      sprintf(buff, "%c ", W(dup));
+    if (win->flags & W_DUPKEY)
+      sprintf(buff, "%c ", win->dup);
     else
       *buff = '\0';
 
@@ -204,14 +209,14 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
         && read_ok(filename)
         && (fp = fopen(filename, "r")) != NULL
         && (b = bitmapread(fp))) {
-      if (W(bitmaps[bmi]))
-        bit_destroy(W(bitmaps[bmi]));
-      W(bitmaps[bmi]) = b;
+      if (win->bitmaps[bmi])
+        bit_destroy(win->bitmaps[bmi]);
+      win->bitmaps[bmi] = b;
       sprintf(buff + strlen(buff), "%d %d %d\n", BIT_WIDE(b), BIT_HIGH(b), BIT_DEPTH(b));
     } else {
       strcat(buff, "\n");
     }
-    write(W(to_fd), buff, strlen(buff));
+    write(win->to_fd, buff, strlen(buff));
 
     if (fp != NULL)
       fclose(fp);
@@ -223,12 +228,12 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     BITMAP *b = 0;
     int exists; /* file already exists */
     int free_b = 0;
-    int num = *W(esc);
+    int num = *win->esc;
 
     switch (cnt) {
     case 1: /* off screen bitmap */
       if (num > 0)
-        b = W(bitmaps[num - 1]);
+        b = win->bitmaps[num - 1];
       else
         b = screen;
       break;
@@ -240,21 +245,21 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
       break;
     case 2: /* other guy's window */
       free_b++;
-      b = get_map(num, W(esc[1]));
+      b = get_map(num, win->esc[1]);
       break;
     }
 
     dbgprintf('y', (stderr, "saving...\n"));
-    if (b && W(snarf) && ((exists = access(W(snarf), 0)),
-                             write_ok(W(snarf)))
-        && (fp = fopen(W(snarf), "w")) != NULL) {
+    if (b && win->snarf && ((exists = access(win->snarf, 0)),
+                               write_ok(win->snarf))
+        && (fp = fopen(win->snarf, "w")) != NULL) {
       dbgprintf('y', (stderr, "saving bitmap %d x %d on %s (%d)\n",
-                         BIT_WIDE(b), BIT_HIGH(b), W(snarf), fileno(fp)));
+                         BIT_WIDE(b), BIT_HIGH(b), win->snarf, fileno(fp)));
       if (exists < 0) /* file just created */
         fchown(fileno(fp), getuid(), getgid());
       bitmapwrite(fp, b);
       fclose(fp);
-      dbgprintf('y', (stderr, "saved on %s\n", W(snarf)));
+      dbgprintf('y', (stderr, "saved on %s\n", win->snarf));
     }
 
     if (b && free_b)
@@ -263,25 +268,25 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
   /*}}}  */
   /*{{{  T_GIMME   -- send to process*/
   case T_GIMME:
-    if (W(snarf) && *W(snarf))
-      write_event(win, W(snarf), E_LIST_UP);
-    dbgprintf('y', (stderr, "%s: sending [%s]\r\n", W(tty), W(snarf)));
+    if (win->snarf && *win->snarf)
+      write_event(win, win->snarf, E_LIST_UP);
+    dbgprintf('y', (stderr, "%s: sending [%s]\r\n", win->tty, win->snarf));
     break;
   /*}}}  */
   /*{{{  T_GRUNCH  -- graphics scrunch mode (experimental)*/
   case T_GRUNCH:
-    if (W(snarf))
+    if (win->snarf)
       grunch(win, window);
-    dbgprintf('y', (stderr, "%s: grunching [%d]\r\n", W(tty), W(esc)[cnt]));
+    dbgprintf('y', (stderr, "%s: grunching [%d]\r\n", win->tty, win->esc[cnt]));
     break;
   /*}}}  */
   /*{{{  T_FONT    -- change a font name*/
   case T_FONT:
-    if (W(esc)[0] <= MAXFONT && W(esc)[0] > 0) {
-      if (fontlist[W(esc[0]) - 1])
-        free(fontlist[W(esc[0]) - 1]);
-      fontlist[W(esc[0]) - 1] = W(snarf);
-      W(snarf) = NULL;
+    if (win->esc[0] <= MAXFONT && win->esc[0] > 0) {
+      if (fontlist[win->esc[0] - 1])
+        free(fontlist[win->esc[0] - 1]);
+      fontlist[win->esc[0] - 1] = win->snarf;
+      win->snarf = NULL;
     }
     break;
   /*}}}  */
@@ -291,9 +296,9 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     break;
     /*}}}  */
   }
-  if (W(snarf)) {
-    free(W(snarf));
-    W(snarf) = 0;
+  if (win->snarf) {
+    free(win->snarf);
+    win->snarf = 0;
   }
 }
 /*}}}  */

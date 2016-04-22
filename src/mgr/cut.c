@@ -106,7 +106,7 @@ get_match(
 
   code = get_hash(map, x, y, w, h, 0); /* leaves char in glyph */
   for (entry = table[code]; entry; entry = entry->next) {
-    bit_blit(check, 32 - w, 0, w, h, BIT_SRC, W(font)->glyph[entry->value + entry->type * MAXGLYPHS], 0, 0);
+    bit_blit(check, 32 - w, 0, w, h, BIT_SRC, win->font->glyph[entry->value + entry->type * MAXGLYPHS], 0, 0);
     if (memcmp(data, data2, size) == 0) {
       return (entry->value);
     }
@@ -116,7 +116,7 @@ get_match(
 
   code = get_hash(map, x, y, w, h, 1); /* leaves char in glyph */
   for (entry = table[code]; entry; entry = entry->next) {
-    bit_blit(check, 32 - w, 0, w, h, BIT_SRC, W(font)->glyph[entry->value], 0, 0);
+    bit_blit(check, 32 - w, 0, w, h, BIT_SRC, win->font->glyph[entry->value], 0, 0);
     if (memcmp(data, data2, size) == 0) {
       return (entry->value);
     }
@@ -176,9 +176,9 @@ to_tabs(
 static void
 oops(WINDOW *win)
 {
-  CLEAR(W(window), BIT_NOT(BIT_DST));
+  CLEAR(win->window, BIT_NOT(BIT_DST));
   write(2, "\007", 1);
-  CLEAR(W(window), BIT_NOT(BIT_DST));
+  CLEAR(win->window, BIT_NOT(BIT_DST));
 }
 /*}}}  */
 
@@ -224,10 +224,10 @@ int cut(int mode)
 
   /* return immediately if window is not snarffable */
 
-  for (win = active; win != NULL; win = W(next))
+  for (win = active; win != NULL; win = win->next)
     if (mousein(mousex, mousey, win, 1))
       break;
-  if (!win || ((W(flags) & W_SNARFABLE) == 0))
+  if (!win || ((win->flags & W_SNARFABLE) == 0))
     return (0);
 
   /* initialize comparison registers */
@@ -239,16 +239,16 @@ int cut(int mode)
 
   /* build hash table */
 
-  if ((table = W(font)->table) == NULL) {
+  if ((table = win->font->table) == NULL) {
     dbgprintf('C', (stderr, "building cut table\n"));
-    table = W(font)->table = malloc(sizeof(struct entry) * H_SIZE);
+    table = win->font->table = malloc(sizeof(struct entry) * H_SIZE);
     (void)memset(table, 0, sizeof(struct entry) * H_SIZE);
 
-    count = W(font)->head.type & 0x80 ? 4 : 1;
+    count = win->font->head.type & 0x80 ? 4 : 1;
     for (j = 0; j < count; j++)
       for (i = FSIZE(start); i < FSIZE(start) + FSIZE(count); i++) {
-        if (W(font)->glyph[i + MAXGLYPHS * j] && i >= ' ') {
-          hcode = get_hash(W(font)->glyph[i + MAXGLYPHS * j], 0, 0, FSIZE(wide), FSIZE(high), 0);
+        if (win->font->glyph[i + MAXGLYPHS * j] && i >= ' ') {
+          hcode = get_hash(win->font->glyph[i + MAXGLYPHS * j], 0, 0, FSIZE(wide), FSIZE(high), 0);
           enter(hcode, i, j);
         }
       }
@@ -279,11 +279,11 @@ int cut(int mode)
 
   /* find extent of cut region */
 
-  col = (mousex - (W(x0) + W(borderwid) + W(text.x))) / FSIZE(wide);
-  maxcol = (W(text.wide) ? W(text.wide) : BIT_WIDE(W(window))) / FSIZE(wide);
-  row = (mousey - (W(y0) + W(borderwid) + W(text.y))) / FSIZE(high);
+  col = (mousex - (win->x0 + win->borderwid + win->text.x)) / FSIZE(wide);
+  maxcol = (win->text.wide ? win->text.wide : BIT_WIDE(win->window)) / FSIZE(wide);
+  row = (mousey - (win->y0 + win->borderwid + win->text.y)) / FSIZE(high);
 
-  if (W(flags) & W_SNARFLINES && !mode) { /* snarf lines only */
+  if (win->flags & W_SNARFLINES && !mode) { /* snarf lines only */
     dbgprintf('C', (stderr, "Cutting lines only\n"));
     col = 0;
     cols = maxcol;
@@ -292,9 +292,9 @@ int cut(int mode)
   dbgprintf('C', (stderr, "Cut got %d,%d  %d x %d\n", col, row, cols, rows));
 
   /* prepare src bitmap */
-  src = W(window);
+  src = win->window;
   if (BIT_DEPTH(src) > 1) { /* color display */
-    shrunk_src = bit_shrink(src, GETBCOLOR(W(style)));
+    shrunk_src = bit_shrink(src, GETBCOLOR(win->style));
     src = bit_create(shrunk_src,
         BIT_X(src), BIT_Y(src), BIT_WIDE(src), BIT_HIGH(src));
   } else
@@ -308,10 +308,10 @@ int cut(int mode)
 
     pntr += linelen / 2;
     opntr = pntr;
-    y = W(text.y) + row * FSIZE(high);
+    y = win->text.y + row * FSIZE(high);
     /* Search backwards */
     for (i = 0;; i--) {
-      x = W(text.x) + (col + i) * FSIZE(wide);
+      x = win->text.x + (col + i) * FSIZE(wide);
       c = get_match(win, src, x, y, FSIZE(wide), FSIZE(high));
       if (c == 0) {
         oops(win);
@@ -329,7 +329,7 @@ int cut(int mode)
       startpntr = pntr;
       pntr = opntr;
       for (i = 1; pntr < (line + linelen - 1); i++) {
-        x = W(text.x) + (col + i) * FSIZE(wide);
+        x = win->text.x + (col + i) * FSIZE(wide);
         c = get_match(win, src, x, y, FSIZE(wide), FSIZE(high));
         if (c == 0) {
           oops(win);
@@ -351,8 +351,8 @@ int cut(int mode)
   } else
     switch (rows) {
     case 0: /* 1 row */
-      y = W(text.y) + row * FSIZE(high);
-      for (x = W(text.x) + col * FSIZE(wide), i = 0; i < cols; i++, x += FSIZE(wide)) {
+      y = win->text.y + row * FSIZE(high);
+      for (x = win->text.x + col * FSIZE(wide), i = 0; i < cols; i++, x += FSIZE(wide)) {
         c = get_match(win, src, x, y, FSIZE(wide), FSIZE(high));
         *pntr++ = c ? c : (errors++, C_NOCHAR);
       }
@@ -360,15 +360,15 @@ int cut(int mode)
         pntr = fixline(line, pntr);
       break;
     case 1: /* 2 rows */
-      y = W(text.y) + row * FSIZE(high);
-      for (x = W(text.x) + col * FSIZE(wide), i = 0; i < maxcol; i++, x += FSIZE(wide)) {
+      y = win->text.y + row * FSIZE(high);
+      for (x = win->text.x + col * FSIZE(wide), i = 0; i < maxcol; i++, x += FSIZE(wide)) {
         c = get_match(win, src, x, y, FSIZE(wide), FSIZE(high));
         *pntr++ = c ? c : (errors++, C_NOCHAR);
       }
       pntr = fixline(line, pntr);
 
       y += FSIZE(high);
-      for (x = W(text.x), i = 0; i < col + cols; i++, x += FSIZE(wide)) {
+      for (x = win->text.x, i = 0; i < col + cols; i++, x += FSIZE(wide)) {
         c = get_match(win, src, x, y, FSIZE(wide), FSIZE(high));
         *pntr++ = c ? c : (errors++, C_NOCHAR);
       }
@@ -377,8 +377,8 @@ int cut(int mode)
       break;
 
     default: /* > 2 rows */
-      y = W(text.y) + row * FSIZE(high);
-      for (x = W(text.x) + col * FSIZE(wide), i = 0; i < maxcol; i++, x += FSIZE(wide)) {
+      y = win->text.y + row * FSIZE(high);
+      for (x = win->text.x + col * FSIZE(wide), i = 0; i < maxcol; i++, x += FSIZE(wide)) {
         c = get_match(win, src, x, y, FSIZE(wide), FSIZE(high));
         *pntr++ = c ? c : (errors++, C_NOCHAR);
       }
@@ -386,7 +386,7 @@ int cut(int mode)
 
       for (j = 0; j < rows - 1; j++) {
         y += FSIZE(high);
-        for (x = W(text.x), i = 0; i < maxcol; i++, x += FSIZE(wide)) {
+        for (x = win->text.x, i = 0; i < maxcol; i++, x += FSIZE(wide)) {
           c = get_match(win, src, x, y, FSIZE(wide), FSIZE(high));
           *pntr++ = c ? c : (errors++, C_NOCHAR);
         }
@@ -394,7 +394,7 @@ int cut(int mode)
       }
 
       y += FSIZE(high);
-      for (x = W(text.x), i = 0; i < col + cols; i++, x += FSIZE(wide)) {
+      for (x = win->text.x, i = 0; i < col + cols; i++, x += FSIZE(wide)) {
         c = get_match(win, src, x, y, FSIZE(wide), FSIZE(high));
         *pntr++ = c ? c : (errors++, C_NOCHAR);
       }
@@ -416,11 +416,11 @@ int cut(int mode)
     dbgprintf('C', (stderr, "snarfed %d chars, %d errors\n", count, errors));
     dbgprintf('C', (stderr, "snarfed [%s]\n", line));
 
-    if ((!(W(flags) & W_SNARFHARD) && errors > 0) || 2 * errors > count) {
+    if ((!(win->flags & W_SNARFHARD) && errors > 0) || 2 * errors > count) {
       oops(win);
       count = 0;
     } else {
-      if (W(flags) & W_SNARFTABS)
+      if (win->flags & W_SNARFTABS)
         to_tabs(col, line, line);
 
       if (snarf && button < BUTTON_SYS) { /* add to cut buffer */
@@ -438,8 +438,8 @@ int cut(int mode)
         snarf = line;
 
       /* send snarf events (if any) */
-      id_message = W(pid);
-      for (win = active; win != NULL; win = W(next))
+      id_message = win->pid;
+      for (win = active; win != NULL; win = win->next)
         do_event(EVENT_SNARFED, win, E_MAIN);
     }
   }

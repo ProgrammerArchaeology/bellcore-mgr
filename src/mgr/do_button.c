@@ -63,20 +63,20 @@ void _quit(void)
 
   /* fix pttys */
   if (geteuid() < 2)
-    for (win = active; win != NULL; win = W(next)) {
-      if (W(pid) > 1)
-        killpg(W(pid), SIGHUP);
-      chmod(W(tty), 0666);
-      chown(W(tty), 0, 0);
+    for (win = active; win != NULL; win = win->next) {
+      if (win->pid > 1)
+        killpg(win->pid, SIGHUP);
+      chmod(win->tty, 0666);
+      chown(win->tty, 0, 0);
     }
 
 /* fix utmp file */
 
 #ifdef WHO
   close(getdtablesize() - 1); /* make sure there are enough fd's left */
-  for (win = active; win != NULL; win = W(next))
-    if (W(tty))
-      rm_utmp(W(tty));
+  for (win = active; win != NULL; win = win->next)
+    if (win->tty)
+      rm_utmp(win->tty);
 #endif
 
   CLEAR(screen, BIT_CLR);
@@ -93,8 +93,8 @@ void redraw(void)
   WINDOW *win;
 
   dbgprintf('b', (stderr, "\r\n\tREDRAW\r\n"));
-  for (win = active; win != NULL; win = W(next)) {
-    if (W(flags) & W_ACTIVE) {
+  for (win = active; win != NULL; win = win->next) {
+    if (win->flags & W_ACTIVE) {
       save_win(win);
       do_event(EVENT_REDRAW, win, E_MAIN);
     }
@@ -102,7 +102,7 @@ void redraw(void)
 
   erase_win(screen);
   if (active) {
-    for (win = active->prev; win != active; win = W(prev))
+    for (win = active->prev; win != active; win = win->prev)
       restore_win(win);
     restore_win(active);
   }
@@ -116,15 +116,15 @@ static void lock_screen(void)
   /* Mouse is off from mgr:main */
   /* cursor and active border off because of button handling */
 
-  for (win = active; win != 0; win = W(next))
-    if (W(flags) & W_ACTIVE)
+  for (win = active; win != 0; win = win->next)
+    if (win->flags & W_ACTIVE)
       save_win(win);
 
   copyright(screen, pwd ? pwd->pw_passwd : "");
 
   erase_win(screen);
   if (active) {
-    for (win = active->prev; win != active; win = W(prev))
+    for (win = active->prev; win != active; win = win->prev)
       restore_win(win);
     restore_win(active);
   }
@@ -261,7 +261,7 @@ void do_button(int button)
     if (mousex < STRIPE)
       win = NULL;
     else
-      for (win = active; win != NULL; win = W(next))
+      for (win = active; win != NULL; win = win->next)
         if (mousein(mousex, mousey, win, 1))
           break;
 
@@ -309,7 +309,7 @@ void do_button(int button)
       do_button(0);
     } else {
       /* bring obscured window to the top */
-      dbgprintf('b', (stderr, "activating: %s\r\n", W(tty)));
+      dbgprintf('b', (stderr, "activating: %s\r\n", win->tty));
       if (active) {
         ACTIVE_OFF();
         cursor_off();

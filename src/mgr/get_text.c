@@ -147,12 +147,12 @@ int get_text(
     button = move_mouse(screen, mouse, &mousex, &mousey, 1);
     return (0);
   } else
-    text = W(text);
+    text = win->text;
 
-  left = W(x0) + W(borderwid) + text.x; /* edge of window (pixels) */
-  top = W(y0) + W(borderwid) + text.y;  /* top of window (pixels) */
-  cols = (text.wide ? text.wide : BIT_WIDE(W(window))) / FSIZE(wide);
-  rows = (text.wide ? text.high : BIT_HIGH(W(window))) / FSIZE(high);
+  left = win->x0 + win->borderwid + text.x; /* edge of window (pixels) */
+  top = win->y0 + win->borderwid + text.y;  /* top of window (pixels) */
+  cols = (text.wide ? text.wide : BIT_WIDE(win->window)) / FSIZE(wide);
+  rows = (text.wide ? text.high : BIT_HIGH(win->window)) / FSIZE(high);
   gx = FSIZE(wide); /* char width (pixels) */
   gy = FSIZE(high); /* char height (pixels) */
 

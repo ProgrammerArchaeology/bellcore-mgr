@@ -43,21 +43,21 @@ void get_info(
     BITMAP *text    /* window's text region */
     )
 {
-  int cnt = W(esc_cnt); /* # of leading ESC #'s */
-  int count;            /* whatever */
-  char coords[1024];    /* space for return value */
-  char *start = coords; /* start of reply */
-  WINDOW *win2;         /* generic window pntr */
+  int cnt = win->esc_cnt; /* # of leading ESC #'s */
+  int count;              /* whatever */
+  char coords[1024];      /* space for return value */
+  char *start = coords;   /* start of reply */
+  WINDOW *win2;           /* generic window pntr */
 
-  if (W(flags) & W_DUPKEY) {
-    sprintf(coords, "%c ", W(dup));
+  if (win->flags & W_DUPKEY) {
+    sprintf(coords, "%c ", win->dup);
     start += strlen(coords);
   } else
     *coords = '\0';
 
   if (cnt == 1) { /* info about spot */
     for (win2 = active; win2 != NULL; win2 = win2->next)
-      if (mousein(W(esc)[0], W(esc)[1], win2, 1))
+      if (mousein(win->esc[0], win->esc[1], win2, 1))
         break;
     if (win2 != NULL)
       sprintf(start, "%s %s %d %d\n",
@@ -65,19 +65,19 @@ void get_info(
           win2->tty + strlen(win2->tty) - 2, win2->num, win2->pid);
     else
       sprintf(start, "\n");
-    Write(W(to_fd), coords, strlen(coords));
+    Write(win->to_fd, coords, strlen(coords));
     return;
   }
 
-  dbgprintf('i', (stderr, "%s: getting info %d\r\n", W(tty), *W(esc)));
-  switch (W(esc)[0]) {
+  dbgprintf('i', (stderr, "%s: getting info %d\r\n", win->tty, *win->esc));
+  switch (win->esc[0]) {
   case G_TERMCAP: /* send termcap entry back to shell */
   {
     int lines = T_HIGH / FSIZE(high);
     int cols = T_WIDE / FSIZE(wide);
 
     sprintf(start, "px|mgr|mgr-%d|mgr terminal emulator:%s:li#%d:co#%d:bs:km:cl=^L:ta=^I:ce=\\E%c:cd=\\E%c:cm=\\E%%r%%d%c%%d%c:cs=\\E%%d%c%%d%c:al=\\E%c:dl=\\E%c:AL=\\E%%d%c:DL=\\E%%d%c:ic=\\E%c:dc=\\E%c:IC=\\E%%d%c:DC=\\E%%d%c:up=\\E%c:do=\\E%c:nd=\\E%c:hu=\\E1%c2%c:hd=\\E1%c2%c:ku=\\E[A:kd=\\E[B:kr=\\E[C:kl=\\E[D:so=\\E%c:se=\\E%c:us=\\E4%c:ue=\\E0%c:md=\\E2%c:mr=\\E1%c:me=\\E0%c:RA=\\E%d%c:SA=\\E%d%c:vs=\\E%d%c:vi=\\E%d%c:ve=\\E%c:\n",
-        lines, (W(flags) & W_NOWRAP) ? ".am" : "am", lines, cols,
+        lines, (win->flags & W_NOWRAP) ? ".am" : "am", lines, cols,
         E_CLEAREOL, E_CLEAREOS,
         E_SEP1, E_CUP, E_SEP1, E_TEXTREGION,
         E_ADDLINE, E_DELETELINE, E_ADDLINE, E_DELETELINE,
@@ -95,40 +95,40 @@ void get_info(
     break;
   case G_FONT: /* font wide, high, # */
   {
-    int id = W(font)->ident;
+    int id = win->font->ident;
     sprintf(start, "%d %d %d %s\n", FSIZE(wide),
         FSIZE(high), id, id > 0 ? fontlist[id - 1] : "default");
   } break;
   case G_CURSOR: /* x,y gx,gy cursor_type */
     sprintf(start, "%d %d %d %d %d\n",
-        W(x) / FSIZE(wide),
-        W(y) / FSIZE(high) - 1,
-        W(gx), W(gy),
-        W(curs_type));
+        win->x / FSIZE(wide),
+        win->y / FSIZE(high) - 1,
+        win->gx, win->gy,
+        win->curs_type);
     break;
   case G_TEXT: /* text region size: x,y,wide,high */
     sprintf(start, "%d %d %d %d\n",
-        W(text.x), W(text.y), W(text.wide), W(text.high));
+        win->text.x, win->text.y, win->text.wide, win->text.high);
     break;
   case G_MOUSE: /* mouse coordinates */
     sprintf(start, "%d %d %d\n", mousex, mousey, RPT_BUTTON());
     break;
   case G_MOUSE2: /* massaged coordinates */
-    if (W(flags) & W_ABSCOORDS)
-      sprintf(start, "%d %d %d\n", mousex - W(x0), mousey - W(y0),
+    if (win->flags & W_ABSCOORDS)
+      sprintf(start, "%d %d %d\n", mousex - win->x0, mousey - win->y0,
           RPT_BUTTON());
     else
       sprintf(start, "%ld %ld %d\n",
-          (mousex - W(x0)) * GMAX / BIT_WIDE(W(window)),
-          (mousey - W(y0)) * GMAX / BIT_HIGH(W(window)),
+          (mousex - win->x0) * GMAX / BIT_WIDE(win->window),
+          (mousey - win->y0) * GMAX / BIT_HIGH(win->window),
           RPT_BUTTON());
     break;
   case G_COORDS: /* window coords */
-    sprintf(start, "%d %d %d %d\n", W(x0), W(y0),
+    sprintf(start, "%d %d %d %d\n", win->x0, win->y0,
         WIDE, HIGH);
     break;
   case G_STATUS: /* window status */
-    sprintf(start, "%c\n", W(flags) & W_ACTIVE
+    sprintf(start, "%c\n", win->flags & W_ACTIVE
             ? C_EXPOSED
             : C_OBSCURED);
     if (win == active)
@@ -139,7 +139,7 @@ void get_info(
   {
     char status;
     for (win2 = active; win2 != NULL; win2 = win2->next) {
-      if (*W(esc) == G_ALLMINE && win2->main != W(main))
+      if (*win->esc == G_ALLMINE && win2->main != win->main)
         continue;
       status = win2->flags & W_ACTIVE ? C_EXPOSED : C_OBSCURED;
       if (win2 == win)
@@ -154,7 +154,7 @@ void get_info(
           win2->num,
           status,
           win2->setid);
-      Write(W(to_fd), coords, strlen(coords));
+      Write(win->to_fd, coords, strlen(coords));
       *coords = '\0'; /* output already processed */
       start = coords;
     }
@@ -168,7 +168,7 @@ void get_info(
 
         sprintf(start, "%d.%d %d %s\n",
             win2->pid, win2->num, (int)strlen(str), str);
-        Write(W(to_fd), coords, strlen(coords));
+        Write(win->to_fd, coords, strlen(coords));
         dbgprintf('i', (stderr, "    got %s\r\n", str));
         *coords = '\0'; /* output already processed */
       }
@@ -187,17 +187,17 @@ void get_info(
         BIT_DEPTH(screen));
     break;
   case G_ID: /* client window id */
-    for (count = 0, win2 = W(main); win2; win2 = win2->alt)
+    for (count = 0, win2 = win->main; win2; win2 = win2->alt)
       count++;
-    sprintf(start, "%d %d\n", W(num), count);
+    sprintf(start, "%d %d\n", win->num, count);
     break;
   case G_FLAGS: /* window flags */
     sprintf(coords, "%0lx %d %d %d %d\n",
-        W(flags),
-        GETFCOLOR(W(style)),
-        GETBCOLOR(W(style)),
-        GETFCOLOR(W(op)),
-        GETBCOLOR(W(op)));
+        win->flags,
+        GETFCOLOR(win->style),
+        GETBCOLOR(win->style),
+        GETFCOLOR(win->op),
+        GETBCOLOR(win->op));
 
     break;
 #ifdef OBSOLETE
@@ -223,9 +223,9 @@ void get_info(
   }
 
   if (strlen(coords))
-    Write(W(to_fd), coords, strlen(coords));
+    Write(win->to_fd, coords, strlen(coords));
   else
-    Write(W(to_fd), "\n", 1);
+    Write(win->to_fd, "\n", 1);
   dbgprintf('i', (stderr, "  sending (%d) [%s]\r\n", strlen(coords), coords));
 }
 /*}}}  */

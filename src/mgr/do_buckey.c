@@ -68,7 +68,7 @@ void topwin(int winsetid, int winnum)
 		we can cycle through a set.
 	*/
   for (win = active->prev; win != active; win = win->prev) {
-    if (winsetid == W(setid) && (winnum == -1 || winnum == W(num))) {
+    if (winsetid == win->setid && (winnum == -1 || winnum == win->num)) {
       do_it(win);
       return;
     }
@@ -96,7 +96,7 @@ int do_buckey(int c)
 #ifdef DEBUG
   WINDOW *win, *win2;
   static char debugflag = 0;
-  extern char *debug_flags[];
+  extern const char *const debug_flags[];
 
   dbgprintf('b', (stderr, "Buckey %c\n", c & 0177));
 
@@ -358,27 +358,26 @@ int do_buckey(int c)
       break;
     for (win = active; win != NULL; win = win->next) {
       fprintf(stderr, "%s: %d,%d  %d,%d num(%d) {%s}\r\n",
-          W(tty), W(x0), W(y0),
-          BIT_WIDE(W(window)), BIT_HIGH(W(window)), W(num),
-          c == 'I' ? print_ps(W(tty)) : "");
-      fprintf(stderr, "  flags: %s\n", print_flags(W(flags)));
-      fprintf(stderr, "  events: %s\n", print_events(W(event_mask)));
+          win->tty, win->x0, win->y0,
+          BIT_WIDE(win->window), BIT_HIGH(win->window), win->num,
+          c == 'I' ? print_ps(win->tty) : "");
+      fprintf(stderr, "  flags: %s\n", print_flags(win->flags));
+      fprintf(stderr, "  events: %s\n", print_events(win->event_mask));
       fprintf(stderr, "  cursors: %d,%d  %d,%d  function %d\r\n",
-          W(x), W(y), W(gx), W(gy), W(op));
-      fprintf(stderr, "  fd's: %d,<->%d, pid(%d)", W(from_fd),
-          W(to_fd), W(pid));
-      if (W(main) && strcmp(W(tty), W(main)->tty) != 0)
-        fprintf(stderr, " main(%s)", W(main)->tty);
-      if
-        W(alt)
-      fprintf(stderr, " alt(%s)", W(alt)->tty);
+          win->x, win->y, win->gx, win->gy, win->op);
+      fprintf(stderr, "  fd's: %d,<->%d, pid(%d)", win->from_fd,
+          win->to_fd, win->pid);
+      if (win->main && strcmp(win->tty, win->main->tty) != 0)
+        fprintf(stderr, " main(%s)", win->main->tty);
+      if (win->alt)
+        fprintf(stderr, " alt(%s)", win->alt->tty);
       fprintf(stderr, "\r\n");
-      if (W(snarf))
-        fprintf(stderr, "  snarf (%d) [%.30s...]\r\n", (int)strlen(W(snarf)),
-            W(snarf));
-      if (W(stack)) {
+      if (win->snarf)
+        fprintf(stderr, "  snarf (%d) [%.30s...]\r\n", (int)strlen(win->snarf),
+            win->snarf);
+      if (win->stack) {
         fprintf(stderr, "  stacks:\r\n");
-        for (win2 = W(stack); win2; win2 = win2->stack)
+        for (win2 = win->stack; win2; win2 = win2->stack)
           fprintf(stderr, "\t0x%x, events: 0x%x\r\n",
               win2->code, (unsigned)win2->event_mask);
       }

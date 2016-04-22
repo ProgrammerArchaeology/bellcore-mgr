@@ -48,12 +48,12 @@ insert_win(WINDOW *win)
   }
 
   if (active) {
-    W(prev) = active->prev;
+    win->prev = active->prev;
     active->prev = win;
-    W(next) = active;
+    win->next = active;
   } else {
-    W(prev) = win;
-    W(next) = NULL;
+    win->prev = win;
+    win->next = NULL;
   }
   return (win);
 }
@@ -94,8 +94,8 @@ int next_windowset_id(void)
   for (cp = list; cp < &list[MAXWIN + 2]; cp++)
     *cp = 0;
 
-  for (win = active; win != NULL; win = W(next))
-    list[W(setid)] = 1;
+  for (win = active; win != NULL; win = win->next)
+    list[win->setid] = 1;
 
   /*	There is no window set ID zero.
       */
@@ -114,64 +114,66 @@ int setup_window(WINDOW *win, struct font *curr_font, int x, int y, int dx, int 
   alignwin(screen, &x, &dx, SUM_BDR);
 #endif
 
-  W(font) = curr_font;
-  W(x) = 0;
-  W(y) = curr_font->head.high;
-  W(esc_cnt) = 0;
-  W(esc[0]) = 0;
-  W(flags) = W_ACTIVE | init_flags;
+  win->font = curr_font;
+  win->x = 0;
+  win->y = curr_font->head.high;
+  win->esc_cnt = 0;
+  win->esc[0] = 0;
+  win->flags = W_ACTIVE | init_flags;
 #ifdef CUT
-  W(flags) |= W_SNARFABLE;
+  win->flags |= W_SNARFABLE;
 #endif
-  W(style) = BIT_SRC;
-  W(curs_type) = CS_BLOCK;
-  W(x0) = x;
-  W(y0) = y;
-  W(border) = bit_create(screen, x, y, dx, dy);
-  W(window) = bit_create(W(border), SUM_BDR, SUM_BDR, dx - SUM_BDR * 2, dy - SUM_BDR * 2);
+  win->style = BIT_SRC;
+  win->curs_type = CS_BLOCK;
+  win->x0 = x;
+  win->y0 = y;
+  win->border = bit_create(screen, x, y, dx, dy);
+  win->window = bit_create(win->border, SUM_BDR, SUM_BDR, dx - SUM_BDR * 2, dy - SUM_BDR * 2);
 
-  W(borderwid) = SUM_BDR;
-  W(outborderwid) = OUT_BDR;
+  win->borderwid = SUM_BDR;
+  win->outborderwid = OUT_BDR;
 
-  W(text.x) = 0;
-  W(text.y) = 0;
-  W(text.wide) = 0;
-  W(text.high) = 0;
+  win->text.x = 0;
+  win->text.y = 0;
+  win->text.wide = 0;
+  win->text.high = 0;
 
-  W(bitmap) = NULL;
+  win->bitmap = NULL;
   for (i = 0; i < MAXBITMAPS; i++)
-    W(bitmaps)
-    [i] = NULL;
+    win->bitmaps
+        [i]
+        = NULL;
 
-  W(cursor) = &mouse_arrow;
-  W(save) = NULL;
-  W(stack) = NULL;
-  W(main) = win;
-  W(alt) = NULL;
-  W(esc_cnt) = 0;
-  W(esc[0]) = 0;
-  W(clip_list) = NULL;
+  win->cursor = &mouse_arrow;
+  win->save = NULL;
+  win->stack = NULL;
+  win->main = win;
+  win->alt = NULL;
+  win->esc_cnt = 0;
+  win->esc[0] = 0;
+  win->clip_list = NULL;
 
   for (i = 0; i < MAXMENU; i++)
-    W(menus[i]) = NULL;
+    win->menus[i] = NULL;
 
-  W(menu[0]) = W(menu[1]) = -1;
-  W(event_mask) = 0;
+  win->menu[0] = win->menu[1] = -1;
+  win->event_mask = 0;
 
   for (i = 0; i < MAXEVENTS; i++)
-    W(events)
-    [i] = NULL;
+    win->events
+        [i]
+        = NULL;
 
-  W(snarf) = NULL;
-  W(gx) = 0;
-  W(gy) = 0;
-  W(op) = BIT_OR;
-  W(max) = 0;
-  W(current) = 0;
-  strcpy(W(tty), last_tty());
-  W(num) = 0;
+  win->snarf = NULL;
+  win->gx = 0;
+  win->gy = 0;
+  win->op = BIT_OR;
+  win->max = 0;
+  win->current = 0;
+  strcpy(win->tty, last_tty());
+  win->num = 0;
   clip_bad(win); /* invalidate clip lists */
-  return (W(border) && W(window));
+  return (win->border && win->window);
 }
 /*}}}  */
 /*{{{  make_window -- draw the window on the screen*/
@@ -221,27 +223,27 @@ int make_window(BITMAP *screen, int x, int y, int dx, int dy, int fnt, char *sta
 
   set_covered(win);
   border(win, BORDER_THIN);
-  CLEAR(W(window), PUTOP(BIT_CLR, W(style)));
+  CLEAR(win->window, PUTOP(BIT_CLR, win->style));
 
   SETMOUSEICON(DEFAULT_MOUSE_CURSOR); /* because active win chg */
 
 /* set up file descriptor modes */
 
 #ifndef FNDELAY
-  if (fcntl(W(from_fd), F_SETFL, fcntl(W(from_fd), F_GETFL, 0) | O_NDELAY) == -1)
+  if (fcntl(win->from_fd, F_SETFL, fcntl(win->from_fd, F_GETFL, 0) | O_NDELAY) == -1)
 #else
-  if (fcntl(W(from_fd), F_SETFL, fcntl(W(from_fd), F_GETFL, 0) | FNDELAY) == -1)
+  if (fcntl(win->from_fd, F_SETFL, fcntl(win->from_fd, F_GETFL, 0) | FNDELAY) == -1)
 #endif
-    fprintf(stderr, "%s: fcntl failed for fd %d\n", W(tty), W(from_fd));
+    fprintf(stderr, "%s: fcntl failed for fd %d\n", win->tty, win->from_fd);
 
-  FD_SET(W(to_fd), &mask);
+  FD_SET(win->to_fd, &mask);
   set_size(win);
 
   /* send initial string (if any) */
 
   if (start && *start) {
     dbgprintf('n', (stderr, "Sending initial string: [%s]\n", start));
-    Write(W(to_fd), start, strlen(start));
+    Write(win->to_fd, start, strlen(start));
   }
   return (0);
 }
@@ -263,13 +265,13 @@ int create_window(int x, int y, int dx, int dy, int font_num, char **argv)
     return (-1);
   }
 
-  if ((W(pid) = get_command(argv, &W(from_fd))) < 0) {
+  if ((win->pid = get_command(argv, &win->from_fd)) < 0) {
     free(win);
     fprintf(stderr, "mgr: Can't get a pty\n");
     return (-1);
   }
-  W(to_fd) = W(from_fd);
-  W(setid) = next_windowset_id();
+  win->to_fd = win->from_fd;
+  win->setid = next_windowset_id();
 
   active = insert_win(win);
 
@@ -296,19 +298,19 @@ half_window(int x, int y, int dx, int dy, int font_num)
     return (NULL);
   }
 
-  if ((tty = half_open(&W(from_fd))) == NULL) {
+  if ((tty = half_open(&win->from_fd)) == NULL) {
     free(win);
     fprintf(stderr, "Can't get a pty\n");
     return (NULL);
   }
-  W(to_fd) = W(from_fd);
-  W(setid) = next_windowset_id();
+  win->to_fd = win->from_fd;
+  win->setid = next_windowset_id();
 
   active = insert_win(win);
 
   make_window(screen, x, y, dx, dy, font_num, "");
-  W(pid) = 1; /* wont get killed */
-  W(flags) |= W_NOKILL;
+  win->pid = 1; /* wont get killed */
+  win->flags |= W_NOKILL;
 
   return (tty);
 }

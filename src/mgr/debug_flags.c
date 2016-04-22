@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 
-char *debug_flags[] = {
+const char *const debug_flags[] = {
   /*	"*	fetching and saving bitmaps", */
   "A	Window alignment",
   "B	creating and destroying bitmaps",

@@ -39,43 +39,43 @@ void win_make(WINDOW *win, int indx)
 /* window issuing make-call */
 /* current index into char string (yuk!) */
 {
-  int *p = W(esc); /* array of ESC digits */
+  int *p = win->esc; /* array of ESC digits */
   char buff[20];
   WINDOW *win2 = win;
 
-  switch (W(esc_cnt)) {
+  switch (win->esc_cnt) {
   case 1: /*  destroy the window */
-    dbgprintf('N', (stderr, "%s: destroying %d\n", W(tty), p[0]));
-    if (p[0] <= 0 || W(main)->alt == NULL) {
+    dbgprintf('N', (stderr, "%s: destroying %d\n", win->tty, p[0]));
+    if (p[0] <= 0 || win->main->alt == NULL) {
       break;
     }
-    for (win = W(main)->alt; win != NULL; win = W(alt)) {
-      if (W(num) == p[0])
+    for (win = win->main->alt; win != NULL; win = win->alt) {
+      if (win->num == p[0])
         break;
     }
     if (win != NULL)
-      W(flags) |= W_DIED;
+      win->flags |= W_DIED;
 
     break;
 
   case 0: /* goto a new window */
-    if (W(num) == p[0] || W(main)->alt == NULL) {
+    if (win->num == p[0] || win->main->alt == NULL) {
       break;
     }
-    for (win = W(main); win != NULL; win = W(alt)) {
-      if (W(num) == p[0])
+    for (win = win->main; win != NULL; win = win->alt) {
+      if (win->num == p[0])
         break;
     }
 
     /* move contents of shell buffer to new window */
 
     if (win != NULL) {
-      W(from_fd) = W(to_fd);
+      win->from_fd = win->to_fd;
       win2->from_fd = 0;
-      W(max) = win2->max - win2->current - indx - 1;
-      (void)memcpy(W(buff), win2->buff + win2->current + indx + 1, W(max));
-      W(current) = 0;
-      dbgprintf('N', (stderr, "%s: xfer %d\r\n", W(tty), W(max)));
+      win->max = win2->max - win2->current - indx - 1;
+      (void)memcpy(win->buff, win2->buff + win2->current + indx + 1, win->max);
+      win->current = 0;
+      dbgprintf('N', (stderr, "%s: xfer %d\r\n", win->tty, win->max));
       set_size(win);
     }
     break;
@@ -84,7 +84,7 @@ void win_make(WINDOW *win, int indx)
     p[4] = -1;
   /* no break */
   case 4: /* new window + specify window number */
-    dbgprintf('N', (stderr, "%s: making alternate window\n", W(tty)));
+    dbgprintf('N', (stderr, "%s: making alternate window\n", win->tty));
     if (check_window(p[0], p[1], p[2], p[3], -1) == 0) {
       if (active->flags & W_DUPKEY)
         sprintf(buff, "%c \n", active->dup);
@@ -113,16 +113,16 @@ void win_make(WINDOW *win, int indx)
     ACTIVE_ON();
     cursor_on();
 
-    dbgprintf('N', (stderr, "%s: window created\n", W(tty)));
+    dbgprintf('N', (stderr, "%s: window created\n", win->tty));
     /* fix pointer chain */
 
-    active->to_fd = W(to_fd);
-    active->main = W(main);
-    active->pid = W(pid);
-    active->setid = W(setid);
+    active->to_fd = win->to_fd;
+    active->main = win->main;
+    active->pid = win->pid;
+    active->setid = win->setid;
     strcpy(active->tty, active->main->tty);
     active->from_fd = 0;
-    active->alt = W(main)->alt;
+    active->alt = win->main->alt;
     active->main
         ->alt
         = active;
@@ -134,8 +134,8 @@ void win_make(WINDOW *win, int indx)
       active->num = 1;
 
     dbgprintf('N', (stderr, "%s: created num %d\r\n", active->tty, active->num));
-    if (W(flags) & W_DUPKEY)
-      sprintf(buff, "%c %d\n", W(dup), active->num);
+    if (win->flags & W_DUPKEY)
+      sprintf(buff, "%c %d\n", win->dup, active->num);
     else
       sprintf(buff, "%d\n", active->num);
     write(active->to_fd, buff, strlen(buff));

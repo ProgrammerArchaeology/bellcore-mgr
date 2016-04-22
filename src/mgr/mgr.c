@@ -97,11 +97,11 @@ sig_child(int sig)
 #endif
   if (someonedied) {
     win = active;
-    for (win = active; win != NULL; win = W(next)) {
-      if (W(pid) == pid && !(W(flags) & W_NOKILL) && kill(W(pid), 0) != 0) {
-        W(flags) |= W_DIED;
+    for (win = active; win != NULL; win = win->next) {
+      if (win->pid == pid && !(win->flags & W_NOKILL) && kill(win->pid, 0) != 0) {
+        win->flags |= W_DIED;
         dbgprintf('d', (stderr, "window %d, tty %s, pid %d\r\n",
-                           W(num), W(tty), W(pid)));
+                           win->num, win->tty, win->pid));
       }
     }
   }
@@ -462,12 +462,12 @@ int main(int argc, char **argv)
     /* see if any window died */
 
     for (win = active; win != NULL;)
-      if (W(flags) & W_DIED) {
-        dbgprintf('d', (stderr, "Destroying %s-%d\r\n", W(tty), W(num)));
+      if (win->flags & W_DIED) {
+        dbgprintf('d', (stderr, "Destroying %s-%d\r\n", win->tty, win->num));
         destroy(win);
         win = active;
       } else
-        win = W(next);
+        win = win->next;
 
     /* wait for input */
 
@@ -524,27 +524,27 @@ int main(int argc, char **argv)
 
     /* process shell output */
 
-    for (win = active; win != NULL; win = W(next)) {
+    for (win = active; win != NULL; win = win->next) {
       /* read data into buffer */
 
-      if (W(from_fd) && FD_ISSET(W(from_fd), &reads)
-          && !FD_ISSET(W(from_fd), &to_poll)) {
-        W(current) = 0;
-        if ((W(max) = read(W(from_fd), W(buff), shellbuf)) > 0) {
-          FD_SET(W(from_fd), &to_poll);
-          dbgprintf('p', (stderr, "%s: reading %d [%.*s]\r\n", W(tty),
-                             W(max), W(max), W(buff)));
+      if (win->from_fd && FD_ISSET(win->from_fd, &reads)
+          && !FD_ISSET(win->from_fd, &to_poll)) {
+        win->current = 0;
+        if ((win->max = read(win->from_fd, win->buff, shellbuf)) > 0) {
+          FD_SET(win->from_fd, &to_poll);
+          dbgprintf('p', (stderr, "%s: reading %d [%.*s]\r\n", win->tty,
+                             win->max, win->max, win->buff));
         } else {
-          FD_CLR(W(from_fd), &to_poll);
+          FD_CLR(win->from_fd, &to_poll);
 #ifdef KILL
-          if (W(flags) & W_NOKILL)
-            W(flags) |= W_DIED;
+          if (win->flags & W_NOKILL)
+            win->flags |= W_DIED;
 #endif
 #ifdef DEBUG
           if (debug) {
             fprintf(stderr, "%s: read failed after select on fd(%d) returning %d\r\n",
-                W(tty), W(from_fd), W(max));
-            perror(W(tty));
+                win->tty, win->from_fd, win->max);
+            perror(win->tty);
           }
 #endif
         }
@@ -552,9 +552,9 @@ int main(int argc, char **argv)
 
       /* check for window to auto-expose */
 
-      if (W(from_fd) && FD_ISSET(W(from_fd), &to_poll)
-          && W(flags) & W_EXPOSE && !(W(flags) & W_ACTIVE)) {
-        dbgprintf('o', (stderr, "%s: activating self\r\n", W(tty)));
+      if (win->from_fd && FD_ISSET(win->from_fd, &to_poll)
+          && win->flags & W_EXPOSE && !(win->flags & W_ACTIVE)) {
+        dbgprintf('o', (stderr, "%s: activating self\r\n", win->tty));
         MOUSE_OFF(screen, mousex, mousey);
         cursor_off();
         ACTIVE_OFF();
@@ -566,28 +566,28 @@ int main(int argc, char **argv)
 
       /* write data into the window */
 
-      if (W(from_fd) && FD_ISSET(W(from_fd), &to_poll)
-          && W(flags) & (W_ACTIVE | W_BACKGROUND)) {
+      if (win->from_fd && FD_ISSET(win->from_fd, &to_poll)
+          && win->flags & (W_ACTIVE | W_BACKGROUND)) {
 
 #ifdef PRIORITY /* use priority scheduling */
         if (win == active)
-          count = Min(maxbuf, W(max) - W(current));
-        else if (W(flags) & W_ACTIVE)
-          count = Min(maxbuf >> 1, W(max) - W(current));
+          count = Min(maxbuf, win->max - win->current);
+        else if (win->flags & W_ACTIVE)
+          count = Min(maxbuf >> 1, win->max - win->current);
         else
-          count = Min(maxbuf >> 2, W(max) - W(current));
+          count = Min(maxbuf >> 2, win->max - win->current);
 #else /* use round robin scheduling */
-        count = Min(maxbuf, W(max) - W(current));
+        count = Min(maxbuf, win->max - win->current);
 #endif
 
-        i = put_window(win, W(buff) + W(current), count);
+        i = put_window(win, win->buff + win->current, count);
         dbgprintf('w', (stderr, "%s: writing %d/%d %.*s [%.*s]\r\n",
-                           W(tty), i, count, i, W(buff) + W(current), count - i,
-                           W(buff) + W(current) + i));
+                           win->tty, i, count, i, win->buff + win->current, count - i,
+                           win->buff + win->current + i));
 
-        W(current) += i;
-        if (W(current) >= W(max))
-          FD_CLR(W(from_fd), &to_poll);
+        win->current += i;
+        if (win->current >= win->max)
+          FD_CLR(win->from_fd, &to_poll);
       }
     }
   }

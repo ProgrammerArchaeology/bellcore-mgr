@@ -91,8 +91,8 @@ int shape(int x, int y, int dx, int dy)
       w - active->borderwid * 2,
       h - active->borderwid * 2);
 
-  for (win = active->next; win != NULL; win = W(next)) {
-    if (W(flags) & W_ACTIVE && intersect(active, win))
+  for (win = active->next; win != NULL; win = win->next) {
+    if (win->flags & W_ACTIVE && intersect(active, win))
       save_win(win);
   }
 

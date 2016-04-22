@@ -18,9 +18,9 @@ void border(WINDOW *win, int be_fat)
   int out = (be_fat == BORDER_FAT) ? both - 1 : win->outborderwid;
   int inr = both - out;
 
-  int clr = PUTOP(BIT_CLR, W(style));
-  int set = PUTOP(BIT_SET, W(style));
-  BITMAP *bdr = (W(flags) & W_ACTIVE) ? W(border) : W(save);
+  int clr = PUTOP(BIT_CLR, win->style);
+  int set = PUTOP(BIT_SET, win->style);
+  BITMAP *bdr = (win->flags & W_ACTIVE) ? win->border : win->save;
   int w = BIT_WIDE(bdr);
   int h = BIT_HIGH(bdr);
 

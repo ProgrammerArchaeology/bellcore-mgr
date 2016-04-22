@@ -67,26 +67,26 @@ static int gen_list(WINDOW *window)
 
   /* build arrays of window coordinates: intersecting win's above win */
 
-  x[0] = W(borderwid) + W(x0);
-  y[0] = W(borderwid) + W(y0);
-  x[1] = W(borderwid) + W(x0) + BIT_WIDE(W(window));
-  y[1] = W(borderwid) + W(y0) + BIT_HIGH(W(window));
+  x[0] = win->borderwid + win->x0;
+  y[0] = win->borderwid + win->y0;
+  x[1] = win->borderwid + win->x0 + BIT_WIDE(win->window);
+  y[1] = win->borderwid + win->y0 + BIT_HIGH(win->window);
 
-  for (win = active; win != window; win = W(next)) {
+  for (win = active; win != window; win = win->next) {
     if (!(in_win(win, x[0], y[0], x[1], y[1])))
       continue;
 
-    if (W(x0) >= x[0] && W(x0) <= x[1])
-      x[x_cnt++] = W(x0);
+    if (win->x0 >= x[0] && win->x0 <= x[1])
+      x[x_cnt++] = win->x0;
 
-    if (W(y0) >= y[0] && W(y0) <= y[1])
-      y[y_cnt++] = W(y0);
+    if (win->y0 >= y[0] && win->y0 <= y[1])
+      y[y_cnt++] = win->y0;
 
-    if (W(x0) + BIT_WIDE(W(border)) >= x[0] && W(x0) + BIT_WIDE(W(border)) <= x[1])
-      x[x_cnt++] = W(x0) + BIT_WIDE(W(border));
+    if (win->x0 + BIT_WIDE(win->border) >= x[0] && win->x0 + BIT_WIDE(win->border) <= x[1])
+      x[x_cnt++] = win->x0 + BIT_WIDE(win->border);
 
-    if (W(y0) + BIT_HIGH(W(border)) >= y[0] && W(y0) + BIT_HIGH(W(border)) <= y[1])
-      y[y_cnt++] = W(y0) + BIT_HIGH(W(border));
+    if (win->y0 + BIT_HIGH(win->border) >= y[0] && win->y0 + BIT_HIGH(win->border) <= y[1])
+      y[y_cnt++] = win->y0 + BIT_HIGH(win->border);
 
     if (y_cnt >= MAX_COORDS || x_cnt >= MAX_COORDS)
       break;
@@ -114,7 +114,7 @@ static int gen_list(WINDOW *window)
 
       /* see if patch is visible */
 
-      for (skip = 0, win = active; win != window; win = W(next))
+      for (skip = 0, win = active; win != window; win = win->next)
         if (in_win(win, x[i], y[j], x[i + 1], y[j + 1])) {
           skip++;
           break;
@@ -129,15 +129,15 @@ static int gen_list(WINDOW *window)
         } else {   /* flush held rect */
           count++; /* only for debugging */
           list = malloc(sizeof(struct rect_list));
-          list->rect.x = x[i] - W(x0);
-          list->rect.y = y[j] - W(y0);
+          list->rect.x = x[i] - win->x0;
+          list->rect.y = y[j] - win->y0;
           list->rect.wide = x[i + 1] - x[i];
           list->rect.high = y[j + 1] - y[j];
           list->next = NULL;
           if (prev)
             prev->next = list;
-          if (!W(clip_list)) /* set initial rectangle */
-            W(clip_list) = (char *)list;
+          if (!win->clip_list) /* set initial rectangle */
+            win->clip_list = (char *)list;
           prev = list;
           hold = i + 1; /* next 'i' to check for coalescing */
         }
@@ -147,21 +147,21 @@ static int gen_list(WINDOW *window)
 
   /* look at rect list	DEBUG code, commented out!
 
-	for(list=(struct rect_list *) W(clip_list);list;list = list->next) {
+	for(list=(struct rect_list *) win->clip_list;list;list = list->next) {
 		int	x = list->rect.x,
 			y = list->rect.y,
 			wide = list->rect.wide,
 			high = list->rect.high;
 		in_mouseoff( x, y, wide, high );
-		bit_blit(W(border), x, y, wide, high, BIT_NOT(BIT_DST),0L,0,0);
+		bit_blit(win->border, x, y, wide, high, BIT_NOT(BIT_DST),0L,0,0);
 		dbgprintf('U',(stderr,"  Rect %d,%d  %dx%d\n", x, y, wide, high ));
 		getchar();
-		bit_blit(W(border), x, y, wide, high, BIT_NOT(BIT_DST),0L,0,0);
+		bit_blit(win->border, x, y, wide, high, BIT_NOT(BIT_DST),0L,0,0);
 		MOUSE_ON(screen,mousex,mousey);
 		}
 DEBUG code, commented out! */
 
-  dbgprintf('U', (stderr, "%s: Built clip list (%d)\r\n", W(tty), count));
+  dbgprintf('U', (stderr, "%s: Built clip list (%d)\r\n", win->tty, count));
 
   return (0); /* I'll think of something */
 }
@@ -175,14 +175,14 @@ static void do_update(WINDOW *win, rect *clipp)
   dbgprintf('U', (stderr, "Updating background window to %d,%d => %d,%d\r\n",
                      clipp->x1, clipp->y1, clipp->x2, clipp->y2));
 
-  for (list = (struct rect_list *)W(clip_list); list; list = list->next) {
-    if ((got = got_int(&(list->rect), clipp, W(borderwid)))) {
+  for (list = (struct rect_list *)win->clip_list; list; list = list->next) {
+    if ((got = got_int(&(list->rect), clipp, win->borderwid))) {
       int x = got->x,
           y = got->y,
           wide = got->wide,
           high = got->high;
-      in_mouseoff(x + W(x0), y + W(y0), wide, high);
-      bit_blit(W(border), x, y, wide, high, BIT_SRC, W(save), x, y);
+      in_mouseoff(x + win->x0, y + win->y0, wide, high);
+      bit_blit(win->border, x, y, wide, high, BIT_SRC, win->save, x, y);
       MOUSE_ON(screen, mousex, mousey);
     }
   }
@@ -219,7 +219,7 @@ static int
 in_win(WINDOW *win, int x0, int y0, int x1, int y1)
 {
   return (
-      W(x0) + BIT_WIDE(W(border)) <= x0 || x1 <= W(x0) || W(y0) + BIT_HIGH(W(border)) <= y0 || y1 <= W(y0)
+      win->x0 + BIT_WIDE(win->border) <= x0 || x1 <= win->x0 || win->y0 + BIT_HIGH(win->border) <= y0 || y1 <= win->y0
           ? 0
           : 1);
 }
@@ -235,7 +235,7 @@ cmp(const void *x, const void *y)
 /*{{{  zap_cliplist -- free window's clip list*/
 void zap_cliplist(WINDOW *win)
 {
-  struct rect_list *list = (struct rect_list *)W(clip_list);
+  struct rect_list *list = (struct rect_list *)win->clip_list;
   struct rect_list *next;
 
   dbgprintf('U', (stderr, "Zapping clip list\r\n"));
@@ -243,7 +243,7 @@ void zap_cliplist(WINDOW *win)
     next = list->next;
     free(list);
   }
-  W(clip_list) = NULL;
+  win->clip_list = NULL;
 }
 /*}}}  */
 /*{{{  update -- update an obscured window*/
@@ -251,11 +251,11 @@ void update(WINDOW *win, rect *clipp)
 {
   /* generate clip list */
 
-  if (!(W(flags) & W_CLIPDONE)) {
-    if (W(clip_list) != NULL) /* free old list (we could reuse it) */
+  if (!(win->flags & W_CLIPDONE)) {
+    if (win->clip_list != NULL) /* free old list (we could reuse it) */
       zap_cliplist(win);
     gen_list(win);
-    W(flags) |= W_CLIPDONE;
+    win->flags |= W_CLIPDONE;
   }
 
   /* update the window */
@@ -273,8 +273,8 @@ void clip_bad(
   /* invalidate all intersecting window clip lists below this one */
 
   window->flags &= ~W_CLIPDONE; /* invalidate clip list */
-  for (win = window->next; win != NULL; win = W(next))
+  for (win = window->next; win != NULL; win = win->next)
     if (intersect(win, window))
-      W(flags) &= ~W_CLIPDONE; /* invalidate clip list */
+      win->flags &= ~W_CLIPDONE; /* invalidate clip list */
 }
 /*}}}  */

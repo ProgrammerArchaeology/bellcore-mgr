@@ -58,20 +58,20 @@ detach(WINDOW *win2)
 {
   WINDOW *win = win2;
 
-  if (!(W(main)))
+  if (!(win->main))
     return;
-  for (win = win2->main; W(alt) != win2; win = W(alt))
+  for (win = win2->main; win->alt != win2; win = win->alt)
     ;
-  W(alt) = win2->alt;
+  win->alt = win2->alt;
 }
 /*}}}  */
 /*{{{  set_dead -- notify alternate windows of impending death*/
 static void
 set_dead(WINDOW *win)
 {
-  for (win = W(alt); win != NULL; win = W(alt)) {
-    dbgprintf('d', (stderr, "%s: telling %d\r\n", W(tty), W(num)));
-    W(main) = NULL;
+  for (win = win->alt; win != NULL; win = win->alt) {
+    dbgprintf('d', (stderr, "%s: telling %d\r\n", win->tty, win->num));
+    win->main = NULL;
   }
 }
 /*}}}  */
@@ -84,33 +84,33 @@ void unlink_win(
 {
   int i;
 
-  dbgprintf('u', (stderr, "Unlinking %s %s\n", W(tty), how ? "ALL" : ""));
+  dbgprintf('u', (stderr, "Unlinking %s %s\n", win->tty, how ? "ALL" : ""));
 
-  if (how && W(stack))
-    unlink_win(W(stack), how);
-  if (W(window))
-    bit_destroy(W(window));
+  if (how && win->stack)
+    unlink_win(win->stack, how);
+  if (win->window)
+    bit_destroy(win->window);
   for (i = 0; i < MAXBITMAPS; i++)
-    if (W(bitmaps)[i])
-      bit_destroy(W(bitmaps)[i]);
-  bit_destroy(W(cursor)); /* usually noop because static */
-  if (W(border))
-    bit_destroy(W(border));
-  if (W(save))
-    bit_destroy(W(save));
-  if (W(snarf))
-    free(W(snarf));
-  if (W(bitmap))
-    free(W(bitmap));
+    if (win->bitmaps[i])
+      bit_destroy(win->bitmaps[i]);
+  bit_destroy(win->cursor); /* usually noop because static */
+  if (win->border)
+    bit_destroy(win->border);
+  if (win->save)
+    bit_destroy(win->save);
+  if (win->snarf)
+    free(win->snarf);
+  if (win->bitmap)
+    free(win->bitmap);
   zap_cliplist(win);
 
   for (i = 0; i < MAXEVENTS; i++)
-    if (W(events)[i])
-      free(W(events)[i]);
+    if (win->events[i])
+      free(win->events[i]);
 
   for (i = 0; i < MAXMENU; i++)
-    if (W(menus)[i])
-      menu_destroy(W(menus)[i]);
+    if (win->menus[i])
+      menu_destroy(win->menus[i]);
 
   free(win);
   win = NULL;
@@ -132,32 +132,32 @@ int destroy(WINDOW *win)
     expose(win);
   }
 
-  active = W(next);
+  active = win->next;
 
   /* deallocate window slot */
 
   if (active)
-    active->prev = W(prev);
+    active->prev = win->prev;
 
   /* remove window from screen */
 
-  erase_win(W(border));
+  erase_win(win->border);
 
-  if (W(main) == win) { /* kill process associated with the window */
-    dbgprintf('d', (stderr, "%s: destroy main %s\r\n", W(tty), W(alt) ? "ALT" : ""));
-    if (W(pid) > 1)
-      killpg(W(pid), SIGHUP);
+  if (win->main == win) { /* kill process associated with the window */
+    dbgprintf('d', (stderr, "%s: destroy main %s\r\n", win->tty, win->alt ? "ALT" : ""));
+    if (win->pid > 1)
+      killpg(win->pid, SIGHUP);
 
     if (geteuid() < 1) {
-      chmod(W(tty), 0666);
-      chown(W(tty), 0, 0);
+      chmod(win->tty, 0666);
+      chown(win->tty, 0, 0);
     }
 
-    close(W(to_fd));
-    FD_CLR(W(to_fd), &mask);
-    FD_CLR(W(to_fd), &to_poll);
+    close(win->to_fd);
+    FD_CLR(win->to_fd, &mask);
+    FD_CLR(win->to_fd, &to_poll);
 #ifdef WHO
-    rm_utmp(W(tty));
+    rm_utmp(win->tty);
 #endif
     free_colors(win, 0, 255); /* release claims on the colormap */
 
@@ -169,48 +169,48 @@ int destroy(WINDOW *win)
 
     dbgprintf('d', (stderr, "waiting for ..."));
     fflush(stderr);
-    if (W(pid) > 1 && !(W(flags) & W_DIED)) {
+    if (win->pid > 1 && !(win->flags & W_DIED)) {
       int wpid;
 
       wpid = wait_nohang(&status);
       if (wpid == 0) { /* start it so it can die */
-        kill(W(pid), SIGCONT);
+        kill(win->pid, SIGCONT);
         wpid = wait_nohang(&status);
         if (wpid == 0)
-          fprintf(stderr, "MGR: Wait for %d failed\n", W(pid));
+          fprintf(stderr, "MGR: Wait for %d failed\n", win->pid);
       }
       dbgprintf('d', (stderr, "wait_nohang returns %d\r\n", wpid));
     }
     next_window--;
   }
 
-  else if (W(main) && !(W(main)->flags & W_DIED)) { /* main still alive */
-    dbgprintf('d', (stderr, "%s: destroy alt %d\r\n", W(tty), W(num)));
+  else if (win->main && !(win->main->flags & W_DIED)) { /* main still alive */
+    dbgprintf('d', (stderr, "%s: destroy alt %d\r\n", win->tty, win->num));
     do_event(EVENT_DESTROY, win, E_MAIN);
-    if (W(from_fd)) { /* re-attach output to main window */
-      W(main)
+    if (win->from_fd) { /* re-attach output to main window */
+      win->main
           ->from_fd
-          = W(main)->to_fd;
-      W(main)
+          = win->main->to_fd;
+      win->main
           ->max
-          = W(max) - W(current); /* ??? */
+          = win->max - win->current; /* ??? */
       dbgprintf('d', (stderr, "%s: copy %d chars at %d\r\n",
-                         W(tty), W(main)->max, W(current)));
-      memcpy(W(main)->buff, W(buff) + W(current) + 1, W(main)->max);
-      W(main)
+                         win->tty, win->main->max, win->current));
+      memcpy(win->main->buff, win->buff + win->current + 1, win->main->max);
+      win->main
           ->current
           = 0;
       set_size(win);
-      dbgprintf('d', (stderr, "%s: reattaching main %d chars\r\n", W(tty), W(max)));
+      dbgprintf('d', (stderr, "%s: reattaching main %d chars\r\n", win->tty, win->max));
     }
     detach(win);
-  } else if (W(main)) { /* tell main alts know they are dead */
-    W(main)
+  } else if (win->main) { /* tell main alts know they are dead */
+    win->main
         ->alt
         = NULL;
-    dbgprintf('d', (stderr, "%s: destroy alt, (tell main)\r\n", W(tty)));
+    dbgprintf('d', (stderr, "%s: destroy alt, (tell main)\r\n", win->tty));
   } else {
-    dbgprintf('d', (stderr, "%s: destroy alt, (dead main)\r\n", W(tty)));
+    dbgprintf('d', (stderr, "%s: destroy alt, (dead main)\r\n", win->tty));
   }
 
   /* fix up display if any windows left */

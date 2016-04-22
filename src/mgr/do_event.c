@@ -57,8 +57,8 @@ event_args(
 static char *
 get_id(WINDOW *win)
 {
-  int sub = W(num);  /* subwindow number */
-  int main = W(pid); /* main window id */
+  int sub = win->num;  /* subwindow number */
+  int main = win->pid; /* main window id */
   static char buff[6];
 
   sprintf(buff, "%d.%d", main, sub);
@@ -84,7 +84,7 @@ sub_event(
 #ifdef DEBUG
   if (debug) {
     int i;
-    dbgprintf('e', (stderr, "%s) event (%c) args:", W(tty), c));
+    dbgprintf('e', (stderr, "%s) event (%c) args:", win->tty, c));
     for (i = 0; i < count; i++)
       dbgprintf('e', (stderr, " %d", args[i]));
     dbgprintf('e', (stderr, "\r\n"));
@@ -110,29 +110,29 @@ sub_event(
 
   switch (c) {
   case E_CPOS: /* return mouse position (rows/cols) */
-    sprintf(str, "%d %d", (mousex - (W(x0) + W(borderwid) + W(text).x)) / FSIZE(wide),
-        (mousey - (W(y0) + W(borderwid) + W(text).y)) / FSIZE(high));
+    sprintf(str, "%d %d", (mousex - (win->x0 + win->borderwid + win->text.x)) / FSIZE(wide),
+        (mousey - (win->y0 + win->borderwid + win->text.y)) / FSIZE(high));
     break;
   case E_POS: /* return mouse position */
-    if (W(flags) & W_ABSCOORDS)
-      sprintf(str, "%d %d", mousex - W(x0), mousey - W(y0));
+    if (win->flags & W_ABSCOORDS)
+      sprintf(str, "%d %d", mousex - win->x0, mousey - win->y0);
     else
-      sprintf(str, "%ld %ld", (mousex - W(x0)) * GMAX / BIT_WIDE(W(window)),
-          (mousey - W(y0)) * GMAX / BIT_HIGH(W(window)));
+      sprintf(str, "%ld %ld", (mousex - win->x0) * GMAX / BIT_WIDE(win->window),
+          (mousey - win->y0) * GMAX / BIT_HIGH(win->window));
     break;
   case E_SWLINE: /* sweep out line */
     sweep++;
     if (!swept)
       get_rect(screen, mouse, mousex, mousey, &x, &y, 1);
-    sprintf(str, "%d %d %d %d", mousex - W(x0), mousey - W(y0),
-        mousex + x - W(x0), mousey + y - W(y0));
+    sprintf(str, "%d %d %d %d", mousex - win->x0, mousey - win->y0,
+        mousex + x - win->x0, mousey + y - win->y0);
     break;
   case E_SWRECT: /* sweep out rectangle */
     sweep++;
     if (!swept)
       get_rect(screen, mouse, mousex, mousey, &x, &y, 0);
-    sprintf(str, "%d %d %d %d", mousex - W(x0), mousey - W(y0),
-        mousex + x - W(x0), mousey + y - W(y0));
+    sprintf(str, "%d %d %d %d", mousex - win->x0, mousey - win->y0,
+        mousex + x - win->x0, mousey + y - win->y0);
     break;
   case E_SWRECTA: /* sweep out rectangle */
     sweep++;
@@ -145,7 +145,7 @@ sub_event(
     sweep++;
     if (!swept)
       move_box(screen, mouse, &mousex, &mousey, x, y, 1);
-    sprintf(str, "%d %d", mousex - W(x0), mousey - W(y0));
+    sprintf(str, "%d %d", mousex - win->x0, mousey - win->y0);
     break;
   case E_SWBOXA: /* sweep out box */
     sweep++;
@@ -161,24 +161,24 @@ sub_event(
       code = get_text(screen, mouse, mousex, mousey, &x, &y, win, c);
     if (code)
       sprintf(str, "%d %d %d %d",
-          (mousex - (W(x0) + W(borderwid) + W(text.x))) / FSIZE(wide),
-          (mousey - (W(y0) + W(borderwid) + W(text.y))) / FSIZE(high),
+          (mousex - (win->x0 + win->borderwid + win->text.x)) / FSIZE(wide),
+          (mousey - (win->y0 + win->borderwid + win->text.y)) / FSIZE(high),
           x, y);
     else
       *str = '\0';
     break;
   case E_NOTIFY: /* get other windows notify text */
-    for (win = active; win != NULL; win = W(next)) {
+    for (win = active; win != NULL; win = win->next) {
       if (mousein(mousex, mousey, win, 1))
         break;
     }
     if (win && IS_EVENT(win, EVENT_NOTIFY))
-      sprintf(str, "%.*s", SUB_SIZE - 1, W(events[GET_EVENT(EVENT_NOTIFY)]));
+      sprintf(str, "%.*s", SUB_SIZE - 1, win->events[GET_EVENT(EVENT_NOTIFY)]);
     else
       *str = '\0';
     break;
   case E_WHO: /* send other windows id */
-    for (win = active; win != NULL; win = W(next)) {
+    for (win = active; win != NULL; win = win->next) {
       if (mousein(mousex, mousey, win, 1))
         break;
     }
@@ -189,16 +189,16 @@ sub_event(
     break;
   case E_WINSIZE: /* send other windows size */
     sprintf(str, "%d %d %d %d",
-        W(x0), W(y0), BIT_WIDE(W(border)), BIT_HIGH(W(border)));
+        win->x0, win->y0, BIT_WIDE(win->border), BIT_HIGH(win->border));
     break;
   case E_WHOSIZE: /* send other windows size */
-    for (win = active; win != NULL; win = W(next)) {
+    for (win = active; win != NULL; win = win->next) {
       if (mousein(mousex, mousey, win, 1))
         break;
     }
     if (win)
       sprintf(str, "%d %d %d %d",
-          W(x0), W(y0), BIT_WIDE(W(border)), BIT_HIGH(W(border)));
+          win->x0, win->y0, BIT_WIDE(win->border), BIT_HIGH(win->border));
     else
       *str = '\0';
     break;
@@ -251,15 +251,15 @@ void write_event(
   for (start = str; *start && (end = strchr(start, E_ESC)); start = end + 1) {
     dbgprintf('e', (stderr, "  sending %d [%s]\r\n", (int)strlen(str), str));
     if (end > start)
-      Write(W(to_fd), start, end - start);
+      Write(win->to_fd, start, end - start);
     end = event_args(end, &count, args);
     if (strchr(list, *end)) {
       swept += sub_event(win, data, *end, swept, count, args);
-      Write(W(to_fd), data, strlen(data));
+      Write(win->to_fd, data, strlen(data));
     }
   }
   if (*start)
-    Write(W(to_fd), start, strlen(start));
+    Write(win->to_fd, start, strlen(start));
   if (swept)
     /* If we swept something, the button was down and is now up.  Notify
 	 do_button(). */
@@ -279,7 +279,7 @@ void do_event(
     return;
 
   dbgprintf('e', (stderr, "%s: event %d (%s) %s\r\n",
-                     W(tty), GET_EVENT(event),
+                     win->tty, GET_EVENT(event),
                      IS_EVENT(win, event) ? "ON" : "OFF",
                      flag == E_MAIN ? "MAIN" : "STACK"));
 
@@ -298,16 +298,16 @@ void do_event(
     switch (event) {
     case EVENT_B1_DOWN:
     case EVENT_B2_DOWN:
-      if (IS_EVENT(win, event) && (buff = W(events[GET_EVENT(event)])))
+      if (IS_EVENT(win, event) && (buff = win->events[GET_EVENT(event)]))
         write_event(win, buff, E_LIST_BUTTON);
 
       /* notify clicked window */
 
-      for (win = active; win != NULL; win = W(next))
+      for (win = active; win != NULL; win = win->next)
         if (mousein(mousex, mousey, win, 1))
           break;
       if (win && IS_EVENT(win, EVENT_TELLME)
-          && (buff = W(events[GET_EVENT(EVENT_TELLME)]))) {
+          && (buff = win->events[GET_EVENT(EVENT_TELLME)])) {
         if (message) {
           free(message);
           message = NULL;
@@ -317,11 +317,11 @@ void do_event(
       }
       break;
     case EVENT_PASTE:
-      if (IS_EVENT(win, event) && (buff = W(events[GET_EVENT(event)])))
+      if (IS_EVENT(win, event) && (buff = win->events[GET_EVENT(event)]))
         write_event(win, buff, E_LIST_PASTE);
       break;
     case EVENT_SNARFED:
-      if (IS_EVENT(win, event) && (buff = W(events[GET_EVENT(event)])))
+      if (IS_EVENT(win, event) && (buff = win->events[GET_EVENT(event)]))
         write_event(win, buff, E_LIST_SNARF);
       break;
     case EVENT_BSYS_DOWN: /* No events for System Button, down or up. */
@@ -338,16 +338,16 @@ void do_event(
     case EVENT_UNCOVERED:
     case EVENT_DEACTIVATED:
     case EVENT_ACTIVATED:
-      if (IS_EVENT(win, event) && (buff = W(events[GET_EVENT(event)])))
+      if (IS_EVENT(win, event) && (buff = win->events[GET_EVENT(event)]))
         write_event(win, buff, E_LIST_UP);
       break;
     case EVENT_ACCEPT:
-      buff = W(events[GET_EVENT(event)]);
-      if (buff && message && mode_ok(W(tty), MSG_MODEMASK)) {
+      buff = win->events[GET_EVENT(event)];
+      if (buff && message && mode_ok(win->tty, MSG_MODEMASK)) {
         dbgprintf('e', (stderr, "  accept: %d:  [%s]\r\n",
                            (int)strlen(buff), buff));
         dbgprintf('c', (stderr, "  sent %d->%d: %s\r\n",
-                           id_message, W(pid), message));
+                           id_message, win->pid, message));
         write_event(win, buff, E_LIST_ACCEPT);
       }
 #ifdef DEBUG
@@ -356,10 +356,10 @@ void do_event(
                            "%d: can't send [%s] to %s\r\n",
                            id_message,
                            message ? message : "??",
-                           W(tty)));
+                           win->tty));
         dbgprintf('e', (stderr,
                            "  reject accept: %s %s %s\r\n",
-                           mode_ok(W(tty), MSG_MODEMASK)
+                           mode_ok(win->tty, MSG_MODEMASK)
                                ? "OK"
                                : "BAD_MODE",
                            message ? message : "NO MESSAGE",

@@ -66,7 +66,7 @@
 #define BORDER(win) \
   ((win == active) ? border(win, BORDER_FAT) : border(win, BORDER_THIN))
 
-#define BG_OP PUTOP(BIT_CLR, W(style))
+#define BG_OP PUTOP(BIT_CLR, win->style)
 
 /* fsleep is experimental */
 
@@ -102,31 +102,31 @@ set_winsize(int fd, int rows, int cols, int ypixel, int xpixel)
 /*{{{  standout*/
 static void standout(WINDOW *win)
 {
-  if (W(flags) & W_STANDOUT)
+  if (win->flags & W_STANDOUT)
     return;
 
 #ifdef COLORSTANDOUT
-  if (BIT_DEPTH(W(window)) > 1 && GETFCOLOR(~W(style)) != GETBCOLOR(W(style)))
-    W(style) = PUTFCOLOR(W(style), GETFCOLOR(~W(style)));
+  if (BIT_DEPTH(win->window) > 1 && GETFCOLOR(~win->style) != GETBCOLOR(win->style))
+    win->style = PUTFCOLOR(win->style, GETFCOLOR(~win->style));
   else
 #endif /* COLORSTANDOUT */
-    W(style) = PUTOP(BIT_NOT(W(style)), W(style));
-  W(flags) |= W_STANDOUT;
+    win->style = PUTOP(BIT_NOT(win->style), win->style);
+  win->flags |= W_STANDOUT;
 }
 /*}}}  */
 /*{{{  standend*/
 static void standend(WINDOW *win)
 {
-  if (!(W(flags) & W_STANDOUT))
+  if (!(win->flags & W_STANDOUT))
     return;
 
 #ifdef COLORSTANDOUT
-  if (BIT_DEPTH(W(window)) > 1 && GETFCOLOR(~W(style)) != GETBCOLOR(W(style)))
-    W(style) = PUTFCOLOR(W(style), GETFCOLOR(~W(style)));
+  if (BIT_DEPTH(win->window) > 1 && GETFCOLOR(~win->style) != GETBCOLOR(win->style))
+    win->style = PUTFCOLOR(win->style, GETFCOLOR(~win->style));
   else
 #endif /* COLORSTANDOUT */
-    W(style) = PUTOP(BIT_NOT(W(style)), W(style));
-  W(flags) &= ~W_STANDOUT;
+    win->style = PUTOP(BIT_NOT(win->style), win->style);
+  win->flags &= ~W_STANDOUT;
 }
 /*}}}  */
 
@@ -136,12 +136,12 @@ void set_size(WINDOW *win)
   if (win == NULL)
     return;
 
-  if (W(flags) & W_NOREPORT)
+  if (win->flags & W_NOREPORT)
     return; /* just return if user requested */
-  if (W(text.wide) > 0) {
-    set_winsize(active->to_fd, W(text.high) / FSIZE(high), W(text.wide) / FSIZE(wide), 0, 0);
+  if (win->text.wide > 0) {
+    set_winsize(active->to_fd, win->text.high / FSIZE(high), win->text.wide / FSIZE(wide), 0, 0);
   } else {
-    set_winsize(W(to_fd), BIT_HIGH(W(window)) / FSIZE(high), BIT_WIDE(W(window)) / FSIZE(wide), 0, 0);
+    set_winsize(win->to_fd, BIT_HIGH(win->window) / FSIZE(high), BIT_WIDE(win->window) / FSIZE(wide), 0, 0);
   }
 }
 /*}}}  */
@@ -163,10 +163,10 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
   /*}}}  */
 
   /*{{{  set up environment*/
-  if (W(flags) & W_ACTIVE)
-    window = W(window);
+  if (win->flags & W_ACTIVE)
+    window = win->window;
   else {
-    window = bit_create(W(save), W(borderwid), W(borderwid), BIT_WIDE(W(window)), BIT_HIGH(W(window)));
+    window = bit_create(win->save, win->borderwid, win->borderwid, BIT_WIDE(win->window), BIT_HIGH(win->window));
     sub_window++;
   }
 
@@ -180,24 +180,24 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
   fsizehigh = FSIZE(high);
   fsizewide = FSIZE(wide);
 
-  if (W(flags) & W_SPECIAL) {
-    if (W(flags) & W_UNDER)
+  if (win->flags & W_SPECIAL) {
+    if (win->flags & W_UNDER)
       offset = MAXGLYPHS;
-    if (W(flags) & W_BOLD)
+    if (win->flags & W_BOLD)
       offset += 2 * MAXGLYPHS;
   }
 
   if (Do_clip()) {
     Set_clipall();
-    Set_cliplow(W(x) + W(text).x, W(y) + W(text).y - fsizehigh);
+    Set_cliplow(win->x + win->text.x, win->y + win->text.y - fsizehigh);
   }
 
-  if (W(text.wide))
-    text = bit_create(window, W(text.x), W(text.y), W(text.wide), W(text.high));
+  if (win->text.wide)
+    text = bit_create(window, win->text.x, win->text.y, win->text.wide, win->text.high);
   if (text == NULL)
     text = window;
 
-  if (W(flags) & W_ACTIVE && mousein(mousex, mousey, win, 0)) {
+  if (win->flags & W_ACTIVE && mousein(mousex, mousey, win, 0)) {
     MOUSE_OFF(screen, mousex, mousey);
   }
 
@@ -207,17 +207,18 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
   /*}}}  */
   /*{{{  do each character*/
   for (indx = 0; c = *buff++, indx < buff_count && !done; indx++)
-    switch (W(flags) & W_STATE) {
+    switch (win->flags & W_STATE) {
     /*{{{  W_TEXT -- down load a text string*/
     case W_TEXT:
-      cnt = W(esc_cnt);
-      W(snarf[W(esc)[TEXT_COUNT]++]) = c;
-      if (W(esc)[TEXT_COUNT] >= W(esc)[cnt]) {
-        W(flags) &= ~W_TEXT;
-        if (W(snarf) && W(code) != T_BITMAP && W(code) != T_GRUNCH) {
-          W(snarf)
-          [W(esc)[TEXT_COUNT]] = '\0';
-          trans(W(snarf));
+      cnt = win->esc_cnt;
+      win->snarf[win->esc[TEXT_COUNT]++] = c;
+      if (win->esc[TEXT_COUNT] >= win->esc[cnt]) {
+        win->flags &= ~W_TEXT;
+        if (win->snarf && win->code != T_BITMAP && win->code != T_GRUNCH) {
+          win->snarf
+              [win->esc[TEXT_COUNT]]
+              = '\0';
+          trans(win->snarf);
         }
         down_load(win, window, text);
         done++;
@@ -226,14 +227,14 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
     /*}}}  */
     /*{{{  W_ESCAPE -- process an escape code*/
     case W_ESCAPE:
-      W(flags) &= ~(W_ESCAPE);
-      cnt = W(esc_cnt);
+      win->flags &= ~(W_ESCAPE);
+      cnt = win->esc_cnt;
       switch (c) {
       /*{{{  ESC          -- turn on escape mode*/
       case ESC:
-        W(flags) |= W_ESCAPE;
-        W(esc_cnt) = 0;
-        W(esc[0]) = 0;
+        win->flags |= W_ESCAPE;
+        win->esc_cnt = 0;
+        win->esc[0] = 0;
         break;
       /*}}}  */
       /*{{{  0, 1, 2, 3, 4, 5, 6, 7, 8, 9*/
@@ -247,36 +248,37 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       case '7':
       case '8':
       case '9': {
-        int n = W(esc)[W(esc_cnt)];
+        int n = win->esc[win->esc_cnt];
 
         if (n >= 0)
           n = n * 10 + (c - '0');
         else
           n = n * 10 - (c - '0');
-        W(flags) |= W_ESCAPE;
-        if (W(flags) & W_MINUS && n != 0) {
+        win->flags |= W_ESCAPE;
+        if (win->flags & W_MINUS && n != 0) {
           n = -n;
-          W(flags) &= ~(W_MINUS);
+          win->flags &= ~(W_MINUS);
         }
-        W(esc)
-        [W(esc_cnt)] = n;
+        win->esc
+            [win->esc_cnt]
+            = n;
       } break;
       /*}}}  */
       /*{{{  E_SEP1, E_SEP2 field separators*/
       case E_SEP1:
       case E_SEP2:
-        if (W(esc_cnt) + 1 < MAXESC)
-          W(esc_cnt)
-        ++;
-        W(esc)
-        [W(esc_cnt)] = 0;
-        W(flags) &= ~(W_MINUS);
-        W(flags) |= W_ESCAPE;
+        if (win->esc_cnt + 1 < MAXESC)
+          win->esc_cnt++;
+        win->esc
+            [win->esc_cnt]
+            = 0;
+        win->flags &= ~(W_MINUS);
+        win->flags |= W_ESCAPE;
         break;
       /*}}}  */
       /*{{{  E_MINUS      -- set the MINUS flag*/
       case E_MINUS:
-        W(flags) |= (W_ESCAPE | W_MINUS);
+        win->flags |= (W_ESCAPE | W_MINUS);
         break;
       /*}}}  */
       /*{{{  E_NULL       -- do nothing*/
@@ -286,35 +288,35 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_ADDLINE    -- add a new line*/
       case E_ADDLINE:
-        if (*W(esc)) {
-          int count = *W(esc);
-          scroll(win, text, W(y) - fsizehigh, T_HIGH, -count * (fsizehigh), BG_OP);
+        if (*win->esc) {
+          int count = *win->esc;
+          scroll(win, text, win->y - fsizehigh, T_HIGH, -count * (fsizehigh), BG_OP);
         } else {
-          scroll(win, text, W(y) - fsizehigh, T_HIGH, -(fsizehigh), BG_OP);
+          scroll(win, text, win->y - fsizehigh, T_HIGH, -(fsizehigh), BG_OP);
         }
         done++;
         break;
       /*}}}  */
       /*{{{  E_ADDCHAR    -- insert a character*/
       case E_ADDCHAR: {
-        int wide = (fsizewide) * (*W(esc) ? *W(esc) : 1);
-        if (wide + W(x) > T_WIDE)
-          wide = T_WIDE - W(x);
-        bit_blit(text, W(x) + wide, W(y) - fsizehigh,
-            T_WIDE - W(x) - wide, fsizehigh, BIT_SRC,
-            text, W(x), W(y) - fsizehigh);
-        bit_blit(text, W(x), W(y) - fsizehigh, wide,
+        int wide = (fsizewide) * (*win->esc ? *win->esc : 1);
+        if (wide + win->x > T_WIDE)
+          wide = T_WIDE - win->x;
+        bit_blit(text, win->x + wide, win->y - fsizehigh,
+            T_WIDE - win->x - wide, fsizehigh, BIT_SRC,
+            text, win->x, win->y - fsizehigh);
+        bit_blit(text, win->x, win->y - fsizehigh, wide,
             fsizehigh, BG_OP, 0, 0, 0);
       } break;
       /*}}}  */
       /*{{{  E_DELETELINE -- delete a line*/
       case E_DELETELINE: /* delete a line */
-        if (*W(esc)) {
-          int count = *W(esc);
-          scroll(win, text, W(y) - fsizehigh, T_HIGH, count * fsizehigh,
+        if (*win->esc) {
+          int count = *win->esc;
+          scroll(win, text, win->y - fsizehigh, T_HIGH, count * fsizehigh,
               BG_OP);
         } else {
-          scroll(win, text, W(y) - fsizehigh, T_HIGH, fsizehigh,
+          scroll(win, text, win->y - fsizehigh, T_HIGH, fsizehigh,
               BG_OP);
         }
         done++;
@@ -322,13 +324,13 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_DELETECHAR -- delete a character*/
       case E_DELETECHAR: {
-        int wide = (fsizewide) * (*W(esc) ? *W(esc) : 1);
-        if (wide + W(x) > T_WIDE)
-          wide = T_WIDE - W(x);
-        bit_blit(text, W(x), W(y) - fsizehigh,
-            T_WIDE - W(x) - wide, fsizehigh, BIT_SRC,
-            text, W(x) + wide, W(y) - fsizehigh);
-        bit_blit(text, T_WIDE - wide, W(y) - fsizehigh, wide,
+        int wide = (fsizewide) * (*win->esc ? *win->esc : 1);
+        if (wide + win->x > T_WIDE)
+          wide = T_WIDE - win->x;
+        bit_blit(text, win->x, win->y - fsizehigh,
+            T_WIDE - win->x - wide, fsizehigh, BIT_SRC,
+            text, win->x + wide, win->y - fsizehigh);
+        bit_blit(text, T_WIDE - wide, win->y - fsizehigh, wide,
             fsizehigh, BG_OP, 0, 0, 0);
       } break;
       /*}}}  */
@@ -336,79 +338,79 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       case E_UPLINE: /* up 1 line */
 #ifdef FRACCHAR
         if (cnt > 0) { /* move up fractions of a character line */
-          int div = W(esc)[1] == 0 ? 1 : W(esc)[1];
-          int n = W(esc)[0] * fsizehigh / div;
-          if (W(y) > n) {
-            W(y) -= n;
+          int div = win->esc[1] == 0 ? 1 : win->esc[1];
+          int n = win->esc[0] * fsizehigh / div;
+          if (win->y > n) {
+            win->y -= n;
             if (Do_clip())
-              Set_cliplow(10000, W(y) + W(text).y - fsizehigh);
+              Set_cliplow(10000, win->y + win->text.y - fsizehigh);
           }
           break;
         }
 #endif
-        if (W(y) > fsizehigh)
-          W(y) -= fsizehigh;
+        if (win->y > fsizehigh)
+          win->y -= fsizehigh;
         if (Do_clip())
-          Set_cliplow(10000, W(y) + W(text).y - fsizehigh);
+          Set_cliplow(10000, win->y + win->text.y - fsizehigh);
         break;
       /*}}}  */
       /*{{{  E_RIGHT      -- right 1 line*/
       case E_RIGHT:
 #ifdef FRACCHAR
         if (cnt > 0) { /* move right/left a fraction of a character */
-          int div = W(esc)[1] == 0 ? 1 : W(esc)[1];
-          int n = W(esc)[0] * fsizewide / div;
-          W(x) += n;
-          if (W(x) < 0)
-            W(x) = 0;
+          int div = win->esc[1] == 0 ? 1 : win->esc[1];
+          int n = win->esc[0] * fsizewide / div;
+          win->x += n;
+          if (win->x < 0)
+            win->x = 0;
           break;
         }
 #endif
-        W(x) += fsizewide;
+        win->x += fsizewide;
         break;
       /*}}}  */
       /*{{{  E_DOWN       -- down 1 line*/
       case E_DOWN: /* down 1 line */
 #ifdef FRACCHAR
         if (cnt > 0) { /* move down a fraction of a character */
-          int div = W(esc)[1] == 0 ? 1 : W(esc)[1];
-          int n = W(esc)[0] * fsizehigh / div;
+          int div = win->esc[1] == 0 ? 1 : win->esc[1];
+          int n = win->esc[0] * fsizehigh / div;
 
-          if (W(y) + n > T_HIGH) {
+          if (win->y + n > T_HIGH) {
             scroll(win, text, 0, T_HIGH, n, BG_OP);
             done++;
           } else {
-            W(y) += n;
+            win->y += n;
             if (Do_clip())
-              Set_cliphigh(0, W(y) + W(text).y);
+              Set_cliphigh(0, win->y + win->text.y);
           }
           break;
         }
 #endif
-        if (W(y) + fsizehigh > T_HIGH) {
+        if (win->y + fsizehigh > T_HIGH) {
           scroll(win, text, 0, T_HIGH, fsizehigh, BG_OP);
           done++;
         } else {
-          W(y) += fsizehigh;
+          win->y += fsizehigh;
           if (Do_clip())
-            Set_cliphigh(0, W(y) + W(text).y);
+            Set_cliphigh(0, win->y + win->text.y);
         }
         break;
       /*}}}  */
       /*{{{  E_FCOLOR     -- set foreground color*/
       case E_FCOLOR:
-        if (W(flags) & W_STANDOUT) {
+        if (win->flags & W_STANDOUT) {
           standend(win);
-          W(style) = W(flags) & W_REVERSE ? PUTBCOLOR(W(style), *W(esc)) : PUTFCOLOR(W(style), *W(esc));
+          win->style = win->flags & W_REVERSE ? PUTBCOLOR(win->style, *win->esc) : PUTFCOLOR(win->style, *win->esc);
           standout(win);
         } else
-          W(style) = W(flags) & W_REVERSE ? PUTBCOLOR(W(style), *W(esc)) : PUTFCOLOR(W(style), *W(esc));
+          win->style = win->flags & W_REVERSE ? PUTBCOLOR(win->style, *win->esc) : PUTFCOLOR(win->style, *win->esc);
         BORDER(win);
         break;
       /*}}}  */
       /*{{{  E_BCOLOR     -- set background color*/
       case E_BCOLOR:
-        W(style) = W(flags) & W_REVERSE ? PUTFCOLOR(W(style), *W(esc)) : PUTBCOLOR(W(style), *W(esc));
+        win->style = win->flags & W_REVERSE ? PUTFCOLOR(win->style, *win->esc) : PUTBCOLOR(win->style, *win->esc);
         BORDER(win);
         break;
       /*}}}  */
@@ -420,10 +422,10 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*{{{  E_STANDEND   -- normal video (characters)*/
       /* standend also sets character attributes */
       case E_STANDEND: {
-        int mode = *W(esc);
+        int mode = *win->esc;
 
         if (mode) {
-          enhance_font(W(font));
+          enhance_font(win->font);
           done++;
         }
         offset = 0;
@@ -434,16 +436,16 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           standend(win);
         }
         if (mode & 2) { /* bold */
-          W(flags) |= W_BOLD;
+          win->flags |= W_BOLD;
           offset |= 2;
         } else {
-          W(flags) &= ~W_BOLD;
+          win->flags &= ~W_BOLD;
         }
         if (mode & 4) { /* underline */
-          W(flags) |= W_UNDER;
+          win->flags |= W_UNDER;
           offset |= 4;
         } else {
-          W(flags) &= ~W_UNDER;
+          win->flags &= ~W_UNDER;
         }
         offset *= MAXGLYPHS;
 
@@ -452,28 +454,28 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_CLEAREOL   -- clear to end of line*/
       case E_CLEAREOL: /* clear to end of line */
-        bit_blit(text, W(x), W(y) - fsizehigh, T_WIDE - W(x), fsizehigh, BG_OP, 0, 0, 0);
+        bit_blit(text, win->x, win->y - fsizehigh, T_WIDE - win->x, fsizehigh, BG_OP, 0, 0, 0);
         if (Do_clip())
-          Set_cliphigh(BIT_WIDE(W(window)), 0);
+          Set_cliphigh(BIT_WIDE(win->window), 0);
         break;
       /*}}}  */
       /*{{{  E_CLEAREOS   -- clear to end of window*/
       case E_CLEAREOS: /* clear to end of window */
-        bit_blit(text, W(x), W(y) - fsizehigh, T_WIDE - W(x), fsizehigh, BG_OP, 0, 0, 0);
-        bit_blit(text, 0, W(y), T_WIDE, T_HIGH - W(y), BG_OP, 0, 0, 0);
+        bit_blit(text, win->x, win->y - fsizehigh, T_WIDE - win->x, fsizehigh, BG_OP, 0, 0, 0);
+        bit_blit(text, 0, win->y, T_WIDE, T_HIGH - win->y, BG_OP, 0, 0, 0);
         if (Do_clip())
-          Set_cliphigh(BIT_WIDE(W(window)), BIT_HIGH(window));
+          Set_cliphigh(BIT_WIDE(win->window), BIT_HIGH(window));
         break;
       /*}}}  */
       /*{{{  E_SETCURSOR  -- set the character cursor*/
       case E_SETCURSOR:
-        W(curs_type) = *W(esc);
+        win->curs_type = *win->esc;
         break;
       /*}}}  */
       /*{{{  E_BLEEP      -- highlight a section of the screen*/
       case E_BLEEP:
         if (cnt > 2) {
-          int *p = W(esc);
+          int *p = win->esc;
           if (p[0] < 0 || p[1] < 0)
             break;
           p[2] = BETWEEN(1, p[2], BIT_WIDE(screen) - 1);
@@ -487,29 +489,30 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_FONT       -- pick a new font*/
       case E_FONT:
-        W(flags) &= ~W_SNARFABLE;
-        W(flags) &= ~W_SPECIAL; /* reset bold or underline */
+        win->flags &= ~W_SNARFABLE;
+        win->flags &= ~W_SPECIAL; /* reset bold or underline */
         offset = 0;
         if (cnt > 0) {
-          W(esc)
-          [TEXT_COUNT] = 0;
-          if (W(esc)[cnt] > 0 && (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0)
-            W(flags) |= W_TEXT;
-          W(code) = T_FONT;
+          win->esc
+              [TEXT_COUNT]
+              = 0;
+          if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
+            win->flags |= W_TEXT;
+          win->code = T_FONT;
           break;
         }
 
         {
-          int font_count = W(esc)[cnt];
+          int font_count = win->esc[cnt];
           int baseline = FSIZE(baseline);
 
-          W(font) = Get_font(font_count);
+          win->font = Get_font(font_count);
           fsizehigh = FSIZE(high);
           fsizewide = FSIZE(wide);
-          W(y) += FSIZE(baseline) - baseline;
-          if (W(y) < fsizehigh) {
-            scroll(win, text, W(y) - fsizehigh, T_HIGH, W(y) - fsizehigh, BG_OP);
-            W(y) = fsizehigh;
+          win->y += FSIZE(baseline) - baseline;
+          if (win->y < fsizehigh) {
+            scroll(win, text, win->y - fsizehigh, T_HIGH, win->y - fsizehigh, BG_OP);
+            win->y = fsizehigh;
             done++;
           }
         }
@@ -524,22 +527,22 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
 
           if (cnt == 0) {
             /* change mouse cursor shape */
-            int bn = W(esc)[0];
+            int bn = win->esc[0];
 
-            bit_destroy(W(cursor));
+            bit_destroy(win->cursor);
             if (bn > 0 && bn <= MAXBITMAPS
-                && cursor_ok(W(bitmaps)[bn - 1])
-                && (W(cursor) = bit_alloc(16, 32, 0, 1)) != NULL) {
-              bit_blit(W(cursor), 0, 0, 16, 32, BIT_SRC,
-                  W(bitmaps)[bn - 1], 0, 0);
+                && cursor_ok(win->bitmaps[bn - 1])
+                && (win->cursor = bit_alloc(16, 32, 0, 1)) != NULL) {
+              bit_blit(win->cursor, 0, 0, 16, 32, BIT_SRC,
+                  win->bitmaps[bn - 1], 0, 0);
             } else
-              W(cursor) = &mouse_arrow;
+              win->cursor = &mouse_arrow;
 
             SETMOUSEICON(DEFAULT_MOUSE_CURSOR);
           } else {
             /* move mouse */
-            mousex = W(esc)[0];
-            mousey = W(esc)[1];
+            mousex = win->esc[0];
+            mousey = win->esc[1];
             mousex = BETWEEN(0, mousex, BIT_WIDE(screen) - 1);
             mousey = BETWEEN(0, mousey, BIT_HIGH(screen) - 1);
           }
@@ -550,18 +553,18 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_SIZE       -- reshape window: cols, rows*/
       case E_SIZE:
-        if (!W(flags) & W_ACTIVE)
+        if (!win->flags & W_ACTIVE)
           break;
         if (cnt >= 1) {
-          int cols = W(esc)[cnt - 1];
-          int lines = W(esc)[cnt];
-          int x = W(x0), y = W(y0);
+          int cols = win->esc[cnt - 1];
+          int lines = win->esc[cnt];
+          int x = win->x0, y = win->y0;
 
           MOUSE_OFF(screen, mousex, mousey);
 
           if (cnt >= 3) {
-            x = W(esc)[0];
-            y = W(esc)[1];
+            x = win->esc[0];
+            y = win->esc[1];
           }
 
           if (win != active)
@@ -569,10 +572,10 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           ACTIVE_OFF();
           expose(win);
           shape(x, y,
-              cols ? cols * fsizewide + 2 * W(borderwid) : 2 * W(borderwid) + WIDE,
-              lines ? lines * fsizehigh + 2 * W(borderwid) : 2 * W(borderwid) + HIGH);
+              cols ? cols * fsizewide + 2 * win->borderwid : 2 * win->borderwid + WIDE,
+              lines ? lines * fsizehigh + 2 * win->borderwid : 2 * win->borderwid + HIGH);
           ACTIVE_ON();
-          if (!(W(flags) & W_ACTIVE && mousein(mousex, mousey, win, 0)))
+          if (!(win->flags & W_ACTIVE && mousein(mousex, mousey, win, 0)))
             MOUSE_ON(screen, mousex, mousey);
           done++;
         }
@@ -581,64 +584,70 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*{{{  E_PUTSNARF   -- put the snarf buffer*/
       case E_PUTSNARF:
         if (snarf)
-          Write(W(to_fd), snarf, strlen(snarf));
+          Write(win->to_fd, snarf, strlen(snarf));
         break;
       /*}}}  */
       /*{{{  E_GIMME      -- snarf text into input queue*/
       case E_GIMME:
-        W(esc)
-        [TEXT_COUNT] = 0;
-        if (W(esc)[cnt] > 0 && W(esc)[cnt] < MAXSHELL && (W(snarf) = malloc(W(esc)[cnt] + 1)) != NULL)
-          W(flags) |= W_TEXT;
-        W(code) = T_GIMME;
+        win->esc
+            [TEXT_COUNT]
+            = 0;
+        if (win->esc[cnt] > 0 && win->esc[cnt] < MAXSHELL && (win->snarf = malloc(win->esc[cnt] + 1)) != NULL)
+          win->flags |= W_TEXT;
+        win->code = T_GIMME;
         break;
       /*}}}  */
       /*{{{  E_GMAP       -- read a bitmap from a file*/
       case E_GMAP:
-        W(esc)
-        [TEXT_COUNT] = 0;
-        if (W(esc)[cnt] > 0 && W(esc)[cnt] < MAX_PATH && (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0)
-          W(flags) |= W_TEXT;
-        W(code) = T_GMAP;
+        win->esc
+            [TEXT_COUNT]
+            = 0;
+        if (win->esc[cnt] > 0 && win->esc[cnt] < MAX_PATH && (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
+          win->flags |= W_TEXT;
+        win->code = T_GMAP;
         break;
       /*}}}  */
       /*{{{  E_SMAP       -- save a bitmap on a file*/
       case E_SMAP:
-        W(esc)
-        [TEXT_COUNT] = 0;
-        if (W(esc)[cnt] > 0 && W(esc)[cnt] < MAX_PATH && (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0) {
-          W(flags) |= W_TEXT;
+        win->esc
+            [TEXT_COUNT]
+            = 0;
+        if (win->esc[cnt] > 0 && win->esc[cnt] < MAX_PATH && (win->snarf = malloc(win->esc[cnt] + 1)) != 0) {
+          win->flags |= W_TEXT;
         }
-        W(code) = T_SMAP;
+        win->code = T_SMAP;
         break;
       /*}}}  */
       /*{{{  E_SNARF      -- snarf text into the snarf buffer*/
       case E_SNARF:
-        W(esc)
-        [TEXT_COUNT] = 0;
-        if (W(esc)[cnt] >= 0 && /*** was just > */
-            (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0)
-          W(flags) |= W_TEXT;
-        W(code) = T_YANK;
+        win->esc
+            [TEXT_COUNT]
+            = 0;
+        if (win->esc[cnt] >= 0 && /*** was just > */
+            (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
+          win->flags |= W_TEXT;
+        win->code = T_YANK;
         break;
       /*}}}  */
       /*{{{  E_STRING     -- write text into the offscreen bitmap*/
       case E_STRING:
-        W(esc)
-        [TEXT_COUNT] = 0;
-        if (W(esc)[cnt] > 0 && (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0)
-          W(flags) |= W_TEXT;
-        W(code) = T_STRING;
+        win->esc
+            [TEXT_COUNT]
+            = 0;
+        if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
+          win->flags |= W_TEXT;
+        win->code = T_STRING;
         break;
       /*}}}  */
       /*{{{  E_GRUNCH     -- graphics scrunch mode  (experimental)*/
       case E_GRUNCH: /* graphics scrunch mode  (experimental) */
-        W(esc)
-        [TEXT_COUNT] = 0;
-        if (W(esc)[cnt] >= 0 && /*** was just > */
-            (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0)
-          W(flags) |= W_TEXT;
-        W(code) = T_GRUNCH;
+        win->esc
+            [TEXT_COUNT]
+            = 0;
+        if (win->esc[cnt] >= 0 && /*** was just > */
+            (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
+          win->flags |= W_TEXT;
+        win->code = T_GRUNCH;
         break;
 /*}}}  */
 #ifdef XMENU
@@ -649,22 +658,22 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         /* ^[1,2,3X     display menu 3 at 1,2 */
         /* ^[1,2,3,4Xhighlight menu 3 item 4 at 1,2 */
         {
-          int *p = W(esc);
+          int *p = win->esc;
           struct menu_state *menu;
           switch (cnt) {
           case 0: /* remove menu from display */
-            if (p[0] >= 0 && p[0] < MAXMENU && (menu = W(menus[p[0]])))
+            if (p[0] >= 0 && p[0] < MAXMENU && (menu = win->menus[p[0]]))
               menu_remove(menu);
           case 1: /* select active item */
-            if (p[0] >= 0 && p[0] < MAXMENU && (menu = W(menus[p[0]])))
+            if (p[0] >= 0 && p[0] < MAXMENU && (menu = win->menus[p[0]]))
               menu->current = p[1];
             break;
           case 2: /* display menu  on window */
-            if (p[2] >= 0 && p[2] < MAXMENU && (menu = W(menus[p[2]])))
+            if (p[2] >= 0 && p[2] < MAXMENU && (menu = win->menus[p[2]]))
               menu_setup(menu, window, Scalex(p[0]), Scaley(p[1]), -1);
             break;
           case 3: /* highlight menu item on window */
-            if (p[2] >= 0 && p[2] < MAXMENU && (menu = W(menus[p[2]])) && menu->menu) {
+            if (p[2] >= 0 && p[2] < MAXMENU && (menu = win->menus[p[2]]) && menu->menu) {
               bit_blit(window, Scalex(p[0]) + MENU_BORDER,
                   Scaley(p[1]) + (p[3] - 1) * menu->bar_sizey + MENU_BORDER,
                   menu->bar_sizex, menu->bar_sizey,
@@ -677,36 +686,36 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
 /*}}}  */
 #endif
       /*{{{  E_MENU       -- get a menu*/
-      case E_MENU:               /* get a menu */
-      {                          /* should be split into several cases */
-        int b = (W(esc)[0] < 0); /* which button */
-        int n = ABS(W(esc)[0]);  /* menu number */
+      case E_MENU:                 /* get a menu */
+      {                            /* should be split into several cases */
+        int b = (win->esc[0] < 0); /* which button */
+        int n = ABS(win->esc[0]);  /* menu number */
 
         /* setup menu pointer */
 
         if (cnt > 2) {
-          int parent = n;        /* parent menu # */
-          int child = W(esc[2]); /* child menu number */
-          int item = W(esc[1]);  /* item # of parent */
-          int flags = W(esc[3]); /* menu flags */
+          int parent = n;          /* parent menu # */
+          int child = win->esc[2]; /* child menu number */
+          int item = win->esc[1];  /* item # of parent */
+          int flags = win->esc[3]; /* menu flags */
 
-          if (parent < 0 || parent >= MAXMENU || child >= MAXMENU || W(menus[parent]) == NULL)
+          if (parent < 0 || parent >= MAXMENU || child >= MAXMENU || win->menus[parent] == NULL)
             break;
 
           dbgprintf('M', (stderr, "Linking menu %d to parent %d at item %d\n",
                              child, parent, item));
 
           if (item < 0) /* page link */
-            W(menus[parent])
+            win->menus[parent]
                 ->next
                 = child;
-          else if (item < W(menus[parent])->count) /* slide lnk */
-            menu_setnext(W(menus[parent]), item) = child;
+          else if (item < win->menus[parent]->count) /* slide lnk */
+            menu_setnext(win->menus[parent], item) = child;
 
           /* menu flags */
 
           if (flags > 0)
-            W(menus[parent])
+            win->menus[parent]
                 ->flags
                 = flags;
 
@@ -716,35 +725,37 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         /* download a menu */
 
         if (cnt > 0) {
-          W(esc)
-          [TEXT_COUNT] = 0;
-          if (W(menus)[n]) {
-            menu_destroy(W(menus)[n]);
-            W(menus)
-            [n] = NULL;
-            if (W(menu[0]) == n)
-              W(menu[0]) = -1;
-            if (W(menu[1]) == n)
-              W(menu[1]) = -1;
+          win->esc
+              [TEXT_COUNT]
+              = 0;
+          if (win->menus[n]) {
+            menu_destroy(win->menus[n]);
+            win->menus
+                [n]
+                = NULL;
+            if (win->menu[0] == n)
+              win->menu[0] = -1;
+            if (win->menu[1] == n)
+              win->menu[1] = -1;
           }
-          if (W(esc)[cnt] > 0 && (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0) {
-            W(flags) |= W_TEXT;
-            W(code) = T_MENU;
+          if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0) {
+            win->flags |= W_TEXT;
+            win->code = T_MENU;
           }
           dbgprintf('M', (stderr, "downloading menu %d\n", n));
         }
 
         /* select menu number */
 
-        else if (n < MAXMENU && W(menus)[n]) {
-          int last_menu = W(menu[b]);
+        else if (n < MAXMENU && win->menus[n]) {
+          int last_menu = win->menu[b];
 
           dbgprintf('M', (stderr, "selecting menu %d on button %d\n", n, b));
-          W(menu[b]) = n;
+          win->menu[b] = n;
           if (last_menu < 0 && button_state == (b ? BUTTON_1 : BUTTON_2))
             go_menu(b);
         } else
-          W(menu[b]) = -1;
+          win->menu[b] = -1;
       } break;
       /*}}}  */
       /*{{{  E_EVENT      -- get an event*/
@@ -752,22 +763,24 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         switch (cnt) {
         case 2: /* append to an event */
         case 1: /* set an event */
-          W(esc)
-          [TEXT_COUNT] = 0;
-          if (W(esc)[cnt] > 0 && (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0) {
-            W(flags) |= W_TEXT;
-            W(code) = T_EVENT;
+          win->esc
+              [TEXT_COUNT]
+              = 0;
+          if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0) {
+            win->flags |= W_TEXT;
+            win->code = T_EVENT;
           }
           break;
         case 0:
-          cnt = W(esc)[0];
+          cnt = win->esc[0];
           if (!CHK_EVENT(cnt))
             break;
           EVENT_CLEAR_MASK(win, cnt);
-          if (W(events)[GET_EVENT(cnt)]) {
-            free(W(events)[GET_EVENT(cnt)]);
-            W(events)
-            [GET_EVENT(cnt)] = NULL;
+          if (win->events[GET_EVENT(cnt)]) {
+            free(win->events[GET_EVENT(cnt)]);
+            win->events
+                [GET_EVENT(cnt)]
+                = NULL;
           }
           break;
         }
@@ -775,17 +788,18 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_SEND       -- send a message*/
       case E_SEND: /* send a message */
-        W(esc)
-        [TEXT_COUNT] = 0;
-        if (W(esc)[cnt] > 0 && (W(snarf) = malloc(W(esc)[cnt] + 1)) != 0) {
-          W(flags) |= W_TEXT;
-          W(code) = T_SEND;
+        win->esc
+            [TEXT_COUNT]
+            = 0;
+        if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0) {
+          win->flags |= W_TEXT;
+          win->code = T_SEND;
         }
         break;
       /*}}}  */
       /*{{{  E_COLORPALETTE   -- set/get color palette entries */
       case E_COLORPALETTE: {
-        int i = W(esc)[0];
+        int i = win->esc[0];
         unsigned int ind, r, g, b, maxi;
 
         if (cnt == 0) { /* read or allocate palette entry */
@@ -799,22 +813,22 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
             else
               sprintf(tbuff, "\n"); /* none available */
           }
-          write(W(to_fd), tbuff, strlen(tbuff));
+          write(win->to_fd, tbuff, strlen(tbuff));
         } else if (cnt == 1) { /* free some colors */
-          free_colors(win, (unsigned int)i, (unsigned int)W(esc)[1]);
+          free_colors(win, (unsigned int)i, (unsigned int)win->esc[1]);
         } else if (cnt == 3) { /* find a color */
           r = (unsigned int)i;
-          g = W(esc)[1];
-          b = W(esc)[2];
-          maxi = W(esc)[3];
+          g = win->esc[1];
+          b = win->esc[2];
+          maxi = win->esc[3];
           findcolor(screen, &ind, &r, &g, &b, &maxi);
           sprintf(tbuff, "COLOR %u %u %u %u %u\n", ind, r, g, b, maxi);
-          write(W(to_fd), tbuff, strlen(tbuff));
+          write(win->to_fd, tbuff, strlen(tbuff));
         } else if (cnt == 4) { /* set palette entry */
-          r = W(esc)[1];
-          g = W(esc)[2];
-          b = W(esc)[3];
-          maxi = W(esc)[4];
+          r = win->esc[1];
+          g = win->esc[2];
+          b = win->esc[3];
+          maxi = win->esc[4];
           setpalette(screen, (unsigned int)i, r, g, b, maxi);
         }
         break;
@@ -822,40 +836,40 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_BITGET     -- transfer a bitmap from server to client*/
       case E_BITGET: {
-        int offset = W(esc)[2];
-        int which = *W(esc);
-        int size = W(esc)[1];
-        BITMAP *m; /* = W(bitmaps)[which-1]; */
+        int offset = win->esc[2];
+        int which = *win->esc;
+        int size = win->esc[1];
+        BITMAP *m; /* = win->bitmaps[which-1]; */
         unsigned char *data;
 
         if (
             cnt > 1
             && which > 0
             && which <= MAXBITMAPS
-            && (m = W(bitmaps)[which - 1]) != NULL
+            && (m = win->bitmaps[which - 1]) != NULL
             && size + offset <= B_SIZE8(BIT_WIDE(m), BIT_HIGH(m), BIT_DEPTH(m))) {
           data = bit_save(m);
-          write(W(to_fd), data + offset, size);
+          write(win->to_fd, data + offset, size);
           free(data);
-          /* write(W(to_fd),BIT_DATA(m)+offset,size); */
+          /* write(win->to_fd,BIT_DATA(m)+offset,size); */
         }
         break;
       }
       /*}}}  */
       /*{{{  E_BITVALUE   -- set/get pixel value*/
       case E_BITVALUE: {
-        int m = W(esc)[0];
-        int x = W(esc)[1];
-        int y = W(esc)[2];
-        int v = W(esc)[3];
+        int m = win->esc[0];
+        int x = win->esc[1];
+        int y = win->esc[2];
+        int v = win->esc[3];
         BITMAP *map;
 
         if ((cnt == 2 || cnt == 3) && m > 0 && m <= MAXBITMAPS) {
-          map = W(bitmaps)[m - 1];
+          map = win->bitmaps[m - 1];
           if (map) {
             if (cnt == 2) { /* get pixel value */
               sprintf(tbuff, "%d\n", bit_on(map, x, y));
-              write(W(to_fd), tbuff, strlen(tbuff));
+              write(win->to_fd, tbuff, strlen(tbuff));
             } else {
               v &= ~(~0 << BIT_DEPTH(map));
               bit_point(map, x, y, PUTFCOLOR(BIT_SET, v));
@@ -868,31 +882,33 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*{{{  E_BITCRT     -- create/destroy a bitmap*/
       case E_BITCRT: /* create/destroy a bitmap */
       {
-        int bmnbr = W(esc)[0];
+        int bmnbr = win->esc[0];
 
         switch (cnt) {
         case 0: /* destroy a bitmap */
-          if (bmnbr > 0 && bmnbr <= MAXBITMAPS && W(bitmaps)[bmnbr - 1]) {
-            bit_destroy(W(bitmaps)[bmnbr - 1]);
-            W(bitmaps)
-            [bmnbr - 1] = NULL;
+          if (bmnbr > 0 && bmnbr <= MAXBITMAPS && win->bitmaps[bmnbr - 1]) {
+            bit_destroy(win->bitmaps[bmnbr - 1]);
+            win->bitmaps
+                [bmnbr - 1]
+                = NULL;
           }
           break;
         case 2: /* create new bitmap - same depth as window */
         case 3: /* " - specify depth, 1->1 bit, otherwise DEPTH */
-          if (bmnbr > 0 && bmnbr <= MAXBITMAPS && W(bitmaps)[bmnbr - 1]) {
-            int w = W(esc)[1];
-            int h = W(esc)[2];
+          if (bmnbr > 0 && bmnbr <= MAXBITMAPS && win->bitmaps[bmnbr - 1]) {
+            int w = win->esc[1];
+            int h = win->esc[2];
 
-            W(bitmaps)
-            [bmnbr - 1] = bit_alloc(Scalex(w),
-                Scaley(h),
-                0,
-                (cnt == 3 && W(esc)[3] == 1)
-                    ? 1
-                    : BIT_DEPTH(W(window)));
+            win->bitmaps
+                [bmnbr - 1]
+                = bit_alloc(Scalex(w),
+                    Scaley(h),
+                    0,
+                    (cnt == 3 && win->esc[3] == 1)
+                        ? 1
+                        : BIT_DEPTH(win->window));
             dbgprintf('B', (stderr, "%s: created bitmap %d (%d,%d)\r\n",
-                               W(tty), bmnbr, w, h));
+                               win->tty, bmnbr, w, h));
           }
           break;
         }
@@ -901,11 +917,12 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*{{{  E_BITLOAD    -- transfer a bitmap from client to server*/
       case E_BITLOAD:
         if (cnt >= 4) {
-          if ((W(snarf) = malloc(W(esc[W(esc_cnt)]))) != 0) {
-            W(esc)
-            [TEXT_COUNT] = 0;
-            W(code) = T_BITMAP;
-            W(flags) |= W_TEXT;
+          if ((win->snarf = malloc(win->esc[win->esc_cnt])) != 0) {
+            win->esc
+                [TEXT_COUNT]
+                = 0;
+            win->code = T_BITMAP;
+            win->flags |= W_TEXT;
           } else
             fprintf(stderr, "MGR: Can't allocate bitmap!\n");
         }
@@ -923,15 +940,15 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         }
 
         if (cnt >= 3)
-          shape(W(esc)[cnt - 3], W(esc)[cnt - 2],
-              W(esc)[cnt - 1], W(esc)[cnt]);
+          shape(win->esc[cnt - 3], win->esc[cnt - 2],
+              win->esc[cnt - 1], win->esc[cnt]);
         else if (cnt == 1)
-          shape(W(esc)[cnt - 1], W(esc)[cnt],
-              BIT_WIDE(W(border)),
-              BIT_HIGH(W(border)));
+          shape(win->esc[cnt - 1], win->esc[cnt],
+              BIT_WIDE(win->border),
+              BIT_HIGH(win->border));
 
         ACTIVE_ON();
-        if (!(W(flags) & W_ACTIVE && mousein(mousex, mousey, win, 0)))
+        if (!(win->flags & W_ACTIVE && mousein(mousex, mousey, win, 0)))
           MOUSE_ON(screen, mousex, mousey);
 
         done++;
@@ -960,21 +977,21 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_MOVE       -- move to x,y pixels*/
       case E_MOVE: /* move to x,y pixels */
-        W(flags) &= ~W_SNARFABLE;
+        win->flags &= ~W_SNARFABLE;
         if (Do_clip())
-          Set_cliphigh(W(x) + W(text).x + fsizewide, W(y) + W(text).y);
+          Set_cliphigh(win->x + win->text.x + fsizewide, win->y + win->text.y);
         if (cnt > 0) {
-          W(x) = Scalex(*W(esc));
-          W(y) = Scaley(W(esc)[1]);
+          win->x = Scalex(*win->esc);
+          win->y = Scaley(win->esc[1]);
         } else {
-          W(x) += Scalex(*W(esc));
+          win->x += Scalex(*win->esc);
         }
-        if (W(x) + fsizewide > WIDE && !(W(flags) & W_NOWRAP))
-          W(x) = WIDE - fsizewide;
-        if (W(y) > HIGH)
-          W(y) = HIGH - fsizehigh;
+        if (win->x + fsizewide > WIDE && !(win->flags & W_NOWRAP))
+          win->x = WIDE - fsizewide;
+        if (win->y > HIGH)
+          win->y = HIGH - fsizehigh;
         if (Do_clip())
-          Set_cliplow(W(x) + W(text).x, W(y) + W(text).y - fsizehigh);
+          Set_cliplow(win->x + win->text.x, win->y + win->text.y - fsizehigh);
         break;
       /*}}}  */
       /*{{{  E_CUP        -- move to col,row (zero based)*/
@@ -982,39 +999,39 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         if (cnt < 1)
           break;
         {
-          int x = W(esc)[cnt - 1] * fsizewide;
-          int y = W(esc)[cnt] * fsizehigh;
+          int x = win->esc[cnt - 1] * fsizewide;
+          int y = win->esc[cnt] * fsizehigh;
           if (x == BETWEEN(-1, x, T_WIDE - fsizewide) && y == BETWEEN(-1, y, T_HIGH)) {
             if (Do_clip())
-              Set_cliphigh(W(x) + W(text).x + fsizewide, W(y) + W(text).y);
-            W(y) = y + fsizehigh;
-            W(x) = x;
+              Set_cliphigh(win->x + win->text.x + fsizewide, win->y + win->text.y);
+            win->y = y + fsizehigh;
+            win->x = x;
             if (Do_clip())
-              Set_cliplow(W(x) + W(text).x, W(y) + W(text).y - fsizehigh);
+              Set_cliplow(win->x + win->text.x, win->y + win->text.y - fsizehigh);
           }
         }
         break;
       /*}}}  */
       /*{{{  E_VI         -- turn on vi hack*/
       case E_VI: /* turn on vi hack */
-        W(flags) |= W_VI;
+        win->flags |= W_VI;
         break;
       /*}}}  */
       /*{{{  E_NOVI       -- turn off vi hack*/
       case E_NOVI: /* turn off vi hack */
-        W(flags) &= ~W_VI;
+        win->flags &= ~W_VI;
         break;
       /*}}}  */
       /*{{{  E_PUSH       -- push environment*/
       case E_PUSH: /* push environment */
-        win_push(win, *W(esc));
+        win_push(win, *win->esc);
         break;
       /*}}}  */
       /*{{{  E_POP        -- pop old environment*/
       case E_POP: /* pop old environment */
         MOUSE_OFF(screen, mousex, mousey);
         win_pop(win);
-        if (!(W(flags) & W_ACTIVE && mousein(mousex, mousey, win, 0)))
+        if (!(win->flags & W_ACTIVE && mousein(mousex, mousey, win, 0)))
           MOUSE_ON(screen, mousex, mousey);
         done++;
         break;
@@ -1023,51 +1040,51 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       case E_TEXTREGION: /* setup text region */
         switch (cnt) {
         case 1: /* setup scrolling region (~aka vt100) */
-          if (W(esc)[0] >= 0 && W(esc)[1] >= W(esc)[0] && W(esc)[1] * fsizehigh < BIT_HIGH(W(window))) {
-            W(text.x) = 0;
-            W(text.wide) = BIT_WIDE(W(window));
-            W(text.y) = fsizehigh * W(esc[0]);
-            W(text.high) = fsizehigh * (1 + W(esc[1])) - W(text.y);
-            if (W(y) < W(text.y) + fsizehigh)
-              W(y) = W(text.y) + fsizehigh;
-            if (W(y) > W(text.high))
-              W(y) = W(text.high);
+          if (win->esc[0] >= 0 && win->esc[1] >= win->esc[0] && win->esc[1] * fsizehigh < BIT_HIGH(win->window)) {
+            win->text.x = 0;
+            win->text.wide = BIT_WIDE(win->window);
+            win->text.y = fsizehigh * win->esc[0];
+            win->text.high = fsizehigh * (1 + win->esc[1]) - win->text.y;
+            if (win->y < win->text.y + fsizehigh)
+              win->y = win->text.y + fsizehigh;
+            if (win->y > win->text.high)
+              win->y = win->text.high;
           }
           break;
         case 3: /* set up entire region */
-          W(text.wide) = Scalex(W(esc[2]));
-          W(text.high) = Scaley(W(esc[3]));
-          W(text.x) = Scalex(W(esc[0]));
-          W(text.y) = Scaley(W(esc[1]));
-          if (W(text.high) >= fsizehigh * MIN_Y && W(text.wide) >= fsizewide * MIN_X) {
-            W(x) = 0;
-            W(y) = fsizehigh;
-            W(flags) &= ~W_SNARFABLE;
+          win->text.wide = Scalex(win->esc[2]);
+          win->text.high = Scaley(win->esc[3]);
+          win->text.x = Scalex(win->esc[0]);
+          win->text.y = Scaley(win->esc[1]);
+          if (win->text.high >= fsizehigh * MIN_Y && win->text.wide >= fsizewide * MIN_X) {
+            win->x = 0;
+            win->y = fsizehigh;
+            win->flags &= ~W_SNARFABLE;
             break;
           }
-          W(text.x) = 0;
-          W(text.y) = 0;
-          W(text.wide) = 0;
-          W(text.high) = 0;
+          win->text.x = 0;
+          win->text.y = 0;
+          win->text.wide = 0;
+          win->text.high = 0;
           break;
         case 4: /* set up entire region (use rows, cols) */
-          W(text.x) = W(esc[0]) * fsizewide;
-          W(text.y) = W(esc[1]) * fsizehigh;
-          W(text.wide) = W(esc[2]) * fsizewide;
-          W(text.high) = W(esc[3]) * fsizehigh;
-          if (W(text.high) >= fsizehigh * MIN_Y && W(text.wide) >= fsizewide * MIN_X) {
-            W(x) = 0;
-            W(y) = fsizehigh;
+          win->text.x = win->esc[0] * fsizewide;
+          win->text.y = win->esc[1] * fsizehigh;
+          win->text.wide = win->esc[2] * fsizewide;
+          win->text.high = win->esc[3] * fsizehigh;
+          if (win->text.high >= fsizehigh * MIN_Y && win->text.wide >= fsizewide * MIN_X) {
+            win->x = 0;
+            win->y = fsizehigh;
             break;
           }
           break;
         case 0: /* clear text region */
-          if (W(text.x) % fsizewide != 0 || W(text.y) % fsizehigh != 0)
-            W(flags) &= ~W_SNARFABLE;
-          W(text.x) = 0;
-          W(text.y) = 0;
-          W(text.wide) = 0;
-          W(text.high) = 0;
+          if (win->text.x % fsizewide != 0 || win->text.y % fsizehigh != 0)
+            win->flags &= ~W_SNARFABLE;
+          win->text.x = 0;
+          win->text.y = 0;
+          win->text.wide = 0;
+          win->text.high = 0;
           break;
         }
         done++;
@@ -1078,48 +1095,48 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_SETMODE    -- set a window mode*/
       case E_SETMODE:
-        switch (W(esc)[0]) {
+        switch (win->esc[0]) {
         case M_STANDOUT:
           standout(win);
           break;
         case M_BACKGROUND: /* enable background writes */
-          W(flags) |= W_BACKGROUND;
+          win->flags |= W_BACKGROUND;
           break;
         case M_NOINPUT: /* disable keyboard input */
-          W(flags) |= W_NOINPUT;
+          win->flags |= W_NOINPUT;
           break;
         case M_AUTOEXPOSE: /* auto expose upon write */
-          W(flags) |= W_EXPOSE;
+          win->flags |= W_EXPOSE;
           break;
         case M_WOB: /* set white on black */
-          if (W(flags) & W_REVERSE)
+          if (win->flags & W_REVERSE)
             break;
-          W(flags) |= W_REVERSE;
-          W(style) = SWAPCOLOR(W(style));
+          win->flags |= W_REVERSE;
+          win->style = SWAPCOLOR(win->style);
           CLEAR(window, BG_OP);
           BORDER(win);
           if (Do_clip())
             Set_all();
           break;
         case M_NOWRAP: /* turn on no-wrap */
-          W(flags) |= W_NOWRAP;
+          win->flags |= W_NOWRAP;
           break;
         case M_OVERSTRIKE: /* turn on overstrike */
-          W(style) = PUTOP(W(op), W(style));
-          W(flags) |= W_OVER;
+          win->style = PUTOP(win->op, win->style);
+          win->flags |= W_OVER;
           break;
         case M_ABS: /* set absolute coordinate mode */
-          W(flags) |= W_ABSCOORDS;
+          win->flags |= W_ABSCOORDS;
           break;
         case M_DUPKEY: /* duplicate esc char from keyboard */
-          W(flags) |= W_DUPKEY;
+          win->flags |= W_DUPKEY;
           if (cnt > 0)
-            W(dup) = W(esc[1]) & 0xff;
+            win->dup = win->esc[1] & 0xff;
           else
-            W(dup) = DUP_CHAR;
+            win->dup = DUP_CHAR;
           break;
         case M_NOBUCKEY: /* set no buckey interpretation mode */
-          W(flags) |= W_NOBUCKEY;
+          win->flags |= W_NOBUCKEY;
           break;
         case M_CONSOLE: /* redirect console to this device */
           set_console(win, 1);
@@ -1130,16 +1147,16 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           break;
 #endif
         case M_SNARFLINES: /* only cut lines */
-          W(flags) |= W_SNARFLINES;
+          win->flags |= W_SNARFLINES;
           break;
         case M_SNARFTABS: /* change spaces to tabs */
-          W(flags) |= W_SNARFTABS;
+          win->flags |= W_SNARFTABS;
           break;
         case M_SNARFHARD: /* snarf even if errors */
-          W(flags) |= W_SNARFHARD;
+          win->flags |= W_SNARFHARD;
           break;
         case M_NOREPORT: /* don't tell kernel our window size */
-          W(flags) |= W_NOREPORT;
+          win->flags |= W_NOREPORT;
           break;
         case M_ACTIVATE: /* activate the window */
           if (win == active)
@@ -1154,7 +1171,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           cursor_on();
           done++;
 
-          if (!(W(flags) & W_ACTIVE && mousein(mousex, mousey, win, 0)))
+          if (!(win->flags & W_ACTIVE && mousein(mousex, mousey, win, 0)))
             MOUSE_ON(screen, mousex, mousey);
           break;
         }
@@ -1162,47 +1179,47 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_CLEARMODE  -- clear a window mode*/
       case E_CLEARMODE:
-        switch (W(esc)[0]) {
+        switch (win->esc[0]) {
         case M_STANDOUT:
           standend(win);
           break;
         case M_BACKGROUND: /* don't permit background writes */
-          W(flags) &= ~W_BACKGROUND;
+          win->flags &= ~W_BACKGROUND;
           break;
         case M_NOINPUT: /* permit keyboard input */
-          W(flags) &= ~W_NOINPUT;
+          win->flags &= ~W_NOINPUT;
           break;
         case M_AUTOEXPOSE: /* don't auto expose */
-          W(flags) &= ~W_EXPOSE;
+          win->flags &= ~W_EXPOSE;
           break;
         case M_WOB: /* set black-on-white */
-          if (!(W(flags) & W_REVERSE))
+          if (!(win->flags & W_REVERSE))
             break;
-          W(flags) &= ~W_REVERSE;
-          W(style) = SWAPCOLOR(W(style));
+          win->flags &= ~W_REVERSE;
+          win->style = SWAPCOLOR(win->style);
           CLEAR(window, BG_OP);
           BORDER(win);
           if (Do_clip())
             Set_all();
           break;
         case M_NOWRAP: /* turn off no-wrap */
-          W(flags) &= ~W_NOWRAP;
+          win->flags &= ~W_NOWRAP;
           break;
         case M_OVERSTRIKE: /* turn off overstrike */
-          if (W(flags) & W_STANDOUT)
-            W(style) = PUTOP(BIT_NOT(BIT_SRC), W(style));
+          if (win->flags & W_STANDOUT)
+            win->style = PUTOP(BIT_NOT(BIT_SRC), win->style);
           else
-            W(style) = PUTOP(BIT_SRC, W(style));
-          W(flags) &= ~W_OVER;
+            win->style = PUTOP(BIT_SRC, win->style);
+          win->flags &= ~W_OVER;
           break;
         case M_ABS: /* set relative coordinate mode */
-          W(flags) &= ~W_ABSCOORDS;
+          win->flags &= ~W_ABSCOORDS;
           break;
         case M_DUPKEY: /* reset keyboard dup-ky mode */
-          W(flags) &= ~W_DUPKEY;
+          win->flags &= ~W_DUPKEY;
           break;
         case M_NOBUCKEY: /* reset no buckey interpretation mode */
-          W(flags) &= ~W_NOBUCKEY;
+          win->flags &= ~W_NOBUCKEY;
           break;
         case M_CONSOLE: /* quit console redirection to this device */
           set_console(win, 0);
@@ -1213,19 +1230,19 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           break;
 #endif
         case M_SNARFLINES: /* only cut lines */
-          W(flags) &= ~W_SNARFLINES;
+          win->flags &= ~W_SNARFLINES;
           break;
         case M_SNARFTABS: /* change spaces to tabs */
-          W(flags) &= ~W_SNARFTABS;
+          win->flags &= ~W_SNARFTABS;
           break;
         case M_SNARFHARD: /* snarf even if errors */
-          W(flags) &= ~W_SNARFHARD;
+          win->flags &= ~W_SNARFHARD;
           break;
         case M_NOREPORT: /* don't tell kernel our window size */
-          W(flags) &= ~W_NOREPORT;
+          win->flags &= ~W_NOREPORT;
           break;
         case M_ACTIVATE: /* hide the window */
-          if (!(W(flags) & W_ACTIVE) || next_window == 1)
+          if (!(win->flags & W_ACTIVE) || next_window == 1)
             break;
           MOUSE_OFF(screen, mousex, mousey);
           if (win != active)
@@ -1235,7 +1252,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           ACTIVE_ON();
           if (win != active)
             cursor_on();
-          if (!(W(flags) & W_ACTIVE && mousein(mousex, mousey, win, 0)))
+          if (!(win->flags & W_ACTIVE && mousein(mousex, mousey, win, 0)))
             MOUSE_ON(screen, mousex, mousey);
 
           done++;
@@ -1258,7 +1275,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*{{{  E_HALFWIN    -- make a 1/2 window*/
       case E_HALFWIN: /* make a 1/2 window */
       {
-        int *p = W(esc);
+        int *p = win->esc;
         char *tty = NULL;
 
         if (cnt < 3 || cnt > 4)
@@ -1278,14 +1295,14 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         }
         if (win != active)
           cursor_on();
-        if (W(flags) & W_DUPKEY)
-          sprintf(tbuff, "%c %s\n", W(dup), tty ? tty : "");
+        if (win->flags & W_DUPKEY)
+          sprintf(tbuff, "%c %s\n", win->dup, tty ? tty : "");
         else
           sprintf(tbuff, "%s\n", tty ? tty : "");
         if (tty) {
           ACTIVE_ON();
         }
-        write(W(to_fd), tbuff, strlen(tbuff));
+        write(win->to_fd, tbuff, strlen(tbuff));
 
         done++;
       } break;
@@ -1295,8 +1312,8 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         break;
         /*}}}  */
       }
-      if (!(W(flags) & W_ESCAPE))
-        W(flags) &= ~W_MINUS;
+      if (!(win->flags & W_ESCAPE))
+        win->flags &= ~W_MINUS;
       break;
     /*}}}  */
     /*{{{  default -- normal character*/
@@ -1304,10 +1321,10 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       switch (c) {
       /*{{{  ESC -- turn on escape mode*/
       case ESC:
-        W(flags) |= W_ESCAPE;
-        W(flags) &= ~(W_MINUS);
-        W(esc_cnt) = 0;
-        W(esc[0]) = 0;
+        win->flags |= W_ESCAPE;
+        win->flags &= ~(W_MINUS);
+        win->esc_cnt = 0;
+        win->esc[0] = 0;
         break;
       /*}}}  */
       /*{{{  C_NULL -- null character, ignore*/
@@ -1317,22 +1334,22 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*{{{  C_BS -- back space*/
       case C_BS:
         if (Do_clip()) {
-          Set_cliphigh(W(x) + W(text).x + fsizewide, 0);
+          Set_cliphigh(win->x + win->text.x + fsizewide, 0);
         }
-        W(x) -= fsizewide;
-        if (W(x) < 0)
-          W(x) = 0;
+        win->x -= fsizewide;
+        if (win->x < 0)
+          win->x = 0;
         if (Do_clip()) {
-          Set_cliplow(W(x) + W(text).x, 10000);
+          Set_cliplow(win->x + win->text.x, 10000);
         }
         break;
       /*}}}  */
       /*{{{  C_FF -- form feed*/
       case C_FF:
         CLEAR(text, BG_OP);
-        W(x) = 0;
-        W(y) = fsizehigh;
-        W(flags) |= W_SNARFABLE;
+        win->x = 0;
+        win->y = fsizehigh;
+        win->flags |= W_SNARFABLE;
         if (Do_clip())
           Set_all();
         done++;
@@ -1342,58 +1359,58 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       case C_BELL:
         bell_on();
         if (!bell++) {
-          CLEAR(W(window), BIT_NOT(BIT_DST));
-          CLEAR(W(window), BIT_NOT(BIT_DST));
+          CLEAR(win->window, BIT_NOT(BIT_DST));
+          CLEAR(win->window, BIT_NOT(BIT_DST));
         }
         break;
       /*}}}  */
       /*{{{  C_TAB -- tab*/
       case C_TAB:
-        W(x) = ((W(x) / fsizewide + 8) & ~7) * fsizewide;
-        if (W(x) + fsizewide >= T_WIDE) {
-          W(x) = 0;
-          if (W(y) + fsizehigh > T_HIGH) {
+        win->x = ((win->x / fsizewide + 8) & ~7) * fsizewide;
+        if (win->x + fsizewide >= T_WIDE) {
+          win->x = 0;
+          if (win->y + fsizehigh > T_HIGH) {
             scroll(win, text, 0, T_HIGH, fsizehigh, BG_OP);
             done++;
           } else
-            W(y) += fsizehigh;
+            win->y += fsizehigh;
         }
         break;
       /*}}}  */
       /*{{{  C_RETURN -- return*/
       case C_RETURN:
         if (Do_clip()) {
-          Set_cliphigh(W(x) + W(text).x + fsizewide, 0);
-          Set_cliplow(W(text).x, 10000);
+          Set_cliphigh(win->x + win->text.x + fsizewide, 0);
+          Set_cliplow(win->text.x, 10000);
         }
-        W(x) = 0;
+        win->x = 0;
         break;
       /*}}}  */
       /*{{{  C_NL -- line feed*/
       case C_NL: /* line feed */
-        if (W(y) + fsizehigh > T_HIGH) {
+        if (win->y + fsizehigh > T_HIGH) {
           scroll(win, text, 0, T_HIGH, fsizehigh, BG_OP);
           done++;
         } else
-          W(y) += fsizehigh;
+          win->y += fsizehigh;
         break;
       /*}}}  */
       /*{{{  default -- print a character*/
       default:
-        if (W(y) > T_HIGH)
-          W(y) = T_HIGH - fsizehigh;
-        PUT_CHAR(text, W(x), W(y), W(font), W(style), offset + c);
+        if (win->y > T_HIGH)
+          win->y = T_HIGH - fsizehigh;
+        PUT_CHAR(text, win->x, win->y, win->font, win->style, offset + c);
 
-        W(x) += fsizewide;
-        if (W(x) + fsizewide > T_WIDE && !(W(flags) & W_NOWRAP)) {
+        win->x += fsizewide;
+        if (win->x + fsizewide > T_WIDE && !(win->flags & W_NOWRAP)) {
           if (Do_clip()) {
-            Set_cliphigh(W(x) + W(text).x + fsizewide, 0);
-            Set_cliplow(W(text).x, 10000);
+            Set_cliphigh(win->x + win->text.x + fsizewide, 0);
+            Set_cliplow(win->text.x, 10000);
           }
-          W(x) = 0;
-          W(y) += fsizehigh;
-          if (W(y) > T_HIGH) {
-            W(y) -= fsizehigh;
+          win->x = 0;
+          win->y += fsizehigh;
+          if (win->y > T_HIGH) {
+            win->y -= fsizehigh;
             scroll(win, text, 0, T_HIGH, fsizehigh, BG_OP);
             done++;
           }
@@ -1408,7 +1425,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
   /*}}}  */
 
   if (Do_clip()) {
-    Set_cliphigh(W(x) + W(text).x + fsizewide, W(y) + W(text).y);
+    Set_cliphigh(win->x + win->text.x + fsizewide, win->y + win->text.y);
   }
 
   cursor_on();
@@ -1421,7 +1438,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
   if (sub_window)
     bit_destroy(window);
 
-  if (W(flags) & W_BACKGROUND && !(W(flags) & W_ACTIVE))
+  if (win->flags & W_BACKGROUND && !(win->flags & W_ACTIVE))
     update(win, &clip);
   return (indx);
 }

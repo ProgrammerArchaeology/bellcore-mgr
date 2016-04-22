@@ -33,9 +33,6 @@
 #include "shape.h"
 #include "subs.h"
 /*}}}  */
-/*{{{  #defines*/
-#define S(x) (stack->x)
-/*}}}  */
 
 /*{{{  win_push -- push a window on the environment stack*/
 int win_push(
@@ -52,24 +49,21 @@ int win_push(
   if (level == 0)
     level = P_DEFAULT;
 
-  dbgprintf('P', (stderr, "%s Stacking %s\n", W(tty), print_stack(level)));
+  dbgprintf('P', (stderr, "%s Stacking %s\n", win->tty, print_stack(level)));
 
   /* setup stacked window */
 
   (void)memcpy(stack, win, sizeof(WINDOW));
-  W(stack) = stack;
+  win->stack = stack;
 
   for (j = 0; j < MAXMENU; j++)
-    S(menus)
-    [j] = NULL;
+    stack->menus[j] = NULL;
   for (j = 0; j < MAXEVENTS; j++)
-    S(events)
-    [j] = NULL;
+    stack->events[j] = NULL;
   for (j = 0; j < MAXBITMAPS; j++)
-    S(bitmaps)
-    [j] = NULL;
-  S(save) = NULL;
-  S(clip_list) = NULL;
+    stack->bitmaps[j] = NULL;
+  stack->save = NULL;
+  stack->clip_list = NULL;
 
   /* setup each pushed item */
 
@@ -78,15 +72,12 @@ int win_push(
     case P_MENU: /* save the menus */
       dbgprintf('P', (stderr, "  menus "));
       for (j = 0; j < MAXMENU; j++)
-        if (W(menus)[j] && (level & P_CLEAR)) {
-          S(menus)
-          [j] = W(menus)[j];
-          W(menus)
-          [j] = NULL;
+        if (win->menus[j] && (level & P_CLEAR)) {
+          stack->menus[j] = win->menus[j];
+          win->menus[j] = NULL;
           dbgprintf('P', (stderr, "%d ", j));
-        } else if (W(menus)[j]) {
-          S(menus)
-          [j] = menu_copy(W(menus)[j]);
+        } else if (win->menus[j]) {
+          stack->menus[j] = menu_copy(win->menus[j]);
           dbgprintf('P', (stderr, "%d ", j));
         }
       dbgprintf('P', (stderr, "\n"));
@@ -98,130 +89,112 @@ int win_push(
         EVENT_SET_MASK(win, EVENT_STFLAG);
 
       if (level & P_CLEAR)
-        W(event_mask) = IS_EVENT(win, EVENT_STFLAG);
+        win->event_mask = IS_EVENT(win, EVENT_STFLAG);
       else
         EVENT_CLEAR_MASK(win, EVENT_STACK);
 
       for (j = 0; j < MAXEVENTS; j++)
-        if (W(events)[j] && (level & P_CLEAR)) {
-          S(events)
-          [j] = W(events)[j];
-          W(events)
-          [j] = NULL;
+        if (win->events[j] && (level & P_CLEAR)) {
+          stack->events[j] = win->events[j];
+          win->events[j] = NULL;
           dbgprintf('P', (stderr, "%d ", j));
-        } else if (W(events)[j]) {
-          S(events)
-          [j] = strcpy(malloc(strlen(W(events)[j]) + 1), W(events)[j]);
+        } else if (win->events[j]) {
+          stack->events[j] = strcpy(malloc(strlen(win->events[j]) + 1), win->events[j]);
           dbgprintf('P', (stderr, "%d ", j));
         }
       dbgprintf('P', (stderr, "\n"));
       break;
     case P_CURSOR: /* restore the cursor style */
       if (level & P_CLEAR)
-        W(curs_type) = CS_BLOCK;
+        win->curs_type = CS_BLOCK;
       break;
     case P_BITMAP: /* save the bitmaps */
       dbgprintf('P', (stderr, "  bitmaps "));
       for (j = 0; j < MAXBITMAPS; j++)
-        if (W(bitmaps)[j] && level & P_CLEAR) {
-          S(bitmaps)
-          [j] = W(bitmaps)[j];
-          W(bitmaps)
-          [j] = NULL;
+        if (win->bitmaps[j] && level & P_CLEAR) {
+          stack->bitmaps[j] = win->bitmaps[j];
+          win->bitmaps[j] = NULL;
           dbgprintf('P', (stderr, "%d ", j));
-        } else if (W(bitmaps)[j]) {
-          S(bitmaps)
-          [j] = bit_alloc(BIT_WIDE(W(bitmaps)[j]),
-              BIT_HIGH(W(bitmaps)[j]), NULL_DATA,
-              BIT_DEPTH(W(bitmaps)[j]));
-          bit_blit(S(bitmaps)[j], 0, 0, BIT_WIDE(W(bitmaps)[j]),
-              BIT_HIGH(W(bitmaps)[j]), BIT_SRC, W(bitmaps)[j], 0, 0);
+        } else if (win->bitmaps[j]) {
+          stack->bitmaps[j] = bit_alloc(BIT_WIDE(win->bitmaps[j]),
+              BIT_HIGH(win->bitmaps[j]), NULL_DATA,
+              BIT_DEPTH(win->bitmaps[j]));
+          bit_blit(stack->bitmaps[j], 0, 0, BIT_WIDE(win->bitmaps[j]),
+              BIT_HIGH(win->bitmaps[j]), BIT_SRC, win->bitmaps[j], 0, 0);
           dbgprintf('P', (stderr, "%d ", j));
         }
       dbgprintf('P', (stderr, "\n"));
       break;
     case P_WINDOW: /* save the bit image */
       dbgprintf('P', (stderr, "  window\n"));
-      S(save) = bit_alloc(BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-          NULL_DATA, BIT_DEPTH(W(window)));
-      if (W(save) && !(W(flags) & W_ACTIVE))
-        bit_blit(S(save), 0, 0, BIT_WIDE(W(save)), BIT_HIGH(W(save)),
-            BIT_SRC, W(save), 0, 0);
+      stack->save = bit_alloc(BIT_WIDE(win->border), BIT_HIGH(win->border),
+          NULL_DATA, BIT_DEPTH(win->window));
+      if (win->save && !(win->flags & W_ACTIVE))
+        bit_blit(stack->save, 0, 0, BIT_WIDE(win->save), BIT_HIGH(win->save),
+            BIT_SRC, win->save, 0, 0);
       else
-        bit_blit(S(save), 0, 0, BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-            BIT_SRC, W(border), 0, 0);
+        bit_blit(stack->save, 0, 0, BIT_WIDE(win->border), BIT_HIGH(win->border),
+            BIT_SRC, win->border, 0, 0);
       break;
     case P_POSITION: /* save the window position */
       dbgprintf('P', (stderr, "  position\n"));
-      S(esc)
-      [1] = BIT_WIDE(W(border));
-      S(esc)
-      [2] = BIT_HIGH(W(border));
+      stack->esc[1] = BIT_WIDE(win->border);
+      stack->esc[2] = BIT_HIGH(win->border);
       break;
     case P_TEXT: /* save text region */
       if (level & P_CLEAR) {
-        W(text)
-            .x
-            = 0;
-        W(text)
-            .y
-            = 0;
-        W(text)
-            .wide
-            = 0;
-        W(text)
-            .high
-            = 0;
+        win->text.x = 0;
+        win->text.y = 0;
+        win->text.wide = 0;
+        win->text.high = 0;
         set_size(win);
       }
       break;
     case P_MOUSE: /* save mouse position */
       dbgprintf('P', (stderr, "  mouse\n"));
-      S(esc)
-      [3] = mousex;
-      S(esc)
-      [4] = mousey;
+      stack->esc[3] = mousex;
+      stack->esc[4] = mousey;
       if (level & P_CLEAR) {
-        S(cursor) = W(cursor);
-        W(cursor) = &mouse_arrow;
-      } else if (IS_STATIC(W(cursor))) {
-        S(cursor) = W(cursor);
+        stack->cursor = win->cursor;
+        win->cursor = &mouse_arrow;
+      } else if (IS_STATIC(win->cursor)) {
+        stack->cursor = win->cursor;
       } else {
         /* user-defined cursor shape */
-        S(cursor) = bit_alloc(BIT_WIDE(W(cursor)), BIT_HIGH(W(cursor)),
-            NULL_DATA, BIT_DEPTH(W(cursor)));
-        bit_blit(S(cursor), 0, 0, BIT_WIDE(W(cursor)), BIT_HIGH(W(cursor)),
-            BIT_SRC, W(cursor), 0, 0);
+        stack->cursor = bit_alloc(BIT_WIDE(win->cursor), BIT_HIGH(win->cursor),
+            NULL_DATA, BIT_DEPTH(win->cursor));
+        bit_blit(stack->cursor, 0, 0, BIT_WIDE(win->cursor), BIT_HIGH(win->cursor),
+            BIT_SRC, win->cursor, 0, 0);
       }
       break;
     case P_FLAGS: /* save window flags  */
       if (level & P_CLEAR) {
-        W(flags) &= ~W_SAVE;
-        W(flags) |= W_BACKGROUND;
-        W(style) = PUTOP(BIT_SRC, W(style));
+        win->flags &= ~W_SAVE;
+        win->flags |= W_BACKGROUND;
+        win->style = PUTOP(BIT_SRC, win->style);
         border(win, win == active ? BORDER_FAT : BORDER_THIN);
-        W(dup) = '\0'; /* clear the dupkey mode */
+        win->dup = '\0'; /* clear the dupkey mode */
       }
       break;
     case P_COLOR: /* save the colors  */
       if (level & P_CLEAR) {
-        W(style) = PUTOP(W(style), BIT_SRC);
-        W(op) = PUTOP(W(op), BIT_OR);
+        win->style = PUTOP(win->style, BIT_SRC);
+        win->op = PUTOP(win->op, BIT_OR);
       }
       break;
     case P_BITOP: /* save the bitblit ops  */
       if (level & P_CLEAR) {
-        W(style) = PUTOP(BIT_SRC, W(style));
-        W(op) = PUTOP(BIT_OR, W(op));
+        win->style = PUTOP(BIT_SRC, win->style);
+        win->op = PUTOP(BIT_OR, win->op);
       }
       break;
     }
 
-  S(code) = level;
-  S(window) = NULL;
-  S(border) = NULL;
-  S(snarf) = NULL;
-  S(bitmap) = NULL;
+  stack->code = level;
+  stack->window = NULL;
+  stack->border = NULL;
+  stack->snarf = NULL;
+  stack->bitmap = NULL;
   return level;
 }
 /*}}}  */
@@ -231,37 +204,34 @@ int win_pop(
     )
 {
   int i, j;
-  WINDOW *stack = W(stack); /* window to pop from */
+  WINDOW *stack = win->stack; /* window to pop from */
 
   if (stack == NULL) {
     dbgprintf('P', (stderr, "  No environment to pop\n"));
     return -1;
   }
 
-  dbgprintf('P', (stderr, "%s popping %s\n", W(tty), print_stack(S(code))));
+  dbgprintf('P', (stderr, "%s popping %s\n", win->tty, print_stack(stack->code)));
 
   /* pop each item stacked */
 
   for (i = 1; i != P_MAX; i <<= 1)
-    switch (S(code) & i) {
+    switch (stack->code & i) {
     case P_MENU: /* restore the menus */
       dbgprintf('P', (stderr, "  menus "));
-      W(menu[0]) = S(menu[0]);
-      W(menu[1]) = S(menu[1]);
+      win->menu[0] = stack->menu[0];
+      win->menu[1] = stack->menu[1];
       for (j = 0; j < MAXMENU; j++) {
-        if (W(menus)[j]) {
+        if (win->menus[j]) {
           dbgprintf('P', (stderr, "d(%d) ", j));
-          menu_destroy(W(menus)[j]);
+          menu_destroy(win->menus[j]);
         }
-        if (S(menus)[j]) {
+        if (stack->menus[j]) {
           dbgprintf('P', (stderr, "r(%d) ", j));
-          W(menus)
-          [j] = S(menus)[j];
-          S(menus)
-          [j] = NULL;
+          win->menus[j] = stack->menus[j];
+          stack->menus[j] = NULL;
         } else
-          W(menus)
-          [j] = NULL;
+          win->menus[j] = NULL;
       }
       dbgprintf('P', (stderr, "\n"));
       break;
@@ -269,41 +239,37 @@ int win_pop(
 
       dbgprintf('P', (stderr, "  events "));
       for (j = 0; j < MAXEVENTS; j++) {
-        if (W(events)[j]) {
+        if (win->events[j]) {
           dbgprintf('P', (stderr, "d(%d) ", j));
-          free(W(events)[j]);
+          free(win->events[j]);
         }
-        W(events)
-        [j] = S(events)[j];
-        S(events)
-        [j] = NULL;
+        win->events[j] = stack->events[j];
+        stack->events[j] = NULL;
       }
-      W(event_mask) = S(event_mask);
+      win->event_mask = stack->event_mask;
       dbgprintf('P', (stderr, "\n"));
       break;
     case P_CURSOR: /* restore the cursor position */
-      W(x) = S(x);
-      W(y) = S(y);
-      W(gx) = S(gx);
-      W(gy) = S(gy);
-      W(curs_type) = S(curs_type);
+      win->x = stack->x;
+      win->y = stack->y;
+      win->gx = stack->gx;
+      win->gy = stack->gy;
+      win->curs_type = stack->curs_type;
       break;
     case P_BITMAP: /* restore the bitmaps */
       for (j = 0; j < MAXBITMAPS; j++) {
-        if (W(bitmaps)[j])
-          bit_destroy(W(bitmaps)[j]);
-        W(bitmaps)
-        [j] = S(bitmaps)[j];
-        S(bitmaps)
-        [j] = NULL;
+        if (win->bitmaps[j])
+          bit_destroy(win->bitmaps[j]);
+        win->bitmaps[j] = stack->bitmaps[j];
+        stack->bitmaps[j] = NULL;
       }
       dbgprintf('P', (stderr, "  bitmaps\n"));
       break;
     case P_FONT: /* restore font */
-      W(font) = S(font);
+      win->font = stack->font;
       break;
     case P_TEXT: /* restore text region */
-      W(text) = S(text);
+      win->text = stack->text;
       set_size(win);
       break;
     case P_POSITION: /* restore the window position */
@@ -312,49 +278,49 @@ int win_pop(
       ACTIVE_OFF();
       expose(win);
 
-      shape(S(x0), S(y0), S(esc)[1], S(esc)[2]);
+      shape(stack->x0, stack->y0, stack->esc[1], stack->esc[2]);
 
       ACTIVE_ON();
       dbgprintf('P', (stderr, "  position\n"));
       break;
     case P_WINDOW: /* restore the window contents */
-      if (W(save))
-        bit_destroy(W(save));
-      W(save) = bit_alloc(BIT_WIDE(W(border)), BIT_HIGH(W(border)),
-          NULL_DATA, BIT_DEPTH(W(window)));
-      bit_blit(W(border), 0, 0, BIT_WIDE(S(save)), BIT_HIGH(S(save)),
-          BIT_SRC, S(save), 0, 0);
+      if (win->save)
+        bit_destroy(win->save);
+      win->save = bit_alloc(BIT_WIDE(win->border), BIT_HIGH(win->border),
+          NULL_DATA, BIT_DEPTH(win->window));
+      bit_blit(win->border, 0, 0, BIT_WIDE(stack->save), BIT_HIGH(stack->save),
+          BIT_SRC, stack->save, 0, 0);
       dbgprintf('P', (stderr, "  window\n"));
       break;
     case P_FLAGS: /* restore the window flags */
-      W(op) = PUTOP(S(op), W(op));
-      W(style) = PUTOP(S(style), W(style));
-      W(dup) = S(dup);
-      W(flags) = (S(flags) & W_SAVE) | (W(flags) & (~W_SAVE));
+      win->op = PUTOP(stack->op, win->op);
+      win->style = PUTOP(stack->style, win->style);
+      win->dup = stack->dup;
+      win->flags = (stack->flags & W_SAVE) | (win->flags & (~W_SAVE));
       border(win, win == active ? BORDER_FAT : BORDER_THIN);
       dbgprintf('P', (stderr, "  flags\n"));
       break;
     case P_COLOR: /* restore the colors */
-      W(op) = PUTOP(W(op), S(op));
-      W(style) = PUTOP(W(style), S(style));
+      win->op = PUTOP(win->op, stack->op);
+      win->style = PUTOP(win->style, stack->style);
       dbgprintf('P', (stderr, "  colors\n"));
       break;
     case P_BITOP: /* restore the bitblit ops */
-      W(op) = PUTOP(S(op), W(op));
-      W(style) = PUTOP(S(style), W(style));
+      win->op = PUTOP(stack->op, win->op);
+      win->style = PUTOP(stack->style, win->style);
       dbgprintf('P', (stderr, "  bitblit ops\n"));
       break;
     case P_MOUSE: /* save mouse position */
       dbgprintf('P', (stderr, "  mouse\n"));
-      mousex = S(esc)[3];
-      mousey = S(esc)[4];
-      bit_destroy(W(cursor)); /* no op if static */
-      W(cursor) = S(cursor);
-      S(cursor) = 0;
+      mousex = stack->esc[3];
+      mousey = stack->esc[4];
+      bit_destroy(win->cursor); /* no op if static */
+      win->cursor = stack->cursor;
+      stack->cursor = 0;
       break;
     }
-  dbgprintf('P', (stderr, "%s\n", S(stack) ? "another stack" : "no environments stacked"));
-  W(stack) = S(stack);
+  dbgprintf('P', (stderr, "%s\n", stack->stack ? "another stack" : "no environments stacked"));
+  win->stack = stack->stack;
   unlink_win(stack, 0);
 
   return (0);

@@ -47,20 +47,20 @@ int mousein(
 {
   if (how == 0)
     return (!(
-        x + 16 < W(x0) || x > W(x0) + BIT_WIDE(win->border) || y + 16 < W(y0) || y > W(y0) + BIT_HIGH(win->border)));
+        x + 16 < win->x0 || x > win->x0 + BIT_WIDE(win->border) || y + 16 < win->y0 || y > win->y0 + BIT_HIGH(win->border)));
   else
     return (!(
-        x < W(x0) || x > W(x0) + BIT_WIDE(win->border) || y < W(y0) || y > W(y0) + BIT_HIGH(win->border)));
+        x < win->x0 || x > win->x0 + BIT_WIDE(win->border) || y < win->y0 || y > win->y0 + BIT_HIGH(win->border)));
 }
 /*}}}  */
 /*{{{  in_text -- see if mouse is in text region*/
 int in_text(int x, int y, WINDOW *win)
 {
-  if (W(text.wide)) {
-    int x0 = W(x0) + W(text.x);
-    int y0 = W(y0) + W(text.y);
+  if (win->text.wide) {
+    int x0 = win->x0 + win->text.x;
+    int y0 = win->y0 + win->text.y;
     return (!(
-        x < x0 || x > x0 + W(text.wide) || y < y0 || y > y0 + W(text.high)));
+        x < x0 || x > x0 + win->text.wide || y < y0 || y > y0 + win->text.high));
   } else
     return (mousein(x, y, win, 1));
 }
