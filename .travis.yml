@@ -1,0 +1,30 @@
+language: c
+
+os:
+  - linux
+  - osx
+
+compiler:
+  - gcc
+  - clang
+
+sudo: false
+
+addons:
+  apt:
+    sources:
+      - george-edison55-precise-backports
+    packages:
+      - cmake-data
+      - cmake
+      - ninja-build
+
+before_install:
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew update && brew install ninja; fi
+
+script:
+  - mkdir build
+  - cd build
+  - cmake .. -G "Ninja"
+  - ninja
+  - ninja test
