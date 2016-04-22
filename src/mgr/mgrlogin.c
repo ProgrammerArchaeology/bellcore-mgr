@@ -16,7 +16,6 @@ Michael
 #include <sys/stat.h>
 #include <limits.h>
 #include <getopt.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <grp.h>
