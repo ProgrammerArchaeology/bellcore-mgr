@@ -57,12 +57,11 @@ event_args(
 static char *
 get_id(WINDOW *win)
 {
-  int sub = win->num;  /* subwindow number */
-  int main = win->pid; /* main window id */
   static char buff[6];
 
-  sprintf(buff, "%d.%d", main, sub);
-  return (buff);
+  /* main window ID followed by the subwindow number */
+  sprintf(buff, "%d.%d", win->pid, win->num);
+  return buff;
 }
 /*}}}  */
 /*{{{  sub_event -- substitute %x into str, returns true if an area was swept.*/
