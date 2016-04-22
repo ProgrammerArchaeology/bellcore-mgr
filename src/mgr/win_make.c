@@ -123,9 +123,7 @@ void win_make(WINDOW *win, int indx)
     strcpy(active->tty, active->main->tty);
     active->from_fd = 0;
     active->alt = win->main->alt;
-    active->main
-        ->alt
-        = active;
+    active->main->alt = active;
     if (p[4] > 0)
       active->num = p[4];
     else if (active->alt)

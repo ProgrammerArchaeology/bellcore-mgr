@@ -215,9 +215,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       if (win->esc[TEXT_COUNT] >= win->esc[cnt]) {
         win->flags &= ~W_TEXT;
         if (win->snarf && win->code != T_BITMAP && win->code != T_GRUNCH) {
-          win->snarf
-              [win->esc[TEXT_COUNT]]
-              = '\0';
+          win->snarf[win->esc[TEXT_COUNT]] = '\0';
           trans(win->snarf);
         }
         down_load(win, window, text);
@@ -259,9 +257,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           n = -n;
           win->flags &= ~(W_MINUS);
         }
-        win->esc
-            [win->esc_cnt]
-            = n;
+        win->esc[win->esc_cnt] = n;
       } break;
       /*}}}  */
       /*{{{  E_SEP1, E_SEP2 field separators*/
@@ -269,9 +265,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       case E_SEP2:
         if (win->esc_cnt + 1 < MAXESC)
           win->esc_cnt++;
-        win->esc
-            [win->esc_cnt]
-            = 0;
+        win->esc[win->esc_cnt] = 0;
         win->flags &= ~(W_MINUS);
         win->flags |= W_ESCAPE;
         break;
@@ -493,9 +487,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         win->flags &= ~W_SPECIAL; /* reset bold or underline */
         offset = 0;
         if (cnt > 0) {
-          win->esc
-              [TEXT_COUNT]
-              = 0;
+          win->esc[TEXT_COUNT] = 0;
           if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
             win->flags |= W_TEXT;
           win->code = T_FONT;
@@ -589,9 +581,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_GIMME      -- snarf text into input queue*/
       case E_GIMME:
-        win->esc
-            [TEXT_COUNT]
-            = 0;
+        win->esc[TEXT_COUNT] = 0;
         if (win->esc[cnt] > 0 && win->esc[cnt] < MAXSHELL && (win->snarf = malloc(win->esc[cnt] + 1)) != NULL)
           win->flags |= W_TEXT;
         win->code = T_GIMME;
@@ -599,9 +589,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_GMAP       -- read a bitmap from a file*/
       case E_GMAP:
-        win->esc
-            [TEXT_COUNT]
-            = 0;
+        win->esc[TEXT_COUNT] = 0;
         if (win->esc[cnt] > 0 && win->esc[cnt] < MAX_PATH && (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
           win->flags |= W_TEXT;
         win->code = T_GMAP;
@@ -609,9 +597,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_SMAP       -- save a bitmap on a file*/
       case E_SMAP:
-        win->esc
-            [TEXT_COUNT]
-            = 0;
+        win->esc[TEXT_COUNT] = 0;
         if (win->esc[cnt] > 0 && win->esc[cnt] < MAX_PATH && (win->snarf = malloc(win->esc[cnt] + 1)) != 0) {
           win->flags |= W_TEXT;
         }
@@ -620,9 +606,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_SNARF      -- snarf text into the snarf buffer*/
       case E_SNARF:
-        win->esc
-            [TEXT_COUNT]
-            = 0;
+        win->esc[TEXT_COUNT] = 0;
         if (win->esc[cnt] >= 0 && /*** was just > */
             (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
           win->flags |= W_TEXT;
@@ -631,9 +615,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_STRING     -- write text into the offscreen bitmap*/
       case E_STRING:
-        win->esc
-            [TEXT_COUNT]
-            = 0;
+        win->esc[TEXT_COUNT] = 0;
         if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
           win->flags |= W_TEXT;
         win->code = T_STRING;
@@ -641,9 +623,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_GRUNCH     -- graphics scrunch mode  (experimental)*/
       case E_GRUNCH: /* graphics scrunch mode  (experimental) */
-        win->esc
-            [TEXT_COUNT]
-            = 0;
+        win->esc[TEXT_COUNT] = 0;
         if (win->esc[cnt] >= 0 && /*** was just > */
             (win->snarf = malloc(win->esc[cnt] + 1)) != 0)
           win->flags |= W_TEXT;
@@ -706,18 +686,14 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
                              child, parent, item));
 
           if (item < 0) /* page link */
-            win->menus[parent]
-                ->next
-                = child;
+            win->menus[parent]->next = child;
           else if (item < win->menus[parent]->count) /* slide lnk */
             menu_setnext(win->menus[parent], item) = child;
 
           /* menu flags */
 
           if (flags > 0)
-            win->menus[parent]
-                ->flags
-                = flags;
+            win->menus[parent]->flags = flags;
 
           break;
         }
@@ -725,14 +701,10 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         /* download a menu */
 
         if (cnt > 0) {
-          win->esc
-              [TEXT_COUNT]
-              = 0;
+          win->esc[TEXT_COUNT] = 0;
           if (win->menus[n]) {
             menu_destroy(win->menus[n]);
-            win->menus
-                [n]
-                = NULL;
+            win->menus[n] = NULL;
             if (win->menu[0] == n)
               win->menu[0] = -1;
             if (win->menu[1] == n)
@@ -763,9 +735,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         switch (cnt) {
         case 2: /* append to an event */
         case 1: /* set an event */
-          win->esc
-              [TEXT_COUNT]
-              = 0;
+          win->esc[TEXT_COUNT] = 0;
           if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0) {
             win->flags |= W_TEXT;
             win->code = T_EVENT;
@@ -778,9 +748,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
           EVENT_CLEAR_MASK(win, cnt);
           if (win->events[GET_EVENT(cnt)]) {
             free(win->events[GET_EVENT(cnt)]);
-            win->events
-                [GET_EVENT(cnt)]
-                = NULL;
+            win->events[GET_EVENT(cnt)] = NULL;
           }
           break;
         }
@@ -788,9 +756,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_SEND       -- send a message*/
       case E_SEND: /* send a message */
-        win->esc
-            [TEXT_COUNT]
-            = 0;
+        win->esc[TEXT_COUNT] = 0;
         if (win->esc[cnt] > 0 && (win->snarf = malloc(win->esc[cnt] + 1)) != 0) {
           win->flags |= W_TEXT;
           win->code = T_SEND;
@@ -888,9 +854,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
         case 0: /* destroy a bitmap */
           if (bmnbr > 0 && bmnbr <= MAXBITMAPS && win->bitmaps[bmnbr - 1]) {
             bit_destroy(win->bitmaps[bmnbr - 1]);
-            win->bitmaps
-                [bmnbr - 1]
-                = NULL;
+            win->bitmaps[bmnbr - 1] = NULL;
           }
           break;
         case 2: /* create new bitmap - same depth as window */
@@ -899,14 +863,12 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
             int w = win->esc[1];
             int h = win->esc[2];
 
-            win->bitmaps
-                [bmnbr - 1]
-                = bit_alloc(Scalex(w),
-                    Scaley(h),
-                    0,
-                    (cnt == 3 && win->esc[3] == 1)
-                        ? 1
-                        : BIT_DEPTH(win->window));
+            win->bitmaps[bmnbr - 1] = bit_alloc(Scalex(w),
+                Scaley(h),
+                0,
+                (cnt == 3 && win->esc[3] == 1)
+                    ? 1
+                    : BIT_DEPTH(win->window));
             dbgprintf('B', (stderr, "%s: created bitmap %d (%d,%d)\r\n",
                                win->tty, bmnbr, w, h));
           }
@@ -918,9 +880,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       case E_BITLOAD:
         if (cnt >= 4) {
           if ((win->snarf = malloc(win->esc[win->esc_cnt])) != 0) {
-            win->esc
-                [TEXT_COUNT]
-                = 0;
+            win->esc[TEXT_COUNT] = 0;
             win->code = T_BITMAP;
             win->flags |= W_TEXT;
           } else

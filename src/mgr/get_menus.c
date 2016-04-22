@@ -66,11 +66,11 @@ const char *str;
 /*{{{  menu_define -- allocate space for and initialize menu*/
 struct menu_state *
 menu_define(
-    struct font *font,    /* which font to use for menu */
+    struct font *font,          /* which font to use for menu */
     const char *const list[],   /* list of menu items */
     const char *const values[], /* list of return values */
-    int max,              /* max number of menu items */
-    int color             /* raster op function containing the colors to use for the menus */
+    int max,                    /* max number of menu items */
+    int color                   /* raster op function containing the colors to use for the menus */
     )
 {
   int i, incr, count; /* counters */
@@ -335,8 +335,7 @@ menu_copy(struct menu_state *menu)
   if (menu == NULL)
     return (menu);
 
-  if ((tmp = (struct menu_state *)malloc(sizeof(struct menu_state)))
-      == NULL)
+  if ((tmp = (struct menu_state *)malloc(sizeof(struct menu_state))) == NULL)
     return (NULL);
 
   (void)memcpy(tmp, menu, sizeof(struct menu_state));

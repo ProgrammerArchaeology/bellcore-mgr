@@ -140,9 +140,7 @@ int setup_window(WINDOW *win, struct font *curr_font, int x, int y, int dx, int 
 
   win->bitmap = NULL;
   for (i = 0; i < MAXBITMAPS; i++)
-    win->bitmaps
-        [i]
-        = NULL;
+    win->bitmaps[i] = NULL;
 
   win->cursor = &mouse_arrow;
   win->save = NULL;
@@ -160,9 +158,7 @@ int setup_window(WINDOW *win, struct font *curr_font, int x, int y, int dx, int 
   win->event_mask = 0;
 
   for (i = 0; i < MAXEVENTS; i++)
-    win->events
-        [i]
-        = NULL;
+    win->events[i] = NULL;
 
   win->snarf = NULL;
   win->gx = 0;

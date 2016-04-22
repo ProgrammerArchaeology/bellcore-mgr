@@ -188,26 +188,18 @@ int destroy(WINDOW *win)
     dbgprintf('d', (stderr, "%s: destroy alt %d\r\n", win->tty, win->num));
     do_event(EVENT_DESTROY, win, E_MAIN);
     if (win->from_fd) { /* re-attach output to main window */
-      win->main
-          ->from_fd
-          = win->main->to_fd;
-      win->main
-          ->max
-          = win->max - win->current; /* ??? */
+      win->main->from_fd = win->main->to_fd;
+      win->main->max = win->max - win->current; /* ??? */
       dbgprintf('d', (stderr, "%s: copy %d chars at %d\r\n",
                          win->tty, win->main->max, win->current));
       memcpy(win->main->buff, win->buff + win->current + 1, win->main->max);
-      win->main
-          ->current
-          = 0;
+      win->main->current = 0;
       set_size(win);
       dbgprintf('d', (stderr, "%s: reattaching main %d chars\r\n", win->tty, win->max));
     }
     detach(win);
   } else if (win->main) { /* tell main alts know they are dead */
-    win->main
-        ->alt
-        = NULL;
+    win->main->alt = NULL;
     dbgprintf('d', (stderr, "%s: destroy alt, (tell main)\r\n", win->tty));
   } else {
     dbgprintf('d', (stderr, "%s: destroy alt, (dead main)\r\n", win->tty));

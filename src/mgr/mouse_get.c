@@ -81,8 +81,7 @@ int mouse_get(int mouse, int *x_delta, int *y_delta)
       button_faking = (MS_BUTLEFT | MS_BUTRIGHT | MS_BUTMIDDLE);
     } else if (old_butstate == 0 && soon_get_event(mouse)) {
       get_ms_event(&buffered_ms_event);
-      if (buffered_ms_event.ev_butstate
-          == (MS_BUTLEFT | MS_BUTRIGHT)) {
+      if (buffered_ms_event.ev_butstate == (MS_BUTLEFT | MS_BUTRIGHT)) {
         ev.ev_dx += buffered_ms_event.ev_dx;
         ev.ev_dy += buffered_ms_event.ev_dy;
         ev.ev_butstate = buffered_ms_event.ev_butstate;

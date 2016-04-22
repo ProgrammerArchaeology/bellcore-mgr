@@ -56,12 +56,10 @@ void win_rop(WINDOW *win, BITMAP *window)
     if (p[4] > MAXBITMAPS)
       break;
     if (p[4] > 0 && win->bitmaps[p[4] - 1] == NULL)
-      win->bitmaps
-          [p[4] - 1]
-          = bit_alloc(
-              Scalex(p[0]) + Scalex(p[2]), Scaley(p[1]) + Scaley(p[3]),
-              NULL,
-              BIT_DEPTH(win->window));
+      win->bitmaps[p[4] - 1] = bit_alloc(
+          Scalex(p[0]) + Scalex(p[2]), Scaley(p[1]) + Scaley(p[3]),
+          NULL,
+          BIT_DEPTH(win->window));
     bit_blit(
         p[4] ? win->bitmaps[p[4] - 1] : window,
         Scalex(p[0]), Scaley(p[1]),
@@ -104,13 +102,11 @@ void win_rop(WINDOW *win, BITMAP *window)
       else
         depth = BIT_DEPTH(win->window);
 
-      win->bitmaps
-          [p[6] - 1]
-          = bit_alloc(
-              Scalex(p[0]) + Scalex(p[2]),
-              Scaley(p[1]) + Scaley(p[3]),
-              NULL_DATA,
-              depth);
+      win->bitmaps[p[6] - 1] = bit_alloc(
+          Scalex(p[0]) + Scalex(p[2]),
+          Scaley(p[1]) + Scaley(p[3]),
+          NULL_DATA,
+          depth);
     }
     dbgprintf('B', (stderr, "blitting %d to %d (%d x %d)\r\n", p[7], p[6], p[2], p[3]));
     bit_blit(
@@ -164,9 +160,7 @@ void win_map(WINDOW *win, BITMAP *window)
     if (p[2] > MAXBITMAPS)
       break;
     if (p[2] > 0 && win->bitmaps[p[2] - 1] == NULL) {
-      win->bitmaps
-          [p[2] - 1]
-          = win->bitmap;
+      win->bitmaps[p[2] - 1] = win->bitmap;
       win->bitmap = NULL;
     } else
       bit_blit(p[2] ? win->bitmaps[p[2] - 1] : window, Scalex(win->gx), Scaley(win->gy), p[0], p[1], op, win->bitmap, 0, 0);
@@ -185,9 +179,7 @@ void win_map(WINDOW *win, BITMAP *window)
     if (p[4] > MAXBITMAPS)
       break;
     if (p[4] > 0 && win->bitmaps[p[4] - 1] == NULL) {
-      win->bitmaps
-          [p[4] - 1]
-          = win->bitmap;
+      win->bitmaps[p[4] - 1] = win->bitmap;
       win->bitmap = NULL;
     } else
       bit_blit(p[4] ? win->bitmaps[p[4] - 1] : window, p[2], p[3], p[0], p[1], op, win->bitmap, 0, 0);

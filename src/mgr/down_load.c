@@ -82,9 +82,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
       f = win->font;
 
     if (*win->snarf) {
-      win->menus
-          [*win->esc]
-          = do_menu(win->snarf, f, win->style);
+      win->menus[*win->esc] = do_menu(win->snarf, f, win->style);
       if (active == win) {
         if (win->menu[0] == *win->esc && button_state == BUTTON_2)
           go_menu(0);
@@ -92,9 +90,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
           go_menu(1);
       }
     } else
-      win->menus
-          [*win->esc]
-          = NULL;
+      win->menus[*win->esc] = NULL;
   } break;
   /*}}}  */
   /*{{{  T_EVENT   -- down load an event*/
@@ -105,14 +101,10 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     }
     if (win->events[GET_EVENT(cnt)]) {
       free(win->events[GET_EVENT(cnt)]);
-      win->events
-          [GET_EVENT(cnt)]
-          = NULL;
+      win->events[GET_EVENT(cnt)] = NULL;
     }
     if (*win->snarf) {
-      win->events
-          [GET_EVENT(cnt)]
-          = win->snarf;
+      win->events[GET_EVENT(cnt)] = win->snarf;
       win->snarf = NULL;
       EVENT_SET_MASK(win, cnt);
       dbgprintf('e', (stderr, "%s: setting event %d (%zu)[%s]\r\n",
@@ -139,9 +131,7 @@ void down_load(WINDOW *win, BITMAP *window, BITMAP *text)
     dbgprintf('y', (stderr, "%s: drawing [%s] to %d\r\n",
                        win->tty, win->snarf, *win->esc));
     if (*win->esc > 0 && win->bitmaps[*win->esc - 1] == NULL) {
-      win->bitmaps
-          [*win->esc - 1]
-          = bit_alloc(x + strlen(win->snarf) * FSIZE(wide), y, NULL, 1); /* text is always 1 bit deep */
+      win->bitmaps[*win->esc - 1] = bit_alloc(x + strlen(win->snarf) * FSIZE(wide), y, NULL, 1); /* text is always 1 bit deep */
       dbgprintf('y', (stderr, "%s: STRING creating %d (%zux%d)\n",
                          win->tty, *win->esc, x + strlen(win->snarf) * FSIZE(wide), y));
     }

@@ -117,13 +117,9 @@ void expose(
   if (win == active)
     return;
 
-  win->prev
-      ->next
-      = win->next;
+  win->prev->next = win->next;
   if (win->next)
-    win->next
-        ->prev
-        = win->prev;
+    win->next->prev = win->prev;
   else
     active->prev = win->prev;
 
@@ -168,17 +164,11 @@ int bury(
   if (win == active)
     active = win->next;
 
-  win->prev
-      ->next
-      = win->next;
-  win->next
-      ->prev
-      = win->prev;
+  win->prev->next = win->next;
+  win->next->prev = win->prev;
 
   win->prev = active->prev;
-  active->prev
-      ->next
-      = win;
+  active->prev->next = win;
 
   active->prev = win;
   win->next = NULL;
