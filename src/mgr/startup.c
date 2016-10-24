@@ -122,6 +122,7 @@ dowindow(int x, int y, int dx, int dy, int font, char *shell[], int flags, char 
     put_window(active, init, strlen(init));
   if (*start) {
     i = Write(active->to_fd, start, strlen(start));
+    (void)i; /* Prevent warning since i might not be used. */
     dbgprintf('S', (stderr, "%s: start string %d/%zu %s\r\n",
                        active->tty, i, strlen(start), start));
   }
