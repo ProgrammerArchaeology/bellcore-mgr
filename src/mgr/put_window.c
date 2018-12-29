@@ -545,7 +545,7 @@ int put_window(WINDOW *win, const char *buff, int buff_count)
       /*}}}  */
       /*{{{  E_SIZE       -- reshape window: cols, rows*/
       case E_SIZE:
-        if (!win->flags & W_ACTIVE)
+        if (!(win->flags & W_ACTIVE))
           break;
         if (cnt >= 1) {
           int cols = win->esc[cnt - 1];
