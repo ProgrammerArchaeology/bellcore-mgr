@@ -9,7 +9,7 @@ ENABLE_TESTING()
 
 LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 
-OPTION(MGR_BUILD_DOCS "Build the GraphQL documentation." OFF)
+OPTION(MGR_BUILD_DOCS "Build the MGR documentation." OFF)
 
 # clang doesn't print colored diagnostics when invoked from Ninja
 IF(UNIX AND
