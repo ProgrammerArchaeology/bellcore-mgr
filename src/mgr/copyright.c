@@ -211,7 +211,6 @@ void copyright(BITMAP *where, char *password)
   fd_set mask;
   int i = 0;
   char rbuf[64], *readp = rbuf;
-  char *crypt();
   unsigned int ind, r, g, b, maxi;
   int at_startup = (*password == 0);
 
