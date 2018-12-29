@@ -31,12 +31,13 @@ int debug = 0;		/* do debugging */
 
 %}
 
+%option noinput
+
 %START start comment quote
 W	[ 	]*
 K	[a-zA-Z_][a-zA-Z0-9_]*
 
 %%
-
 
 ^".SS".*$ {			/* start source processing */
         static char t1[25],t2[25],t3[25],t4[25];
