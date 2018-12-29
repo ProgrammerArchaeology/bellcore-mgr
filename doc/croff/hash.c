@@ -184,7 +184,7 @@ int put_entry(
       if (value != NULL)
         list->value = save_line(value);
       else
-        list->value == NULL;
+        list->value = NULL;
       return (1);
     }
   return (0);
