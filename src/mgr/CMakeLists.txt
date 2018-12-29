@@ -217,7 +217,7 @@ ADD_EXECUTABLE(mgr-server
                ${mgr_server_HEADERS})
 TARGET_LINK_LIBRARIES(mgr-server bitblit mgr)
 IF(NEED_LIB_CRYPT)
-  TARGET_LINK_LIBRARIES(mgrlogin crypt)
+  TARGET_LINK_LIBRARIES(mgr-server crypt)
 ENDIF()
 IF(NOT CMAKE_SYSTEM_NAME MATCHES "Emscripten")
   SET_TARGET_PROPERTIES(mgr-server PROPERTIES VERSION ${MGR_VERSION})
